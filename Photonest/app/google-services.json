@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "649179709069",
+    "firebase_url": "https://photonest-11327.firebaseio.com",
+    "project_id": "photonest-11327",
+    "storage_bucket": "photonest-11327.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649179709069:android:6db084447f4354b583ecc4",
+        "android_client_info": {
+          "package_name": "com.se302.photonest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "649179709069-f4lsiju97ikm7e9hflrpjvdmi92jlvo1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.se302.photonest",
+            "certificate_hash": "af0977f9177fbd1594c507b052f535cf6fc844cb"
+          }
+        },
+        {
+          "client_id": "649179709069-6rkodjui1hjip9d48dqcfudcqpshte4u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_6KSi6BMR-Vm9cu4CaaTh0mSBlQzeTe8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "649179709069-6rkodjui1hjip9d48dqcfudcqpshte4u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
