@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="10dp"
+    tools:context=".RegistrationActivity">
+
+   <ImageView
+       android:layout_width="wrap_content"
+       android:layout_height="50dp"
+       android:src="@drawable/button_background"
+       />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:hint="Username"
+        android:layout_marginTop="15dp"
+        android:id="@+id/username_registration"
+        android:padding="10dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:hint="Full Name"
+        android:layout_marginTop="15dp"
+        android:id="@+id/fullname_registration"
+        android:padding="10dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:hint="E-mail"
+        android:layout_marginTop="15dp"
+        android:id="@+id/email_registration"
+        android:inputType="textEmailAddress"
+        android:padding="10dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:hint="Password"
+        android:layout_marginTop="15dp"
+        android:id="@+id/password_registration"
+        android:inputType="textPassword"
+        android:padding="10dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_register_page"
+        android:text="Register"
+        android:textColor="@color/colorPrimary"
+        android:background="@drawable/button_background"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already have an account? Log In"
+
+        android:id="@+id/txt_login_registerPage"
+        android:layout_marginTop="10dp" />
+
+
+
+
+
+</LinearLayout>
