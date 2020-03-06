@@ -94,10 +94,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="49dp"
-        android:text="TextView"
+        android:text="Forgot Password?"
         app:layout_constraintBottom_toTopOf="@+id/main_signup_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_login_button"
-        tools:text="Forgot password?" />
+        tools:text="Forgot password?"
+        android:clickable="true"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText main_email, main_password;
     private Button main_login_btn;
 
-    private TextView register_link;
+    private TextView register_link,txtForgotPassword;
 
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
@@ -49,6 +49,13 @@ public class LoginActivity extends AppCompatActivity {
                 signUpClicked();
             }
         });
+
+        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                forgotpasswordClicked();
+            }
+        });
     }
 
     public void init(){
@@ -59,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         main_password= findViewById(R.id.main_password);
         main_login_btn = findViewById(R.id.main_login_button);
         register_link = findViewById(R.id.main_signup_button_text);
+        txtForgotPassword = findViewById(R.id.main_text_forgot_password);
 
 
     }
@@ -97,5 +105,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(register_page_intent);
         finish();
 
+    }
+
+    public void forgotpasswordClicked(){
+        Intent register_page_intent= new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+        startActivity(register_page_intent);
+        finish();
     }
 }

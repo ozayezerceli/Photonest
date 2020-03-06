@@ -11,6 +11,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".LoginActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
+        <activity android:name=".EmailVerification" />
         <activity android:name=".RegistrationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
