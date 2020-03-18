@@ -17,10 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/relativeTop">
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
-            </androidx.appcompat.widget.AppCompatImageView>
+                android:layout_height="50dp"
+                android:background="#F99F63"
+                app:srcCompat="@drawable/photonest_banner"></androidx.appcompat.widget.AppCompatImageView>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
