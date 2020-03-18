@@ -3,4 +3,11 @@
     <string name="login_with_your_account">Login With Your Account</string>
     <string name="please_check_your_email_address_to_verify_your_account_and_then_click_the_acvitivate_button">Please check your email address to verify your account and then click the Acvitivate Button.</string>
     <string name="activate_button">Button</string>
+    <string name="photonestImg"></string>
+    <string name="login_btn">Login</string>
+    <string name="email_field">E-mail address</string>
+    <string name="password_field">Password</string>
+    <string name="sign_up_q">Don\'t have an Account?</string>
+    <string name="sign_up_txt">Sign up</string>
+    <string name="forgot_pw">Forgot Password?</string>
 </resources>
