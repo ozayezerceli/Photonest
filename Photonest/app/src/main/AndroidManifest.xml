@@ -13,7 +13,12 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".EmailVerification" />
+        <activity android:name=".NotificationActivity"/>
+        <activity android:name=".PostActivity"/>
+        <activity android:name=".ProfileActivity"/>
+        <activity android:name=".SearchActivity"/>
         <activity android:name=".RegistrationActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

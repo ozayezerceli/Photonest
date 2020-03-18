@@ -1,15 +1,18 @@
 package com.se302.photonest;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
+import Utils.BottomNavigationViewHelper;
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager myViewPager;
