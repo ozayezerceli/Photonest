@@ -7,33 +7,90 @@
     android:background="#FDEDE3"
     tools:context=".EmailVerification">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/mailIc"
+        android:layout_width="92dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="159dp"
+        android:layout_marginTop="186dp"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="470dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_mail"
+        tools:ignore="MissingConstraints">
+
+    </androidx.appcompat.widget.AppCompatImageView>
+
     <Button
         android:id="@+id/activate_account_btn"
         android:layout_width="341dp"
         android:layout_height="54dp"
-        android:layout_marginBottom="336dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="449dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="228dp"
         android:background="@drawable/button_shape"
         android:text="@string/activate_button"
         android:textColor="#4E260E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:text="Activate" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/emailVerification"
+        android:id="@+id/emailVerifyTxt"
         android:layout_width="351dp"
         android:layout_height="125dp"
-        android:layout_marginTop="172dp"
-        android:text="@string/please_check_your_email_address_to_verify_your_account_and_then_click_the_acvitivate_button"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="276dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="330dp"
+        android:gravity="center"
+        android:text="@string/verify_text"
         android:textColor="#4E260E"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/activate_account_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/emailVerifyHdr"
+        android:layout_width="347dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="98dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="545dp"
+        android:gravity="center"
+        android:text="@string/verify_header"
+        android:textColor="#4E260E"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/checkIc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="211dp"
+        android:layout_marginTop="221dp"
+        android:layout_marginEnd="176dp"
+        android:layout_marginBottom="486dp"
+        android:contentDescription="@string/check_mark_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_check_mark" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
