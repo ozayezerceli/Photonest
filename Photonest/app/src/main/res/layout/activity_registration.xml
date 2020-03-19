@@ -1,74 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_gravity="center"
+    android:background="#FDEDE3"
+    android:orientation="vertical"
     android:padding="10dp"
     tools:context=".RegistrationActivity">
 
-   <ImageView
-       android:layout_width="wrap_content"
-       android:layout_height="50dp"
-       android:src="@drawable/button_background"
-       />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittext_background"
-        android:hint="Username"
-        android:layout_marginTop="15dp"
-        android:id="@+id/username_registration"
-        android:padding="10dp" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittext_background"
-        android:hint="Full Name"
-        android:layout_marginTop="15dp"
-        android:id="@+id/fullname_registration"
-        android:padding="10dp" />
+ <Button
+     android:id="@+id/btn_register_page"
+     android:layout_width="319dp"
+     android:layout_height="49dp"
+     android:layout_marginBottom="140dp"
+     android:background="@drawable/button_shape"
+     android:text="Register"
+     android:textColor="#4E260E"
+     app:layout_constraintBottom_toBottomOf="parent"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittext_background"
-        android:hint="E-mail"
-        android:layout_marginTop="15dp"
-        android:id="@+id/email_registration"
-        android:inputType="textEmailAddress"
-        android:padding="10dp" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittext_background"
-        android:hint="Password"
-        android:layout_marginTop="15dp"
-        android:id="@+id/password_registration"
-        android:inputType="textPassword"
-        android:padding="10dp" />
+ <EditText
+     android:id="@+id/password_registration2"
+     android:layout_width="0dp"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="9dp"
+     android:layout_marginEnd="9dp"
+     android:layout_marginBottom="20dp"
+     android:background="@drawable/edittext_background"
+     android:hint="Password Again"
+     android:inputType="textPassword"
+     android:padding="10dp"
+     app:layout_constraintBottom_toTopOf="@+id/email_registration"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_register_page"
-        android:text="Register"
-        android:textColor="@color/colorPrimary"
-        android:background="@drawable/button_background"
-        android:layout_marginTop="15dp" />
+ <EditText
+     android:id="@+id/username_registration"
+     android:layout_width="0dp"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="9dp"
+     android:layout_marginEnd="9dp"
+     android:layout_marginBottom="20dp"
+     android:background="@drawable/edittext_background"
+     android:hint="Username"
+     android:padding="10dp"
+     app:layout_constraintBottom_toTopOf="@+id/fullname_registration"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Already have an account? Log In"
+ <EditText
+     android:id="@+id/fullname_registration"
+     android:layout_width="0dp"
+     android:layout_height="46dp"
+     android:layout_marginStart="6dp"
+     android:layout_marginEnd="6dp"
+     android:layout_marginBottom="20dp"
+     android:background="@drawable/edittext_background"
+     android:hint="Full Name"
+     android:padding="10dp"
+     app:layout_constraintBottom_toTopOf="@+id/password_registration"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent" />
 
-        android:id="@+id/txt_login_registerPage"
-        android:layout_marginTop="10dp" />
+ <EditText
+     android:id="@+id/email_registration"
+     android:layout_width="0dp"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="9dp"
+     android:layout_marginEnd="9dp"
+     android:layout_marginBottom="20dp"
+     android:background="@drawable/edittext_background"
+     android:hint="E-mail"
+     android:inputType="textEmailAddress"
+     android:padding="10dp"
+     app:layout_constraintBottom_toTopOf="@+id/btn_register_page"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent" />
+
+ <EditText
+     android:id="@+id/password_registration"
+     android:layout_width="0dp"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="9dp"
+     android:layout_marginEnd="9dp"
+     android:layout_marginBottom="20dp"
+     android:background="@drawable/edittext_background"
+     android:hint="Password"
+     android:inputType="textPassword"
+     android:padding="10dp"
+     app:layout_constraintBottom_toTopOf="@+id/password_registration2"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent" />
+
+ <ImageView
+     android:id="@+id/register_banner"
+     android:layout_width="0dp"
+     android:layout_height="185dp"
+     android:layout_marginStart="24dp"
+     android:layout_marginEnd="24dp"
+     app:layout_constraintBottom_toTopOf="@+id/username_registration"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toTopOf="parent"
+     app:layout_constraintVertical_bias="0.24"
+     app:srcCompat="@drawable/photonest_letter" />
 
 
-
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

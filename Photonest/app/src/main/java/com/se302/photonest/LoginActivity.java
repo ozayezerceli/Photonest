@@ -9,14 +9,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -68,6 +68,16 @@ public class LoginActivity extends AppCompatActivity {
         register_link = findViewById(R.id.main_signup_button_text);
         txtForgotPassword = findViewById(R.id.main_text_forgot_password);
 
+        if (currentUser != null){
+            goToMain();
+            finish();
+        }
+
+    }
+
+    public void goToMain(){
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(intent);
 
     }
 

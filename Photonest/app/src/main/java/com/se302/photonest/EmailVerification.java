@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 
 public class EmailVerification extends AppCompatActivity {
@@ -53,6 +53,20 @@ public class EmailVerification extends AppCompatActivity {
 
             }
         });
+/*
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        getWindow().setLayout((width*6),(height*5));
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.gravity = Gravity.CENTER;
+        params.x = 0;
+        params.y = -20;
+
+        getWindow().setAttributes(params);*/
     }
     private  boolean getUserProfile(FirebaseAuth auth) {
         // [START get_user_profile]

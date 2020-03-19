@@ -7,29 +7,33 @@
     android:background="#FDEDE3"
     tools:context=".EmailVerification">
 
-    <TextView
-        android:id="@+id/emailVerification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:text="@string/please_check_your_email_address_to_verify_your_account_and_then_click_the_acvitivate_button"
-        android:textColor="@color/colorPrimary"
-        android:textSize="32sp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="85dp" />
-
     <Button
         android:id="@+id/activate_account_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_background"
+        android:layout_width="341dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="336dp"
+        android:background="@drawable/button_shape"
         android:text="@string/activate_button"
-        android:textColor="@color/colorPrimary"
+        android:textColor="#4E260E"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="375dp"
         tools:text="Activate" />
+
+    <TextView
+        android:id="@+id/emailVerification"
+        android:layout_width="351dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="172dp"
+        android:text="@string/please_check_your_email_address_to_verify_your_account_and_then_click_the_acvitivate_button"
+        android:textColor="#4E260E"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/activate_account_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

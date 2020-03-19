@@ -1,8 +1,5 @@
 package com.se302.photonest;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,9 +27,9 @@ import java.util.HashMap;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    EditText username, fullname, email, password;
+    EditText username, full_name, email, password, passwordAgain;
     Button register_btn;
-    TextView txt_login;
+    ImageView register_banner;
 
     FirebaseAuth auth;
     DatabaseReference reference;
@@ -42,21 +42,13 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         username= findViewById(R.id.username_registration);
-        fullname= findViewById(R.id.fullname_registration);
+        full_name= findViewById(R.id.fullname_registration);
         email= findViewById(R.id.email_registration);
         password= findViewById(R.id.password_registration);
+        passwordAgain = findViewById(R.id.password_registration2);
         register_btn= findViewById(R.id.btn_register_page);
-        txt_login = findViewById(R.id.txt_login_registerPage);
-
+        register_banner = findViewById(R.id.register_banner);
         auth= FirebaseAuth.getInstance();
-
-        txt_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
-                finish();
-            }
-        });
 
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,18 +58,21 @@ public class RegistrationActivity extends AppCompatActivity {
                 pd.show();
 
                 String str_username= username.getText().toString();
-                String str_fullname= fullname.getText().toString();
+                String str_full_name= full_name.getText().toString();
                 String str_email = email.getText().toString();
                 String str_password= password.getText().toString();
-
-                if(TextUtils.isEmpty(str_username) ||  TextUtils.isEmpty(str_fullname)
+                String str_password2 = passwordAgain.getText().toString();
+                if(TextUtils.isEmpty(str_username) ||  TextUtils.isEmpty(str_full_name)
                 || TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)){
                     Toast.makeText(RegistrationActivity.this, "All fields are required", Toast.LENGTH_LONG).show();
 
-                } else if( str_password.length() <6 ){
+                }else if(!str_password.equals(str_password2)){
+                    Toast.makeText(RegistrationActivity.this, "Passwords are not the same", Toast.LENGTH_LONG).show();
+                }
+                else if( str_password.length() <6 ){
                     Toast.makeText(RegistrationActivity.this, "Password must be at least 6 character!", Toast.LENGTH_LONG).show();
                 } else {
-                    register(str_username, str_fullname,str_email,str_password);
+                    register(str_username, str_full_name,str_email,str_password);
 
                 }
             }
@@ -85,23 +80,24 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-    private void register(final String username, final String fullname, String email, String password){
+    private void register(final String username, final String full_name, String email, String password){
         auth.createUserWithEmailAndPassword(email,password)
         .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     final FirebaseUser firebaseUser = auth.getCurrentUser();
-                    String userid= firebaseUser.getUid();
+                    String user_id= firebaseUser.getUid();
                     FirebaseAuth auth = FirebaseAuth.getInstance();
 
                     sendEmailVerification();
 
-                    reference = FirebaseDatabase.getInstance().getReference().child("Users").child(userid);
+                    reference = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
 
                     HashMap<String, Object> hashMap = new HashMap<>();
-                    hashMap.put("id",userid);
+                    hashMap.put("id",user_id);
                     hashMap.put("username", username.toLowerCase());
+                    hashMap.put("fullName", full_name);
                     hashMap.put("bio", "");
                     hashMap.put("imageurl", "https://firebasestorage.googleapis.com/v0/b/photonest-11327.appspot.com/o/external-content.duckduckgo.com.jfif?alt=media&token=65fb1d0c-90cf-4d2b-b0ff-a02f6b79aef8");
 
@@ -118,7 +114,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                 Intent intent = new Intent(RegistrationActivity.this, EmailVerification.class); // Account is created, verification email is sent, user directs to the Email verification paga
                                 // if user' account is verified it directs to main page from Email Verification Activity
-
                                 startActivity(intent);
                                 finish();
                             }
