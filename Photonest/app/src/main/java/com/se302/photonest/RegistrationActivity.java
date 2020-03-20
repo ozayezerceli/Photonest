@@ -80,7 +80,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-    private void register(final String username, final String full_name, String email, String password){
+    private void register(final String username, final String full_name, final String email, String password){
         auth.createUserWithEmailAndPassword(email,password)
         .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -96,6 +96,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                     HashMap<String, Object> hashMap = new HashMap<>();
                     hashMap.put("id",user_id);
+                    hashMap.put("email", email);
                     hashMap.put("username", username.toLowerCase());
                     hashMap.put("fullName", full_name);
                     hashMap.put("bio", "");

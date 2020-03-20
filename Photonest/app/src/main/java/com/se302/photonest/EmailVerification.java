@@ -14,9 +14,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class EmailVerification extends AppCompatActivity {
 
-    FirebaseUser firebaseUser;
-    FirebaseAuth auth;
-    Button activate_btn;
+    private FirebaseUser firebaseUser;
+    private FirebaseAuth auth;
+    private Button activate_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
