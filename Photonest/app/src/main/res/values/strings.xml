@@ -13,4 +13,7 @@
     <string name="forgot_pw">Forgot Password?</string>
     <string name="verify_header">Verify Your Email</string>
     <string name="check_mark_desc"></string>
+    <string name="search_mark_desc"></string>
+    <string name="notification_txt">Notifications</string>
+    <string name="search_hint">Search</string>
 </resources>
