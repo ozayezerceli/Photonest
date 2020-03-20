@@ -1,6 +1,7 @@
 package com.se302.photonest;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ActionMenuView;
 
@@ -78,25 +80,32 @@ public class ProfileActivity extends AppCompatActivity {
                             startActivity(i);
                             break;
                         case R.id.profile_delete_account:
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if(user!=null){
-                                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                            Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();
-                                            Intent i = new Intent(ProfileActivity.this,LoginActivity.class);
-                                            startActivity(i);
-                                            finish();
-                                        }
-                                        else{
-                                            Toast.makeText(ProfileActivity.this, "Account could not be deleted", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
+                                new AlertDialog.Builder(ProfileActivity.this)
+                                        .setTitle("Delete")
+                                        .setMessage("Your account will be deleted. \nAre you sure?")
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if(task.isSuccessful()){
+                                                            Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();
+                                                            Intent i = new Intent(ProfileActivity.this,LoginActivity.class);
+                                                            startActivity(i);
+                                                            finish();
+                                                        }
+                                                        else{
+                                                            Toast.makeText(ProfileActivity.this, "Account could not be deleted", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }
+                                                });
+                                            }})
+                                        .setNegativeButton(android.R.string.no, null).show();
                             }
                             break;
-
                     }
                     return false;
                 }
