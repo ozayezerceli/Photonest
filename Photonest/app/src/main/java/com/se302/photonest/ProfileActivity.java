@@ -78,6 +78,7 @@ public class ProfileActivity extends AppCompatActivity {
                         case R.id.profile_change_password:
                             Intent i = new Intent(ProfileActivity.this, ChangePasswordActivity.class);
                             startActivity(i);
+                            finish();
                             break;
                         case R.id.profile_delete_account:
                             final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

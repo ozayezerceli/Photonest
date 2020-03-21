@@ -2,12 +2,17 @@ package com.se302.photonest;
 
 import android.view.View;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public class LoginActivityTest {
 
@@ -21,6 +26,15 @@ public class LoginActivityTest {
         loginActivity = loginActivityActivityTestRule.getActivity();
     }
 
+    @Test
+    public void testUserInputScenario(){
+        Espresso.onView(withId(R.id.main_email_adress)).perform(typeText("hasan@gmail.com"));
+        Espresso.onView(withId(R.id.main_password)).perform(typeText("123456"));
+        Espresso.closeSoftKeyboard();
+        Espresso.onView(withId(R.id.main_login_button)).perform(click());
+
+    }
+
     @After
     public void tearDown() throws Exception {
         loginActivity = null;
@@ -28,7 +42,7 @@ public class LoginActivityTest {
 
     @Test
     public void testLaunch(){
-        View view = loginActivity.findViewById(R.id.txtInfo1);
+        View view = loginActivity.findViewById(R.id.photonestImg);
         if(view==null) throw new AssertionError("Object cannot be null");
     }
 
