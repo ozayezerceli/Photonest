@@ -13,6 +13,7 @@
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".MainActivity"/>
         <activity android:name=".ForgotPasswordActivity" />
+        <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".EmailVerification"
             android:theme="@style/AppTheme.PopMe"
             />
