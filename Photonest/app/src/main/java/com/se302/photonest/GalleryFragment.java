@@ -1,7 +1,6 @@
 package com.se302.photonest;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,13 +14,12 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
@@ -75,7 +73,9 @@ public class GalleryFragment extends Fragment {
     private void init(){
         FilePaths filePaths = new FilePaths();
 
+        if(FileSearch.getDirectoryPaths(filePaths.PICTURES)!=null) {
             directories = FileSearch.getDirectoryPaths(filePaths.PICTURES);
+        }
 
         directories.add(filePaths.CAMERA);
 
