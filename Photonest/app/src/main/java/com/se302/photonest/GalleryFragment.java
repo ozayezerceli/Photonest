@@ -30,7 +30,7 @@ import Utils.FileSearch;
 import Utils.GridImageAdapter;
 
 
-public class PostFragment extends Fragment {
+public class GalleryFragment extends Fragment {
 
     private static final int NUM_COLUMNS = 3;
 

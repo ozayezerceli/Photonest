@@ -5,4 +5,34 @@
     android:layout_height="match_parent"
     android:background="#FDEDE3">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/relativeP"
+                android:layout_marginBottom="50dp">
+
+                <include layout="@layout/center_viewpager"/>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/relativeP2">
+
+                <include layout="@layout/bottom_tabs"/>
+
+
+            </RelativeLayout>
+
+
+
+        </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
