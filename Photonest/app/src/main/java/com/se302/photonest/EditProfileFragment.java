@@ -103,8 +103,8 @@ public class EditProfileFragment extends Fragment {
         if(!myRef.child("username").equals(username)){
             checkIfUsernameExists(username);
         }
-        if(!myRef.child("fullname").equals(fullname)){
-            myRef.child("fullname").setValue(fullname);
+        if(!myRef.child("fullFame").equals(fullname)){
+            myRef.child("fullFame").setValue(fullname);
         }
         if(!myRef.child("bio").equals(bio)){
             myRef.child("bio").setValue(bio);
