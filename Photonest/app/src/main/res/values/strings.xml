@@ -24,4 +24,6 @@
     <string name="new_photo">new_photo</string>
     <string name="dbname_photos">dbname_photos</string>
     <string name="dbname_user_photos">dbname_user_photos</string>
+    <string name="camera">Camera</string>
+    <string name="open_cam_txt">Open Camera</string>
 </resources>

@@ -13,6 +13,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.util.Objects;
+
 import Utils.SectionsPagerAdapter;
 import Utils.Permissions;
 
@@ -48,8 +50,8 @@ public class PostActivity extends AppCompatActivity{
 
     private void setupViewPager(){
         SectionsPagerAdapter adapter =  new SectionsPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new PhotoFragment());
         adapter.addFragment(new GalleryFragment());
-       // adapter.addFragment(new PhotoFragment());
 
         ViewPager = (ViewPager) findViewById(R.id.viewpager_container);
         ViewPager.setAdapter(adapter);
@@ -57,8 +59,8 @@ public class PostActivity extends AppCompatActivity{
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabsBottom);
         tabLayout.setupWithViewPager(ViewPager);
 
-        tabLayout.getTabAt(0).setText(getString(R.string.gallery));
-        //tabLayout.getTabAt(1).setText(getString(R.string.photo));
+        Objects.requireNonNull(tabLayout.getTabAt(0)).setText(getString(R.string.camera));
+        Objects.requireNonNull(tabLayout.getTabAt(1)).setText(getString(R.string.gallery));
 
     }
 
@@ -88,7 +90,6 @@ public class PostActivity extends AppCompatActivity{
         int permissionRequest = ActivityCompat.checkSelfPermission(PostActivity.this, permission);
 
         if(permissionRequest != PackageManager.PERMISSION_GRANTED){
-            System.out.println("NO PERMISSION!!!");
             return false;
         }
         else{
@@ -96,4 +97,7 @@ public class PostActivity extends AppCompatActivity{
         }
     }
 
+    public int getTask() {
+        return getIntent().getFlags();
+    }
 }

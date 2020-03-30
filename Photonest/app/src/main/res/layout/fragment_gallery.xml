@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:layout_below="@id/relativeParent">
 
-        <include layout="@layout/gallery_toolbar"/>
+        <include layout="@layout/snippet_gallery_toolbar"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
