@@ -87,6 +87,9 @@ public class GalleryFragment extends Fragment {
         }
 
         directories.add(filePaths.CAMERA);
+        if(FileSearch.getDirectoryPaths(filePaths.PICTURES)!=null) {
+            directories.add(filePaths.WHATSAPP);
+        }
 
         ArrayList<String> directoryNames = new ArrayList<>();
         for (int i = 0; i < directories.size(); i++) {
