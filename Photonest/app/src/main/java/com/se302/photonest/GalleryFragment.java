@@ -1,5 +1,6 @@
 package com.se302.photonest;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -65,6 +66,14 @@ public class GalleryFragment extends Fragment {
 
 
         TextView nextAct = (TextView) view.findViewById(R.id.nextBtn);
+        nextAct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), UploadPostActivity.class);
+                intent.putExtra(getString(R.string.selected_image), selectedImage);
+                startActivity(intent);
+            }
+        });
         init();
 
         return view;

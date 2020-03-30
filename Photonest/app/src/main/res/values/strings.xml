@@ -19,4 +19,9 @@
     <string name="search_hint">Search</string>
     <string name="next_btn">Next</string>
     <string name="gallery">Gallery</string>
+    <string name="selected_image">selected_image</string>
+    <string name="selected_bitmap">selected_bitmap</string>
+    <string name="new_photo">new_photo</string>
+    <string name="dbname_photos">dbname_photos</string>
+    <string name="dbname_user_photos">dbname_user_photos</string>
 </resources>

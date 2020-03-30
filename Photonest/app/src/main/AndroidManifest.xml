@@ -22,11 +22,12 @@
         <activity android:name=".MainActivity"/>
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".EmailVerification"
-            android:theme="@style/AppTheme.PopMe"
-            />
+        <activity android:name=".EmailVerification" />
         <activity android:name=".NotificationActivity"/>
         <activity android:name=".PostActivity"/>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".UploadPostActivity"/>
         <activity android:name=".ProfileActivity"/>
         <activity android:name=".SearchActivity"/>
         <activity android:name=".LoginActivity">
