@@ -150,4 +150,8 @@ public class Photo implements Parcelable {
                 ", likes=" + likes +
                 '}';
     }
+
+    public Object getPublisher() {
+        return new Object(); // will be changed!!!
+    }
 }
