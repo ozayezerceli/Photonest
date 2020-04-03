@@ -1,0 +1,78 @@
+package Utils;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.se302.photonest.R;
+import DataModels.UserInformation;
+
+import java.util.List;
+import java.util.Objects;
+
+import DataModels.User;
+
+public class UserListAdapter extends ArrayAdapter<User> {
+    private Context mContext;
+    private int layoutResource;
+    private DatabaseReference reference;
+
+    public UserListAdapter(@NonNull Context context, int resource, @NonNull List<User> objects) {
+        super(context, resource, objects);
+        mContext = context;
+        layoutResource = resource;
+        reference = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        if(convertView==null) {
+            convertView = LayoutInflater.from(mContext).inflate(layoutResource, parent, false);
+        }
+        TextView username = convertView.findViewById(R.id.search_username);
+        TextView email = convertView.findViewById(R.id.search_email);
+        final ImageView profileImage = convertView.findViewById(R.id.search_photo);
+        User user = getItem(position);
+
+        username.setText(Objects.requireNonNull(user).getUsername());
+        email.setText(user.getEmail());
+        System.out.println("WORKED!!");
+
+        Query query = reference.child(mContext.getString(R.string.user_account_settings_node))
+                .orderByChild(mContext.getString(R.string.usernameField))
+                .equalTo(user.getUsername());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                System.out.println("WORKED!!");
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    GlideImageLoader.loadImageWithOutTransition(mContext,
+                            Objects.requireNonNull(ds.getValue(UserInformation.class)).getImageurl(),profileImage);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        return convertView;
+    }
+}

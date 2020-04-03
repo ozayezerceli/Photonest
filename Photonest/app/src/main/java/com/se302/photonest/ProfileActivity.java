@@ -34,6 +34,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
 
+import DataModels.UserInformation;
 import Utils.BottomNavigationViewHelper;
 
 public class ProfileActivity extends AppCompatActivity {

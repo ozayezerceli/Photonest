@@ -12,7 +12,7 @@ public class FileSearch {
         File file = new File(directory);
         File[] listfiles = file.listFiles();
         try{
-            for(int i = 0; i < listfiles.length; i++){
+            for(int i = listfiles.length-1; i >= 0; i--){
                 if(listfiles[i].isDirectory()){
                     pathArray.add(listfiles[i].getAbsolutePath());
                 }
@@ -28,7 +28,7 @@ public class FileSearch {
         File file = new File(directory);
         File[] listfiles = file.listFiles();
         try{
-            for(int i = 0; i < listfiles.length; i++){
+            for(int i = listfiles.length-1; i >= 0; i--){
 
                 if(listfiles[i].isFile()){
                     pathArray.add(listfiles[i].getAbsolutePath());

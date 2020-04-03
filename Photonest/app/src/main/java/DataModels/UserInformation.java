@@ -1,4 +1,4 @@
-package com.se302.photonest;
+package DataModels;
 
 public class UserInformation {
     private String fullName;
