@@ -95,7 +95,7 @@ public class GalleryFragment extends Fragment {
         for (int i = 0; i < directories.size(); i++) {
             int index = directories.get(i).lastIndexOf("/");
             String string = directories.get(i).substring(index);
-            directoryNames.add(string);
+            directoryNames.add(string.substring(1));
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
