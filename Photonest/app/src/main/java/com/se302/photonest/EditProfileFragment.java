@@ -98,19 +98,34 @@ public class EditProfileFragment extends Fragment {
 
     //The method below takes the input from user and updates the user information on firebase
     private void updateData(){
-        String username = EditUsername.getText().toString();
-        String fullname = EditFullName.getText().toString();
-        String bio = EditBio.getText().toString();
-        String websitelink = EditWebsite.getText().toString();
-        if(!myRef.child("username").equals(username)){
-            checkIfUsernameExists(username);
-        }
-        if(!myRef.child("fullFame").equals(fullname)){
-            myRef.child("fullFame").setValue(fullname);
-        }
-        if(!myRef.child("bio").equals(bio)){
-            myRef.child("bio").setValue(bio);
-        }
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String username = EditUsername.getText().toString();
+                String fullname = EditFullName.getText().toString();
+                String bio = EditBio.getText().toString();
+                String websitelink = EditWebsite.getText().toString();
+
+                if(!dataSnapshot.child("username").getValue().toString().equals(username)){
+                    checkIfUsernameExists(username);
+                }
+                if(!dataSnapshot.child("fullName").getValue().toString().equals(fullname)){
+                    myRef.child("fullName").setValue(fullname);
+                }
+                if(!dataSnapshot.child("bio").getValue().toString().equals(bio)){
+                    myRef.child("bio").setValue(bio);
+                }
+                /*if(!dataSnapshot.child("WebsiteLink").getValue().toString().equals(websitelink)){
+                    myRef.child("WebsiteLink").setValue(websitelink);
+                    }
+                */
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
