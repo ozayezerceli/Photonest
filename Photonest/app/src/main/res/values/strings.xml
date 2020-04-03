@@ -30,4 +30,6 @@
     <string name="usernameField">username</string>
     <string name="users_node">users</string>
     <string name="users_id">user_id</string>
+    <string name="profile_fragment">Profile</string>
+    <string name="selected_user">selected user</string>
 </resources>

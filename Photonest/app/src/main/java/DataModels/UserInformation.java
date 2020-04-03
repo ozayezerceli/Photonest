@@ -1,14 +1,39 @@
 package DataModels;
 
-public class UserInformation {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class UserInformation implements Parcelable {
     private String fullName;
     private String email;
     private String bio;
     private String username;
     private String imageurl;
+    private String id;
 
     public UserInformation() {
     }
+
+    protected UserInformation(Parcel in) {
+        fullName = in.readString();
+        email = in.readString();
+        bio = in.readString();
+        username = in.readString();
+        imageurl = in.readString();
+        id = in.readString();
+    }
+
+    public static final Creator<UserInformation> CREATOR = new Creator<UserInformation>() {
+        @Override
+        public UserInformation createFromParcel(Parcel in) {
+            return new UserInformation(in);
+        }
+
+        @Override
+        public UserInformation[] newArray(int size) {
+            return new UserInformation[size];
+        }
+    };
 
     public String getFullName() {
         return fullName;
@@ -48,5 +73,28 @@ public class UserInformation {
 
     public void setImageurl(String imageurl) {
         this.imageurl = imageurl;
+    }
+
+    public String getid() {
+        return id;
+    }
+
+    public void setid(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(fullName);
+        parcel.writeString(email);
+        parcel.writeString(bio);
+        parcel.writeString(username);
+        parcel.writeString(imageurl);
+        parcel.writeString(id);
     }
 }
