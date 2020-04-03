@@ -28,7 +28,7 @@
     <string name="open_cam_txt">Open Camera</string>
     <string name="user_account_settings_node">user_account_settings</string>
     <string name="usernameField">username</string>
-    <string name="users_node">users</string>
+    <string name="users_node">Users</string>
     <string name="users_id">user_id</string>
     <string name="profile_fragment">Profile</string>
     <string name="selected_user">selected user</string>

@@ -26,6 +26,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.jar.JarOutputStream;
 
 import DataModels.User;
 import Utils.BottomNavigationViewHelper;
@@ -64,7 +65,6 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 String keyword = s.toString().trim().toLowerCase();
                 searchForMatch(keyword);
             }
@@ -77,7 +77,6 @@ public class SearchActivity extends AppCompatActivity {
 
                 if(searchList.get(position).getUser_id().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
                     startActivity(new Intent(mContext, ProfileActivity.class));
-                    System.out.println("CLICKED!!!!!!!!!!!!");
                 }else {
                     //Intent intent = new Intent(mContext, ViewProfileActivity.class);
                     //intent.putExtra(getString(R.string.users_id),searchList.get(position).getUser_id());
@@ -95,16 +94,17 @@ public class SearchActivity extends AppCompatActivity {
 
         if(keyword.length()>0) {
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-            Query query = myRef.child(getString(R.string.users_node)).orderByChild(getString(R.string.usernameField))
-                    .startAt(keyword).endAt(keyword + "\uf8ff");
+            Query query = myRef.child(getString(R.string.users_node))
+                    .orderByChild(getString(R.string.usernameField)).startAt(keyword).endAt(keyword+"\uf8ff");
 
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     searchList.clear();
+                    System.out.println(dataSnapshot.toString());
                     listAdapter.notifyDataSetChanged();
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                        System.out.println("WORKED---");
+                        System.out.println("Snapshot WORKS!!!!!!!!!!!");
                         searchList.add(singleSnapshot.getValue(User.class));
                         listAdapter.notifyDataSetChanged();
                     }
