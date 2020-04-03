@@ -77,7 +77,6 @@ public class SearchActivity extends AppCompatActivity {
 
                 if(searchList.get(position).getUser_id().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
                     startActivity(new Intent(mContext, ProfileActivity.class));
-                    System.out.println("CLICKED!!!!!!!!!!!!");
                 }else {
                     //Intent intent = new Intent(mContext, ViewProfileActivity.class);
                     //intent.putExtra(getString(R.string.users_id),searchList.get(position).getUser_id());
