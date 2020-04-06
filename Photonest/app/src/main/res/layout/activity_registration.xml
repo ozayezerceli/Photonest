@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,103 +10,93 @@
     android:padding="10dp"
     tools:context=".RegistrationActivity">
 
- <Button
-     android:id="@+id/btn_register_page"
-     android:layout_width="319dp"
-     android:layout_height="49dp"
-     android:layout_marginBottom="140dp"
-     android:background="@drawable/button_shape"
-     android:text="Register"
-     android:textColor="#4E260E"
-     app:layout_constraintBottom_toBottomOf="parent"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent" />
+ <ImageView
+     android:id="@+id/register_banner"
+     android:layout_width="wrap_content"
+     android:layout_height="147dp"
+     android:layout_marginStart="24dp"
+     android:layout_marginEnd="24dp"
+     android:cropToPadding="false"
+     app:srcCompat="@drawable/photonest_letter" />
 
- <EditText
-     android:id="@+id/password_registration2"
-     android:layout_width="0dp"
-     android:layout_height="wrap_content"
-     android:layout_marginStart="9dp"
-     android:layout_marginEnd="9dp"
-     android:layout_marginBottom="20dp"
-     android:background="@drawable/edittext_background"
-     android:hint="Password Again"
-     android:inputType="textPassword"
-     android:padding="10dp"
-     app:layout_constraintBottom_toTopOf="@+id/email_registration"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent" />
 
  <EditText
      android:id="@+id/username_registration"
-     android:layout_width="0dp"
+     android:layout_width="match_parent"
      android:layout_height="wrap_content"
      android:layout_marginStart="9dp"
      android:layout_marginEnd="9dp"
      android:layout_marginBottom="20dp"
      android:background="@drawable/edittext_background"
+     android:layout_below="@id/register_banner"
      android:hint="Username"
-     android:padding="10dp"
-     app:layout_constraintBottom_toTopOf="@+id/fullname_registration"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent" />
+     android:padding="10dp" />
 
  <EditText
      android:id="@+id/fullname_registration"
-     android:layout_width="0dp"
-     android:layout_height="46dp"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
      android:layout_marginStart="6dp"
      android:layout_marginEnd="6dp"
      android:layout_marginBottom="20dp"
      android:background="@drawable/edittext_background"
+     android:layout_below="@id/username_registration"
      android:hint="Full Name"
-     android:padding="10dp"
-     app:layout_constraintBottom_toTopOf="@+id/password_registration"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent" />
+
+     android:padding="10dp" />
 
  <EditText
      android:id="@+id/email_registration"
-     android:layout_width="0dp"
+     android:layout_width="match_parent"
      android:layout_height="wrap_content"
      android:layout_marginStart="9dp"
      android:layout_marginEnd="9dp"
      android:layout_marginBottom="20dp"
      android:background="@drawable/edittext_background"
      android:hint="E-mail"
+     android:layout_below="@id/fullname_registration"
      android:inputType="textEmailAddress"
-     android:padding="10dp"
-     app:layout_constraintBottom_toTopOf="@+id/btn_register_page"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent" />
+     android:padding="10dp" />
 
  <EditText
      android:id="@+id/password_registration"
-     android:layout_width="0dp"
+     android:layout_width="match_parent"
      android:layout_height="wrap_content"
      android:layout_marginStart="9dp"
      android:layout_marginEnd="9dp"
      android:layout_marginBottom="20dp"
      android:background="@drawable/edittext_background"
+     android:layout_below="@id/email_registration"
      android:hint="Password"
      android:inputType="textPassword"
-     android:padding="10dp"
-     app:layout_constraintBottom_toTopOf="@+id/password_registration2"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent" />
-
- <ImageView
-     android:id="@+id/register_banner"
-     android:layout_width="0dp"
-     android:layout_height="185dp"
-     android:layout_marginStart="24dp"
-     android:layout_marginEnd="24dp"
-     app:layout_constraintBottom_toTopOf="@+id/username_registration"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent"
-     app:layout_constraintTop_toTopOf="parent"
-     app:layout_constraintVertical_bias="0.24"
-     app:srcCompat="@drawable/photonest_letter" />
+     android:padding="10dp" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+ <EditText
+     android:id="@+id/password_registration2"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="9dp"
+     android:layout_marginEnd="9dp"
+     android:layout_marginBottom="20dp"
+     android:background="@drawable/edittext_background"
+     android:layout_below="@id/password_registration"
+     android:hint="Password Again"
+     android:inputType="textPassword"
+     android:padding="10dp" />
+
+
+ <Button
+     android:id="@+id/btn_register_page"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_marginBottom="140dp"
+     android:background="@drawable/button_shape"
+     android:layout_marginLeft="45dp"
+     android:layout_marginRight="45dp"
+     android:text="Register"
+     android:layout_below="@+id/password_registration2"
+     android:textColor="#4E260E" />
+
+
+</RelativeLayout>

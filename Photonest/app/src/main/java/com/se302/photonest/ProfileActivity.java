@@ -1,20 +1,28 @@
 package com.se302.photonest;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import Utils.GlideImageLoader;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ActionMenuView;
@@ -29,67 +37,81 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-
-
-import java.util.ArrayList;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import DataModels.UserInformation;
 import Utils.BottomNavigationViewHelper;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference myRef;
     private TextView username;
     private static final int ACTIVITY_NUM = 4;
     private Context myContext = ProfileActivity.this;
     private String userID;
+    private DatabaseReference user_info_ref;
 
-    ImageView image_profile;
-    TextView posts, followers,following, fullname, bio;
-    Button edit_profile;
-    FirebaseUser firebaseUser;
-    String profileid;
+   private ImageView image_profile;
+    private TextView posts, followers,following, fullname, bio;
+   private Button edit_profile;
+   private FirebaseUser firebaseUser;
+   private String profileid;
+   private RelativeLayout mrelativeTop;
 
-    ImageButton my_photos;
+    private Uri ImageUri;
 
+    private   ImageButton my_photos;
+
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_profile);
         username = findViewById(R.id.usernameTxt);
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference();
         FirebaseUser user =mAuth.getCurrentUser();
         userID = user.getUid();
+        user_info_ref= FirebaseDatabase.getInstance().getReference().child("Users");
+
+        image_profile= findViewById(R.id.profile_image);
+        posts = findViewById(R.id.posts);
+        followers = findViewById(R.id.followers);
+        following = findViewById(R.id.following);
+        fullname = findViewById(R.id.fullname_profile);
+        bio= findViewById(R.id.bio_profile);
+        edit_profile=findViewById(R.id.edit_profile_button);
+        my_photos= findViewById(R.id.my_photos);
 
 
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(myContext == null){
-                    return;
-                }
-                ArrayList<String> array = showData(dataSnapshot);
-                username.setText(array.get(1));
-                fullname.setText(array.get(0));
-                bio.setText(array.get(3));
-                Glide.with(getApplicationContext()).load(array.get(4)).into(image_profile);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         ActionMenuView actionMenuView = findViewById(R.id.profile_menu_view);
         Menu bottomMenu = actionMenuView.getMenu();
         getMenuInflater().inflate(R.menu.profile_menu, bottomMenu);
         setupBottomNavBar();
+
+
+      /*  image_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galeriIntent= new Intent();
+                galeriIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galeriIntent.setType("image/*");
+                startActivityForResult(galeriIntent,GaleriPick);
+
+            }
+        }); */
+
+
 
         for (int i = 0; i < bottomMenu.size(); i++){
             bottomMenu.getItem(i).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
@@ -145,17 +167,10 @@ public class ProfileActivity extends AppCompatActivity {
         profileid = prefs.getString("id" ,  FirebaseAuth.getInstance().getCurrentUser().getUid());
 
 
-        image_profile= findViewById(R.id.profile_image);
-        posts = findViewById(R.id.posts);
-        followers = findViewById(R.id.followers);
-        following = findViewById(R.id.following);
-        fullname = findViewById(R.id.fullname_profile);
-        bio= findViewById(R.id.bio_profile);
-        edit_profile= findViewById(R.id.edit_profile_button);
-        my_photos= findViewById(R.id.my_photos);
 
         getFollowers();
         getNrPosts();
+        showData();
 
         if(profileid.equals((firebaseUser.getUid()))){
             edit_profile.setText("EDIT PROFILE");
@@ -169,10 +184,20 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String btn = edit_profile.getText().toString();
 
-                if(btn.equals("Edit Profile")){
-                    //go to edit profile
+                if(btn.equals("EDIT PROFILE"))
+                {
 
-                } else if(btn.equals("Follow")){
+                   mrelativeTop=findViewById(R.id.relativeTop);
+                   mrelativeTop.setVisibility(View.INVISIBLE);
+
+
+                    FragmentTransaction transaction = getSupportFragmentManager()
+                            .beginTransaction();
+                    transaction.replace(R.id.container_edit, new EditProfileFragment());
+                    transaction.commit();
+
+
+                    } else if(btn.equals("Follow")){
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
                             .child("Following").child(userID).setValue(true);
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(userID)
@@ -190,9 +215,23 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+ /*   @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode==GaleriPick && resultCode==RESULT_OK && data!=null)
+        {
+            ImageUri=data.getData();
+            image_profile.setImageURI(ImageUri);
+            final DatabaseReference filePath=user_info_ref
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+          //  final UploadTask uploadTask= filePath.updateChildren();
 
 
-
+            user_info_ref.child("imageurl").setValue(ImageUri);
+        }
+    }  */
 
 
     private  void checkFollow(){
@@ -248,7 +287,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getNrPosts(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("photos");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -267,28 +306,44 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 
-    private ArrayList showData(DataSnapshot dataSnapshot) {
-        UserInformation uInfo = new UserInformation();
-        ArrayList<String> array = new ArrayList<>();
-        for(DataSnapshot ds : dataSnapshot.getChildren()){
-            uInfo.setFullName(ds.child(userID).getValue(UserInformation.class).getFullName());
-            uInfo.setEmail(ds.child(userID).getValue(UserInformation.class).getEmail());uInfo.setImageurl(ds.child(userID).getValue(UserInformation.class).getImageurl());
-            uInfo.setUsername(ds.child(userID).getValue(UserInformation.class).getUsername());
-            uInfo.setBio(ds.child(userID).getValue(UserInformation.class).getBio());
+
+    private void showData() {
+
+        user_info_ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                            String UserName = dataSnapshot.child("username").getValue().toString();
+                            String FullName = dataSnapshot.child("fullName").getValue().toString();
+                            String E_Mail = dataSnapshot.child("email").getValue().toString();
+                            String BIO = dataSnapshot.child("bio").getValue().toString();
+                            String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
+
+                        //    Uri uri_pp= Uri.parse("R.drawable.place_holder_photo");
+                     //       GlideImageLoader.loadImageWithOutTransition(myContext,Image_Url,image_profile);
+                            Glide.with(getApplicationContext()).load(Image_Url).into(image_profile);
 
 
+                            username.setText(UserName);
+                            fullname.setText(FullName);
+                            bio.setText(BIO);
+                            //   Glide.with(getApplicationContext()).load(Image_Url).into(image_profile);
 
-            array.add(uInfo.getFullName());
-            array.add(uInfo.getUsername());
-            array.add(uInfo.getEmail());
-            array.add(uInfo.getBio());
-            array.add(uInfo.getImageurl());
-        }
-        return array;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
+
 
 
     private void setupBottomNavBar(){
@@ -299,6 +354,8 @@ public class ProfileActivity extends AppCompatActivity {
         MenuItem mItem = menu.getItem(ACTIVITY_NUM);
         mItem.setChecked(true);
     }
+
+
 
 
 }

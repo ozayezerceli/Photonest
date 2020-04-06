@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_profile_fragment"
+
     >
 
 
@@ -19,15 +21,58 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@id/rellayout1"
-        android:layout_marginTop="50sp">
+        android:layout_marginTop="30sp">
+
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <TextView
+
+
+        <ImageView
+            android:id="@+id/profile_image_edit"
+            android:layout_width="112dp"
+            android:layout_height="84dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_profile" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/edit_profile_area"
+            android:layout_below="@id/profile_image_edit"
+            >
+
+            <Button
+                android:id="@+id/delete_image_photo"
+                android:layout_width="138dp"
+                android:layout_height="38dp"
+                android:layout_marginLeft="55dp"
+                android:background="@drawable/button_shape"
+                android:text="Delete Photo"
+                android:textColor="#4E260E" />
+
+
+            <Button
+                android:id="@+id/change_image_photo"
+                android:layout_width="138dp"
+                android:layout_height="38dp"
+                android:background="@drawable/button_shape"
+                android:text="Change Photo"
+                android:textColor="#4E260E" />
+
+        </LinearLayout>
+
+
+        <TextView
         android:id="@+id/fname"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_profile_area"
+            android:layout_marginTop="15dp"
         android:text="Name"
         android:textSize="18dp"/>
 
