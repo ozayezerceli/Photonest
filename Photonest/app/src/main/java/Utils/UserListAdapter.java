@@ -44,13 +44,12 @@ public class UserListAdapter extends ArrayAdapter<User> {
             convertView = LayoutInflater.from(mContext).inflate(layoutResource, parent, false);
         }
         TextView username = convertView.findViewById(R.id.search_username);
-        TextView email = convertView.findViewById(R.id.search_email);
+        TextView fullname = convertView.findViewById(R.id.search_fullname);
         final ImageView profileImage = convertView.findViewById(R.id.search_photo);
-        User user = getItem(position);
+        final User user = getItem(position);
 
         username.setText(Objects.requireNonNull(user).getUsername());
-        email.setText(user.getEmail());
-        System.out.println("WORKED!!");
+        fullname.setText(user.getFullName());
 
         Query query = reference.child(mContext.getString(R.string.user_account_settings_node))
                 .orderByChild(mContext.getString(R.string.usernameField))
@@ -59,11 +58,10 @@ public class UserListAdapter extends ArrayAdapter<User> {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                System.out.println("WORKED!!");
+                profileImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.place_holder_photo));
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
                     GlideImageLoader.loadImageWithOutTransition(mContext,
-                            Objects.requireNonNull(ds.getValue(UserInformation.class)).getImageurl(),profileImage);
+                            Objects.requireNonNull(ds.getValue(UserInformation.class)).getImageurl(), profileImage);
                 }
             }
             @Override
