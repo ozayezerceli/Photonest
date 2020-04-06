@@ -26,7 +26,6 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.jar.JarOutputStream;
 
 import DataModels.User;
 import Utils.BottomNavigationViewHelper;
@@ -104,7 +103,6 @@ public class SearchActivity extends AppCompatActivity {
                     System.out.println(dataSnapshot.toString());
                     listAdapter.notifyDataSetChanged();
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                        System.out.println("Snapshot WORKS!!!!!!!!!!!");
                         searchList.add(singleSnapshot.getValue(User.class));
                         listAdapter.notifyDataSetChanged();
                     }
