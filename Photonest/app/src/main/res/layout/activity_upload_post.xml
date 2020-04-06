@@ -72,10 +72,18 @@
             android:maxLines="5"
             android:id="@+id/upload_post_description"/>
 
+        <Button
+            android:id="@+id/upload_post_add_location_btn"
+            android:layout_width="211dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="Add Location" />
 
 
 
     </LinearLayout>
+
 
 
 

@@ -1,6 +1,9 @@
 package com.se302.photonest;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -22,12 +27,15 @@ import java.util.Objects;
 
 import Utils.Permissions;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class PhotoFragment extends Fragment {
     private static final int CAMERA_REQUEST_CODE = 5;
     private static final int PHOTO_FRAGMENT_NUM = 0;
     final String outputDirectory = Environment.getExternalStorageDirectory().getAbsolutePath()+"/DCIM/Camera";
     File imageFile;
+    private String selectedImage;
 
 
 
@@ -56,8 +64,9 @@ public class PhotoFragment extends Fragment {
                 if(((PostActivity)getActivity()).getCurrentTabNumber() == PHOTO_FRAGMENT_NUM) {
                     if (((PostActivity) getActivity()).checkPermissions(Permissions.CAMERA_PERMISSION[0])) {
                         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
+                        //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
                         startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+
                     }else{
                     Intent intent = new Intent(getActivity(), PostActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -74,6 +83,21 @@ public class PhotoFragment extends Fragment {
             }
         });
 
+
+
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CAMERA_REQUEST_CODE){
+            Bitmap bitmap;
+            bitmap = (Bitmap) data.getExtras().get("data");
+            Intent intent = new Intent(getActivity(), UploadPostActivity.class);
+            intent.putExtra(getString(R.string.selected_bitmap), bitmap);
+            startActivity(intent);
+        }
 
     }
 }
