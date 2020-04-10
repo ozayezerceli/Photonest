@@ -1,13 +1,15 @@
-package com.se302.photonest;
+package DataModels;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.se302.photonest.Like;
 
 import org.w3c.dom.Comment;
 
 import java.util.List;
 
-public class Photo implements Parcelable {
+public class PhotoInformation implements Parcelable {
     private String caption;
     private String date_created;
     private String image_path;
@@ -17,11 +19,11 @@ public class Photo implements Parcelable {
     private List<Like> likes;
     private List<Comment> comments;
 
-    public Photo() {
+    public PhotoInformation() {
 
     }
 
-    public Photo(String caption, String date_created, String image_path, String photo_id,
+    public PhotoInformation(String caption, String date_created, String image_path, String photo_id,
                  String user_id, String hashTags, List<Like> likes, List<Comment> comments) {
         this.caption = caption;
         this.date_created = date_created;
@@ -34,7 +36,7 @@ public class Photo implements Parcelable {
     }
 
 
-    protected Photo(Parcel in) {
+    protected PhotoInformation(Parcel in) {
         caption = in.readString();
         date_created = in.readString();
         image_path = in.readString();
@@ -43,15 +45,15 @@ public class Photo implements Parcelable {
         hashTags = in.readString();
     }
 
-    public static final Creator<Photo> CREATOR = new Creator<Photo>() {
+    public static final Creator<PhotoInformation> CREATOR = new Creator<PhotoInformation>() {
         @Override
-        public Photo createFromParcel(Parcel in) {
-            return new Photo(in);
+        public PhotoInformation createFromParcel(Parcel in) {
+            return new PhotoInformation(in);
         }
 
         @Override
-        public Photo[] newArray(int size) {
-            return new Photo[size];
+        public PhotoInformation[] newArray(int size) {
+            return new PhotoInformation[size];
         }
     };
 
@@ -78,7 +80,7 @@ public class Photo implements Parcelable {
         this.comments = comments;
     }
 
-    public static Creator<Photo> getCREATOR() {
+    public static Creator<PhotoInformation> getCREATOR() {
         return CREATOR;
     }
 

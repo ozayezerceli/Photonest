@@ -20,7 +20,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.se302.photonest.MainActivity;
-import com.se302.photonest.Photo;
+import DataModels.PhotoInformation;
+
 import com.se302.photonest.R;
 
 import java.text.SimpleDateFormat;
@@ -116,7 +117,7 @@ public class FirebaseMethods {
 
         String hashTags = StringManipulation.getHashTags(caption);
         String newPhotoKey = myRef.child(mContext.getString(R.string.dbname_photos)).push().getKey();
-        Photo photo = new Photo();
+        PhotoInformation photo = new PhotoInformation();
         photo.setCaption(caption);
         photo.setDate_created(getTimestamp());
         photo.setImage_path(url);

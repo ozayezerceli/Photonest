@@ -96,8 +96,4 @@ public class PostActivity extends AppCompatActivity{
             return true;
         }
     }
-
-    public int getTask() {
-        return getIntent().getFlags();
-    }
 }

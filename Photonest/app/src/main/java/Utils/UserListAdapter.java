@@ -18,7 +18,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.se302.photonest.R;
-import DataModels.UserInformation;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,9 +39,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        if(convertView==null) {
-            convertView = LayoutInflater.from(mContext).inflate(layoutResource, parent, false);
-        }
+        convertView = LayoutInflater.from(mContext).inflate(layoutResource, parent, false);
         TextView username = convertView.findViewById(R.id.search_username);
         TextView fullname = convertView.findViewById(R.id.search_fullname);
         final ImageView profileImage = convertView.findViewById(R.id.search_photo);
@@ -61,7 +58,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
                 profileImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.place_holder_photo));
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
                     GlideImageLoader.loadImageWithOutTransition(mContext,
-                            Objects.requireNonNull(ds.getValue(UserInformation.class)).getImageurl(), profileImage);
+                            Objects.requireNonNull(ds.getValue(User.class)).getImageUrl(), profileImage);
                 }
             }
             @Override

@@ -34,4 +34,6 @@
     <string name="selected_user">selected user</string>
     <string name="do_you_have_an_account">Do you have an account?</string>
     <string name="login_from_registration">Login</string>
+    <string name="users">Users</string>
+    <string name="hashtags">Hashtags</string>
 </resources>

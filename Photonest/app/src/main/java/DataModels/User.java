@@ -2,18 +2,20 @@ package DataModels;
 
 public class User{
 
-    private String user_id;
+    private String id;
     private String email;
     private String username;
     private String fullName;
-    private String imageUrl;
+    private String imageurl;
+    private String bio;
 
-    public User(String user_id, String email, String username, String fullName, String imageUrl) {
-        this.user_id = user_id;
+    public User(String id, String email, String username, String fullName, String imageurl, String bio) {
+        this.id = id;
         this.email = email;
         this.username = username;
         this.fullName = fullName;
-        this.imageUrl = imageUrl;
+        this.imageurl = imageurl;
+        this.bio = bio;
     }
 
     public User() {
@@ -21,12 +23,20 @@ public class User{
     }
 
 
-    public String getUser_id() {
-        return user_id;
+    public String getId() {
+        return id;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public String getBio() {
+        return bio;
+    }
+
+    public String setBio() {
+        return this.bio = bio;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -42,7 +52,11 @@ public class User{
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageurl;
+    }
+
+    public void setImageUrl() {
+        this.imageurl = imageurl;
     }
 
     public String getFullName() {
@@ -57,11 +71,12 @@ public class User{
     @Override
     public String toString() {
         return "User{" +
-                "user_id='" + user_id + '\'' +
+                "user_id='" + id + '\'' +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", full name='" + fullName + '\'' +
-                ", image url='" + imageUrl + '\'' +
+                ", image url='" + imageurl + '\'' +
+                ", bio='" + bio + '\'' +
                 '}';
     }
 

@@ -28,6 +28,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+
+import DataModels.PhotoInformation;
 import DataModels.UserInformation;
 import Utils.BottomNavigationViewHelper;
 
@@ -232,7 +234,7 @@ public class ViewProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int i =0;
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    Photo post= snapshot.getValue(Photo.class);
+                    PhotoInformation post= snapshot.getValue(PhotoInformation.class);
                     if(post.getPublisher().equals(muser.getid())){ //getPublisher() doldurulacak
                         i++;
                     }

@@ -42,6 +42,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import DataModels.PhotoInformation;
 import DataModels.UserInformation;
 import Utils.BottomNavigationViewHelper;
 import androidx.fragment.app.Fragment;
@@ -276,7 +277,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int i =0;
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    Photo post= snapshot.getValue(Photo.class);
+                    PhotoInformation post= snapshot.getValue(PhotoInformation.class);
                     if(post.getPublisher().equals(userID)){ //getPublisher() doldurulacak
                         i++;
                     }
