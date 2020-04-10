@@ -215,23 +215,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
- /*   @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode==GaleriPick && resultCode==RESULT_OK && data!=null)
-        {
-            ImageUri=data.getData();
-            image_profile.setImageURI(ImageUri);
-            final DatabaseReference filePath=user_info_ref
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-          //  final UploadTask uploadTask= filePath.updateChildren();
-
-
-            user_info_ref.child("imageurl").setValue(ImageUri);
-        }
-    }  */
 
 
     private  void checkFollow(){

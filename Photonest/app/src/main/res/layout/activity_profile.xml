@@ -68,17 +68,20 @@
                         android:id="@+id/top_bar"
                         android:padding="16dp">
 
-                        <ImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/profile_image"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp" />
+                            android:layout_width="92dp"
+                            android:layout_height="96dp"
+                            android:src="@drawable/ic_profile"
+                            app:civ_border_width="2dp"
+                            app:civ_border_color="#FF000000"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
                             android:paddingLeft="20dp"
-                            android:paddingRight="4dp"
-                            android:orientation="vertical">
+                            android:paddingRight="4dp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -92,13 +95,13 @@
                                     android:orientation="vertical">
 
                                     <TextView
+                                        android:id="@+id/posts"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:id="@+id/posts"
-                                        android:textColor="@color/colorPrimaryDark"
                                         android:layout_gravity="center"
-                                        android:textSize="18sp"
-                                        android:textStyle="bold"/>
+                                        android:textColor="@color/colorPrimaryDark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -110,17 +113,17 @@
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="35dp"
+                                    android:layout_marginLeft="30dp"
                                     android:orientation="vertical">
 
                                     <TextView
+                                        android:id="@+id/followers"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:id="@+id/followers"
-                                        android:textColor="@color/colorPrimaryDark"
                                         android:layout_gravity="center"
-                                        android:textSize="18sp"
-                                        android:textStyle="bold"/>
+                                        android:textColor="@color/colorPrimaryDark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -128,20 +131,21 @@
                                         android:text="followers" />
 
                                 </LinearLayout>
+
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="35dp"
+                                    android:layout_marginLeft="30dp"
                                     android:orientation="vertical">
 
                                     <TextView
+                                        android:id="@+id/following"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:id="@+id/following"
-                                        android:textColor="@color/colorPrimaryDark"
                                         android:layout_gravity="center"
-                                        android:textSize="18sp"
-                                        android:textStyle="bold"/>
+                                        android:textColor="@color/colorPrimaryDark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -151,12 +155,13 @@
                                 </LinearLayout>
 
                             </LinearLayout>
+
                             <Button
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
                                 android:id="@+id/edit_profile_button"
-                                android:background="@drawable/button_background"/>
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/button_background" />
 
                         </LinearLayout>
 

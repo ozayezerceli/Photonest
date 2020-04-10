@@ -10,15 +10,15 @@
     android:padding="10dp"
     tools:context=".RegistrationActivity">
 
+
  <ImageView
      android:id="@+id/register_banner"
      android:layout_width="wrap_content"
-     android:layout_height="147dp"
+     android:layout_height="121dp"
      android:layout_marginStart="24dp"
      android:layout_marginEnd="24dp"
      android:cropToPadding="false"
      app:srcCompat="@drawable/photonest_letter" />
-
 
  <EditText
      android:id="@+id/username_registration"
@@ -85,18 +85,44 @@
      android:inputType="textPassword"
      android:padding="10dp" />
 
-
  <Button
      android:id="@+id/btn_register_page"
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
-     android:layout_marginBottom="140dp"
-     android:background="@drawable/button_shape"
      android:layout_marginLeft="45dp"
      android:layout_marginRight="45dp"
+     android:layout_marginBottom="40dp"
+     android:layout_marginTop="20dp"
+     android:layout_below="@id/password_registration2"
+     android:background="@drawable/button_shape"
      android:text="Register"
-     android:layout_below="@+id/password_registration2"
+
      android:textColor="#4E260E" />
+
+ <TextView
+     android:id="@+id/have_an_account"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_below="@id/btn_register_page"
+     android:text="@string/do_you_have_an_account"
+     android:textColor="#4E260E"
+     android:textSize="17sp"
+     />
+
+ <TextView
+     android:id="@+id/login_text_direct"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_below="@id/btn_register_page"
+     android:layout_marginLeft="200dp"
+     android:gravity="center"
+     android:text="@string/login_from_registration"
+     android:textColor="#F99F63"
+     android:textSize="18sp"
+     />
+
+
+
 
 
 </RelativeLayout>

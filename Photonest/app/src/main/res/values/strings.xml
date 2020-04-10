@@ -32,4 +32,6 @@
     <string name="users_id">user_id</string>
     <string name="profile_fragment">Profile</string>
     <string name="selected_user">selected user</string>
+    <string name="do_you_have_an_account">Do you have an account?</string>
+    <string name="login_from_registration">Login</string>
 </resources>

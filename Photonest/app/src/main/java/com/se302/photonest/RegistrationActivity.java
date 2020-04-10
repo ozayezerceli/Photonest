@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText username, full_name, email, password, passwordAgain;
     Button register_btn;
     ImageView register_banner;
+    TextView login_text;
 
     FirebaseAuth auth;
     DatabaseReference reference;
@@ -48,6 +50,7 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordAgain = findViewById(R.id.password_registration2);
         register_btn= findViewById(R.id.btn_register_page);
         register_banner = findViewById(R.id.register_banner);
+        login_text= findViewById(R.id.login_text_direct);
         auth= FirebaseAuth.getInstance();
 
         register_btn.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +78,13 @@ public class RegistrationActivity extends AppCompatActivity {
                     register(str_username, str_full_name,str_email,str_password);
 
                 }
+            }
+        });
+
+        login_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signInClicked();
             }
         });
 
@@ -166,6 +176,14 @@ public class RegistrationActivity extends AppCompatActivity {
                         .build();
         // [END auth_build_action_code_settings]
     }
+
+    public void signInClicked(){
+        Intent register_page_intent= new Intent(RegistrationActivity.this, LoginActivity.class);
+        startActivity(register_page_intent);
+        finish();
+
+    }
+
 
 
 
