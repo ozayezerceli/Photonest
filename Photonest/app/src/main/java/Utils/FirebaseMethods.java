@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,19 +21,25 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.se302.photonest.MainActivity;
+
 import DataModels.PhotoInformation;
 
 import com.se302.photonest.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class FirebaseMethods {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
+    private PhotoInformation photoInformation;
     private DatabaseReference myRef;
     private StorageReference mStorageReference;
     private String userID;
@@ -67,10 +74,10 @@ public class FirebaseMethods {
 
             //convert image url to bitmap
             if (bm == null) {
-                bm = Utils.ImageManager.getBitmap(imgUrl);
+                bm = ImageManager.getBitmap(imgUrl);
             }
 
-            byte[] bytes = Utils.ImageManager.getBytesFromBitmap(bm, 100);
+            byte[] bytes = ImageManager.getBytesFromBitmap(bm, 100);
 
             UploadTask uploadTask = null;
             uploadTask = storageReference.putBytes(bytes);
@@ -78,14 +85,17 @@ public class FirebaseMethods {
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> firebaseUrl = taskSnapshot.getStorage().getDownloadUrl();
-                    while(!firebaseUrl.isComplete());
-                    Uri url = firebaseUrl.getResult();
+                    Task<Uri> firebaseUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            addPhotoToDatabase(caption, uri.toString());
+                        }
+                    });
 
                     Toast.makeText(mContext, "photo upload success", Toast.LENGTH_SHORT).show();
 
                     //add the new photo to 'photos' node and 'user_photos' node
-                    addPhotoToDatabase(caption, url.toString());
+
 
                     //navigate to the main feed so the user can see their photo
                     Intent intent = new Intent(mContext, MainActivity.class);
@@ -114,23 +124,25 @@ public class FirebaseMethods {
     }
 
     private void addPhotoToDatabase(String caption, String url){
-
-        String hashTags = StringManipulation.getHashTags(caption);
+        List<String> hashTags = StringManipulation.getHashTags(caption);
         String newPhotoKey = myRef.child(mContext.getString(R.string.dbname_photos)).push().getKey();
-        PhotoInformation photo = new PhotoInformation();
-        photo.setCaption(caption);
-        photo.setDate_created(getTimestamp());
-        photo.setImage_path(url);
-        photo.setHashTags(hashTags);
-        photo.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        photo.setPhoto_id(newPhotoKey);
-
+        photoInformation = new PhotoInformation();
+        photoInformation.setCaption(caption);
+        photoInformation.setDate_created(getTimestamp());
+        photoInformation.setImage_path(url);
+        photoInformation.setHashTags(hashTags);
+        photoInformation.setUser_id(userID);
+        photoInformation.setPhoto_id(newPhotoKey);
+        Map<String,Object> postValues = photoInformation.toMap();
         //insert into database
-        myRef.child(mContext.getString(R.string.dbname_user_photos))
-                .child(FirebaseAuth.getInstance().getCurrentUser()
-                        .getUid()).child(newPhotoKey).setValue(photo);
-        myRef.child(mContext.getString(R.string.dbname_photos)).child(newPhotoKey).setValue(photo);
-
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(mContext.getString(R.string.dbname_user_photos)+userID+"/"+newPhotoKey,postValues);
+        childUpdates.put(mContext.getString(R.string.dbname_photos)+newPhotoKey,postValues);
+        myRef.updateChildren(childUpdates);
+        /*myRef.child(mContext.getString(R.string.dbname_user_photos))
+                .child(userID).child(newPhotoKey).setValue(photoInformation);
+        myRef.child(mContext.getString(R.string.dbname_photos)).child(newPhotoKey).setValue(photoInformation);
+        */
     }
 
     private String getTimestamp(){

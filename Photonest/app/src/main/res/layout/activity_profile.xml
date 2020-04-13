@@ -191,6 +191,16 @@
                             android:maxLines="5"
                             android:textColor="@color/colorPrimaryDark"/>
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:id="@+id/website_link_profile"
+                            android:maxLines="5"
+                            android:autoLink="web"
+                            android:linksClickable="true"
+                            android:textColor="@color/colorPrimaryDark"/>
+
                     </LinearLayout>
 
                     <LinearLayout

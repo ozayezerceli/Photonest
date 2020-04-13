@@ -90,7 +90,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-    private void register(final String username, final String full_name, final String email, String password){
+    private void register(final String username, final String full_name, final String email, final String password){
         auth.createUserWithEmailAndPassword(email,password)
         .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -110,6 +110,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     hashMap.put("username", username.toLowerCase());
                     hashMap.put("fullName", full_name);
                     hashMap.put("bio", "");
+                    hashMap.put("website_link","");
                     hashMap.put("imageurl", "https://firebasestorage.googleapis.com/v0/b/photonest-11327.appspot.com/o/place_holder_photo.png?alt=media&token=60a9a8bb-5f09-41de-986c-16bc44497adb");
 
                     reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -124,6 +125,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
 
                                 Intent intent = new Intent(RegistrationActivity.this, EmailVerification.class); // Account is created, verification email is sent, user directs to the Email verification paga
+                                intent.putExtra("email",email);
+                                intent.putExtra("pd",password);
                                 // if user' account is verified it directs to main page from Email Verification Activity
                                 startActivity(intent);
                                 finish();

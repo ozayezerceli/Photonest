@@ -29,6 +29,7 @@ import androidx.appcompat.widget.ActionMenuView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,7 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
     private DatabaseReference user_info_ref;
 
    private ImageView image_profile;
-    private TextView posts, followers,following, fullname, bio;
+    private TextView posts, followers,following, fullname, bio, website_link;
    private Button edit_profile;
    private FirebaseUser firebaseUser;
    private String profileid;
@@ -76,20 +77,16 @@ public class ProfileActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_profile);
         username = findViewById(R.id.usernameTxt);
-        mAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        FirebaseUser user =mAuth.getCurrentUser();
-        userID = user.getUid();
-        user_info_ref= FirebaseDatabase.getInstance().getReference().child("Users");
-
         image_profile= findViewById(R.id.profile_image);
         posts = findViewById(R.id.posts);
         followers = findViewById(R.id.followers);
         following = findViewById(R.id.following);
         fullname = findViewById(R.id.fullname_profile);
         bio= findViewById(R.id.bio_profile);
+        website_link = findViewById(R.id.website_link_profile);
         edit_profile=findViewById(R.id.edit_profile_button);
         my_photos= findViewById(R.id.my_photos);
+
 
 
 
@@ -112,7 +109,11 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }); */
 
-
+        mAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        userID = user.getUid();
+        user_info_ref= FirebaseDatabase.getInstance().getReference().child("Users");
 
         for (int i = 0; i < bottomMenu.size(); i++){
             bottomMenu.getItem(i).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
@@ -131,7 +132,7 @@ public class ProfileActivity extends AppCompatActivity {
                             finish();
                             break;
                         case R.id.profile_delete_account:
-                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            user_info_ref= FirebaseDatabase.getInstance().getReference().child("Users");
                             if(user!=null){
                                 new AlertDialog.Builder(ProfileActivity.this)
                                         .setTitle("Delete")
@@ -139,18 +140,22 @@ public class ProfileActivity extends AppCompatActivity {
                                         .setIcon(android.R.drawable.ic_dialog_alert)
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                user_info_ref.child(user.getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if(task.isSuccessful()){
-                                                            Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();
-                                                            Intent i = new Intent(ProfileActivity.this,LoginActivity.class);
-                                                            startActivity(i);
-                                                            finish();
-                                                        }
-                                                        else{
-                                                            Toast.makeText(ProfileActivity.this, "Account could not be deleted", Toast.LENGTH_LONG).show();
-                                                        }
+                                                    public void onSuccess(Void aVoid) {
+                                                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if(task.isSuccessful()){
+                                                                    Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();
+                                                                    Intent i = new Intent(ProfileActivity.this,LoginActivity.class);
+                                                                    startActivity(i);
+                                                                    finish();
+                                                                } else{
+                                                                    Toast.makeText(ProfileActivity.this, "Account could not be deleted", Toast.LENGTH_LONG).show();
+                                                                }
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }})
@@ -306,7 +311,9 @@ public class ProfileActivity extends AppCompatActivity {
                             String FullName = dataSnapshot.child("fullName").getValue().toString();
                             String E_Mail = dataSnapshot.child("email").getValue().toString();
                             String BIO = dataSnapshot.child("bio").getValue().toString();
+                            String website = dataSnapshot.child("website_link").getValue().toString();
                             String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
+
 
                         //    Uri uri_pp= Uri.parse("R.drawable.place_holder_photo");
                      //       GlideImageLoader.loadImageWithOutTransition(myContext,Image_Url,image_profile);
@@ -316,6 +323,7 @@ public class ProfileActivity extends AppCompatActivity {
                             username.setText(UserName);
                             fullname.setText(FullName);
                             bio.setText(BIO);
+                            website_link.setText(website);
                             //   Glide.with(getApplicationContext()).load(Image_Url).into(image_profile);
 
                         }

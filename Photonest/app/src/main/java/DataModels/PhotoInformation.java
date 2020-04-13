@@ -3,28 +3,35 @@ package DataModels;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
+
+import com.google.firebase.database.Exclude;
 import com.se302.photonest.Like;
 
 import org.w3c.dom.Comment;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PhotoInformation implements Parcelable {
-    private String caption;
-    private String date_created;
-    private String image_path;
-    private String photo_id;
-    private String user_id;
-    private String hashTags;
-    private List<Like> likes;
-    private List<Comment> comments;
+    public String caption;
+    public String date_created;
+    public String image_path;
+    public String photo_id;
+    public String user_id;
+    public List<String> hashTags;
+    public List<Like> likes;
+    public List<Comment> comments;
 
+    @Keep
     public PhotoInformation() {
 
     }
 
     public PhotoInformation(String caption, String date_created, String image_path, String photo_id,
-                 String user_id, String hashTags, List<Like> likes, List<Comment> comments) {
+                 String user_id, List<String> hashTags, List<Like> likes, List<Comment> comments) {
         this.caption = caption;
         this.date_created = date_created;
         this.image_path = image_path;
@@ -42,7 +49,6 @@ public class PhotoInformation implements Parcelable {
         image_path = in.readString();
         photo_id = in.readString();
         user_id = in.readString();
-        hashTags = in.readString();
     }
 
     public static final Creator<PhotoInformation> CREATOR = new Creator<PhotoInformation>() {
@@ -69,7 +75,6 @@ public class PhotoInformation implements Parcelable {
         parcel.writeString(image_path);
         parcel.writeString(photo_id);
         parcel.writeString(user_id);
-        parcel.writeString(hashTags);
     }
 
     public List<Comment> getComments() {
@@ -124,11 +129,11 @@ public class PhotoInformation implements Parcelable {
         this.user_id = user_id;
     }
 
-    public String getHashTags() {
+    public List<String> getHashTags() {
         return hashTags;
     }
 
-    public void setHashTags(String hashTags) {
+    public void setHashTags(List<String> hashTags) {
         this.hashTags = hashTags;
     }
 
@@ -148,7 +153,7 @@ public class PhotoInformation implements Parcelable {
                 ", image_path='" + image_path + '\'' +
                 ", photo_id='" + photo_id + '\'' +
                 ", user_id='" + user_id + '\'' +
-                ", tags='" + hashTags + '\'' +
+                ", hashTags='" + hashTags + '\'' +
                 ", likes=" + likes +
                 '}';
     }
@@ -156,4 +161,18 @@ public class PhotoInformation implements Parcelable {
     public Object getPublisher() {
         return new Object(); // will be changed!!!
     }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("caption", caption);
+        result.put("date_created", date_created);
+        result.put("image_path", image_path);
+        result.put("photo_id", photo_id);
+        result.put("user_id", user_id);
+        result.put("hashTags", hashTags);
+
+        return result;
+    }
+
 }

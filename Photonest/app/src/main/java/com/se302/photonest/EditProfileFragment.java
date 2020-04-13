@@ -1,20 +1,11 @@
 package com.se302.photonest;
 
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
+
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.FileUtils;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,15 +14,12 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import Utils.GlideImageLoader;
 import Utils.ImageManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -51,9 +39,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
-
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -217,6 +202,7 @@ public class EditProfileFragment extends Fragment {
                 EditFullName.setText(uInfo.getFullName());
                 EditUsername.setText(uInfo.getUsername());
                 EditBio.setText(uInfo.getBio());
+                EditWebsite.setText(uInfo.getWebsite_link());
                 String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
                 GlideImageLoader.loadImageWithOutTransition(getActivity().getApplicationContext(),Image_Url,edit_profile_image);
 
@@ -368,6 +354,10 @@ public class EditProfileFragment extends Fragment {
                 if(!dataSnapshot.child("bio").getValue().toString().equals(bio)){
                     myRef.child("bio").setValue(bio);
                     Toast.makeText(getActivity(), "Bio changed!", Toast.LENGTH_SHORT).show();
+                }
+                if(!dataSnapshot.child("website_link").getValue().toString().equals(websitelink)){
+                    myRef.child("website_link").setValue(websitelink);
+                    Toast.makeText(getActivity(), "WebSite Link Changed!", Toast.LENGTH_SHORT).show();
                 }
                 /*if(!dataSnapshot.child("WebsiteLink").getValue().toString().equals(websitelink)){
                     myRef.child("WebsiteLink").setValue(websitelink);

@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         main_login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signInClicked();
+                    signInClicked();
             }
         });
 
@@ -76,8 +76,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goToMain(){
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-        startActivity(intent);
+        if(currentUser.isEmailVerified()){
+            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
+        }
 
     }
 
@@ -91,19 +93,23 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Password field is required!", Toast.LENGTH_LONG).show();
         } else{
             main_login_btn.setEnabled(false); // to avoid one more than click
-
             auth.signInWithEmailAndPassword(login_email,login_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        Toast.makeText(LoginActivity.this, "Login succesfull!", Toast.LENGTH_LONG).show();
-                        Intent main_login_intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(main_login_intent);
-                        finish(); // to stop MainActivity
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Email or password is wrong!", Toast.LENGTH_LONG).show();
-                        main_login_btn.setEnabled(true); //if login isnot successfull login button will be enable again.
-                    }
+                        if(task.isSuccessful()){
+                            if(auth.getCurrentUser().isEmailVerified()){
+                                Toast.makeText(LoginActivity.this, "Login succesfull!", Toast.LENGTH_LONG).show();
+                                Intent main_login_intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(main_login_intent);
+                                finish(); // to stop Login Activity
+                            }else {
+                                Toast.makeText(LoginActivity.this, "Please verify your email address!", Toast.LENGTH_LONG).show();
+                                main_login_btn.setEnabled(true);
+                            }
+                        } else{
+                            Toast.makeText(LoginActivity.this, "Email or password is wrong!", Toast.LENGTH_LONG).show();
+                            main_login_btn.setEnabled(true); //if login isnot successfull login button will be enable again.
+                        }
                 }
             });
         }

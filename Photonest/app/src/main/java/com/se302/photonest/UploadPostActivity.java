@@ -71,7 +71,7 @@ public class UploadPostActivity extends AppCompatActivity {
         addLocation = findViewById(R.id.upload_post_add_location_btn);
         setupFirebaseAuth();
         mFirebaseMethods = new FirebaseMethods(UploadPostActivity.this);
-        storageReference = FirebaseStorage.getInstance().getReference("posts");
+        //storageReference = FirebaseStorage.getInstance().getReference("gs://photonest-11327.appspot.com/");
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,10 +165,10 @@ public class UploadPostActivity extends AppCompatActivity {
 
                 if (user != null) {
                     // User is signed in
-                    Toast.makeText(UploadPostActivity.this, "Signed In", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(UploadPostActivity.this, "Signed In", Toast.LENGTH_SHORT).show();
                 } else {
                     // User is signed out
-                    Toast.makeText(UploadPostActivity.this, "Signed Out", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(UploadPostActivity.this, "Signed Out", Toast.LENGTH_SHORT).show();
                 }
                 // ...
             }
@@ -208,6 +208,20 @@ public class UploadPostActivity extends AppCompatActivity {
 
     private void tagCheck(String s, int start, int end) {
         mspanable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_hashtag)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
 }

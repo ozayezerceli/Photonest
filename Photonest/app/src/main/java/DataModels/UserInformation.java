@@ -7,9 +7,11 @@ public class UserInformation implements Parcelable {
     private String fullName;
     private String email;
     private String bio;
+    private String website_link;
     private String username;
     private String imageurl;
     private String id;
+
 
     public UserInformation() {
     }
@@ -18,6 +20,7 @@ public class UserInformation implements Parcelable {
         fullName = in.readString();
         email = in.readString();
         bio = in.readString();
+        website_link = in.readString();
         username = in.readString();
         imageurl = in.readString();
         id = in.readString();
@@ -53,6 +56,14 @@ public class UserInformation implements Parcelable {
 
     public String getBio() {
         return bio;
+    }
+
+    public String getWebsite_link(){
+        return website_link;
+    }
+
+    public void setWebsite_link(String website_link){
+        this.website_link = website_link;
     }
 
     public void setBio(String bio) {
@@ -93,8 +104,10 @@ public class UserInformation implements Parcelable {
         parcel.writeString(fullName);
         parcel.writeString(email);
         parcel.writeString(bio);
+        parcel.writeString(website_link);
         parcel.writeString(username);
         parcel.writeString(imageurl);
         parcel.writeString(id);
+
     }
 }
