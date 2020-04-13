@@ -1,6 +1,7 @@
 package com.se302.photonest;
 
-
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import Utils.GlideImageLoader;
-import Utils.ImageManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -44,7 +44,7 @@ import java.util.HashMap;
 
 
 import DataModels.UserInformation;
-import androidx.fragment.app.FragmentTransaction;
+
 
 import static android.app.Activity.RESULT_OK;
 
@@ -77,7 +77,7 @@ public class EditProfileFragment extends Fragment {
     //EditProfile Fragment widgets
     private EditText EditFullName, EditUsername, EditWebsite, EditBio;
     private  ImageView edit_profile_image;
-    private  String def_image="https://firebasestorage.googleapis.com/v0/b/photonest-11327.appspot.com/o/place_holder_photo.png?alt=media&token=60a9a8bb-5f09-41de-986c-16bc44497adb";
+    private  String def_image="https://firebasestorage.googleapis.com/v0/b/photonest-11327.appspot.com/o/defaultphoto%2Fplace_holder_photo.png?alt=media&token=f450daed-b913-4991-8456-ff6920d63b25";
     //private TextView mChangeProfilePhoto;
 
     public EditProfileFragment() {
@@ -139,7 +139,7 @@ public class EditProfileFragment extends Fragment {
 
 
 
-       /* delete_photo.setOnClickListener(new View.OnClickListener() { //if the request of deletion profile photo comes from user
+      /*  delete_photo.setOnClickListener(new View.OnClickListener() { //if the request of deletion profile photo comes from user
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(getActivity().getApplicationContext())
@@ -192,7 +192,47 @@ public class EditProfileFragment extends Fragment {
 
             }
         }); */
+      /*  delete_photo.setOnClickListener(new View.OnClickListener() { //if the request of deletion profile photo comes from user
+            @Override
+            public void onClick(View v) {
+                                myRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                                        String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
+                                        if(!Image_Url.equals(def_image)){
+                                            Toast.makeText(getActivity().getApplicationContext(), "Deleting profile photo...", Toast.LENGTH_SHORT).show();
+
+                                            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(Image_Url);
+                                            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    myRef.child("imageurl").setValue(def_image);
+                                                    Toast.makeText(getActivity().getApplicationContext(), "Profile photo is deleted", Toast.LENGTH_SHORT).show();
+                                                    Log.d(TAG, "onSuccess: deleted file");
+
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception exception) {
+                                                    Toast.makeText(getActivity().getApplicationContext(), "Profile photo is not deleted.", Toast.LENGTH_SHORT).show();
+                                                    Log.d(TAG, "onFailure: did not delete file");
+                                                }
+                                            });
+
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+            }
+
+        }); */
 
 
         myRef.addValueEventListener(new ValueEventListener() { //to get information of user
@@ -204,7 +244,8 @@ public class EditProfileFragment extends Fragment {
                 EditBio.setText(uInfo.getBio());
                 EditWebsite.setText(uInfo.getWebsite_link());
                 String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
-                GlideImageLoader.loadImageWithOutTransition(getActivity().getApplicationContext(),Image_Url,edit_profile_image);
+             //   GlideImageLoader.loadImageWithOutTransition(getActivity().getApplicationContext(),Image_Url,edit_profile_image);
+                Glide.with(getActivity().getApplicationContext()).load(Uri.parse(Image_Url)).into(edit_profile_image);
 
 
             }
@@ -257,7 +298,7 @@ public class EditProfileFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     String Image_Url = dataSnapshot.child("imageurl").getValue().toString(); // get the current profile photo
-                    if(!Image_Url.equals(def_image)){ //if current profile photo is not equal to the default one
+                    if(!Image_Url.equals(def_image)){ //if current profile photo is not equal to the default one //yanlış
 
 
                         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(Image_Url);
@@ -313,6 +354,43 @@ public class EditProfileFragment extends Fragment {
                             }
                         });
 
+                    } else { //if current photo is equal to defa image
+                        final StorageReference storageReference= user_image_ref.child(System.currentTimeMillis()
+                                +"."+ getFileExtension(ImageUri));
+
+                        uploadtask = storageReference.putFile(ImageUri);
+                        uploadtask.continueWithTask(new Continuation() {
+                            @Override
+                            public Object then(@NonNull Task task) throws Exception {
+                                if(!task.isSuccessful()){
+                                    throw  task.getException();
+                                }
+                                return storageReference.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if(task.isSuccessful()){
+                                    Uri downloadUri = task.getResult();
+                                    String myUrl= downloadUri.toString();
+
+                                    DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+                                    HashMap<String,Object> hashMap = new HashMap<>();
+                                    hashMap.put("imageurl",""+myUrl);
+                                    reference.child("imageurl").setValue(myUrl);
+
+                                    reference.updateChildren(hashMap);
+
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(), "Failed.",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getActivity().getApplicationContext(), e.getMessage(),Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
                 }
