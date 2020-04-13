@@ -118,8 +118,8 @@ public class SearchActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if(searchList.get(position).getId().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
+                //Objects.requireNonNull(mAuth.getCurrentUser()).getUid()
+                if(searchList.get(position).getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     startActivity(new Intent(mContext, ProfileActivity.class));
                 }else {
                     Intent intent = new Intent(mContext, ViewProfileActivity.class);

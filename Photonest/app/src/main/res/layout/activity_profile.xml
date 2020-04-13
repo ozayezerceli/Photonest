@@ -224,10 +224,12 @@
 
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
+                    <GridView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/recycler_view" />
+                        android:id="@+id/grid_view"
+                        android:numColumns="3"
+                        android:gravity="center"/>
 
 
                 </LinearLayout>

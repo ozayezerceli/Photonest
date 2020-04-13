@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,11 +30,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 
+import java.util.ArrayList;
+
+import DataModels.Photo;
 import DataModels.PhotoInformation;
+import DataModels.User;
 import DataModels.UserInformation;
 import Utils.BottomNavigationViewHelper;
+import Utils.GridImageAdapter;
 
 public class ViewProfileActivity extends AppCompatActivity {
+
+    private int NUM_COLUMNS = 3;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -41,12 +49,14 @@ public class ViewProfileActivity extends AppCompatActivity {
     private TextView username;
     private Context myContext = ViewProfileActivity.this;
     private String userID;
-    private UserInformation muser;
+    private User muser;
+    private String viewUserID;
 
     private ImageView image_profile;
     private TextView posts, followers,following, fullname, bio;
     private Button follow_Btn, unfollow_Btn, editprofile_Btn;
     private RelativeLayout mrelativelayout;
+    private GridView mGridView;
 
     ImageButton my_photos;
     @Override
@@ -64,6 +74,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         editprofile_Btn = findViewById(R.id.View_editprofile_button);
         image_profile = findViewById(R.id.View_profile_image);
         mrelativelayout = findViewById(R.id.relativeTop);
+        mGridView = findViewById(R.id.grid_view);
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -75,6 +86,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         getFollowers();
         getNrPosts();
         setupBottomNavBar();
+        setUserPhotos();
 
         follow_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,13 +97,13 @@ public class ViewProfileActivity extends AppCompatActivity {
                         .child("Follow")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                         .child("Following")
-                        .child(muser.getid())
+                        .child(viewUserID)
                         .child("user_id")
-                        .setValue(muser.getid());
+                        .setValue(viewUserID);
 
                 FirebaseDatabase.getInstance().getReference()
                         .child("Follow")
-                        .child(muser.getid())
+                        .child(viewUserID)
                         .child("Followers")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                         .child("user_id")
@@ -110,12 +122,12 @@ public class ViewProfileActivity extends AppCompatActivity {
                         .child("Follow")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                         .child("Following")
-                        .child(muser.getid())
+                        .child(viewUserID)
                         .removeValue();
 
                 FirebaseDatabase.getInstance().getReference()
                         .child("Follow")
-                        .child(muser.getid())
+                        .child(viewUserID)
                         .child("Followers")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                         .removeValue();
@@ -137,7 +149,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
 
 
-        if(muser.getid().equals(userID)){
+        if(viewUserID.equals(userID)){
             follow_Btn.setVisibility(View.GONE);
             unfollow_Btn.setVisibility(View.GONE);
             editprofile_Btn.setVisibility(View.VISIBLE);
@@ -148,14 +160,26 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     private void init(){
         Intent intent = getIntent();
-        if(intent.hasExtra(getString(R.string.selected_user))){
-            Bundle args = new Bundle();
-            args.putParcelable(getString(R.string.selected_user),intent.getParcelableExtra(getString(R.string.selected_user)));
-            muser = args.getParcelable(getString(R.string.selected_user));
-            username.setText(muser.getUsername());
-            fullname.setText(muser.getFullName());
-            bio.setText(muser.getBio());
-            Glide.with(getApplicationContext()).load(muser.getImageurl()).into(image_profile);
+        if(intent.hasExtra(getString(R.string.users_id))){
+            Bundle args = intent.getExtras();
+            viewUserID = args.getString(getString(R.string.users_id));
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+            Query query = myRef.child(getString(R.string.users_node)).child(viewUserID);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    muser = dataSnapshot.getValue(User.class);
+                    username.setText(muser.getUsername());
+                    fullname.setText(muser.getFullName());
+                    bio.setText(muser.getBio());
+                    Glide.with(getApplicationContext()).load(muser.getImageUrl()).into(image_profile);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }else{
             Toast.makeText(this, "something went wrong", Toast.LENGTH_SHORT).show();
         }
@@ -164,7 +188,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     private  void checkFollow(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference.child("Follow").child(userID).child("Following").orderByChild("user_id").equalTo(muser.getid());
+        Query query = reference.child("Follow").child(userID).child("Following").orderByChild("user_id").equalTo(viewUserID);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -197,7 +221,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     private  void getFollowers(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(muser.getid()).child("Followers");
+                .child("Follow").child(viewUserID).child("Followers");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -212,7 +236,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         });
 
         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(muser.getid()).child("Following");
+                .child("Follow").child(viewUserID).child("Following");
 
         reference2.addValueEventListener(new ValueEventListener() {
             @Override
@@ -235,11 +259,48 @@ public class ViewProfileActivity extends AppCompatActivity {
                 int i =0;
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     PhotoInformation post= snapshot.getValue(PhotoInformation.class);
-                    if(post.getPublisher().equals(muser.getid())){ //getPublisher() doldurulacak
+                    if(post.getPublisher().equals(viewUserID)){ //getPublisher() doldurulacak
                         i++;
                     }
                 }
                 posts.setText(""+i);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setUserPhotos(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().
+                child(getString(R.string.dbname_user_photos)).child(viewUserID);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Photo> photoArrayList = new ArrayList<Photo>();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Photo photo = new Photo();
+                    photo.setCaption(snapshot.child("caption").getValue().toString());
+                    photo.setPhoto_id(snapshot.child("photo_id").getValue().toString());
+                    photo.setUser_id(snapshot.child("user_id").getValue().toString());
+                    photo.setHashTags(snapshot.child("hashTags").getValue().toString());
+                    photo.setDate_created(snapshot.child("date_created").getValue().toString());
+                    photo.setImage_path(snapshot.child("image_path").getValue().toString());
+
+                    photoArrayList.add(photo);
+                }
+                int gridWidth = getResources().getDisplayMetrics().widthPixels;
+                int imageWidth = gridWidth/NUM_COLUMNS;
+                mGridView.setColumnWidth(imageWidth);
+
+                ArrayList<String> imgUrls = new ArrayList<String>();
+                for(int i = 0; i < photoArrayList.size(); i++){
+                    imgUrls.add(photoArrayList.get(i).getImage_path());
+                }
+                GridImageAdapter adapter = new GridImageAdapter(ViewProfileActivity.this , R.layout.grid_imageview, "", imgUrls);
+                mGridView.setAdapter(adapter);
             }
 
             @Override

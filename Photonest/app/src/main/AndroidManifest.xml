@@ -38,6 +38,7 @@
             android:theme="@style/AppTheme"/>
         <activity android:name=".UploadPostActivity"/>
         <activity android:name=".ProfileActivity"/>
+        <activity android:name=".ViewProfileActivity"/>
         <activity android:name=".SearchActivity"/>
         <activity android:name=".LoginActivity">
             <intent-filter>

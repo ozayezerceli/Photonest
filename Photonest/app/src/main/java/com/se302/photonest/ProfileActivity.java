@@ -14,12 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import DataModels.Photo;
 import Utils.GlideImageLoader;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,8 +48,12 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import DataModels.PhotoInformation;
 import DataModels.UserInformation;
 import Utils.BottomNavigationViewHelper;
+import Utils.GridImageAdapter;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -64,6 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
    private FirebaseUser firebaseUser;
    private String profileid;
    private RelativeLayout mrelativeTop;
+    private GridView mGridView;
 
     private Uri ImageUri;
 
@@ -86,6 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
         website_link = findViewById(R.id.website_link_profile);
         edit_profile=findViewById(R.id.edit_profile_button);
         my_photos= findViewById(R.id.my_photos);
+        mGridView = findViewById(R.id.grid_view);
 
 
 
@@ -96,6 +104,7 @@ public class ProfileActivity extends AppCompatActivity {
         Menu bottomMenu = actionMenuView.getMenu();
         getMenuInflater().inflate(R.menu.profile_menu, bottomMenu);
         setupBottomNavBar();
+        setUserPhotos();
 
 
       /*  image_profile.setOnClickListener(new View.OnClickListener() {
@@ -334,6 +343,43 @@ public class ProfileActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void setUserPhotos(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child(getString(R.string.dbname_user_photos)).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Photo> photoArrayList = new ArrayList<Photo>();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Photo photo = new Photo();
+                    photo.setCaption(snapshot.child("caption").getValue().toString());
+                    photo.setPhoto_id(snapshot.child("photo_id").getValue().toString());
+                    photo.setUser_id(snapshot.child("user_id").getValue().toString());
+                    photo.setHashTags(snapshot.child("hashTags").getValue().toString());
+                    photo.setDate_created(snapshot.child("date_created").getValue().toString());
+                    photo.setImage_path(snapshot.child("image_path").getValue().toString());
+
+                    photoArrayList.add(photo);
+                }
+                int gridWidth = getResources().getDisplayMetrics().widthPixels;
+                int imageWidth = gridWidth/3;
+                mGridView.setColumnWidth(imageWidth);
+
+                ArrayList<String> imgUrls = new ArrayList<String>();
+                for(int i = 0; i < photoArrayList.size(); i++){
+                    imgUrls.add(photoArrayList.get(i).getImage_path());
+                }
+                GridImageAdapter adapter = new GridImageAdapter(ProfileActivity.this , R.layout.grid_imageview, "", imgUrls);
+                mGridView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
