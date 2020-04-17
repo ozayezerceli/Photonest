@@ -9,6 +9,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
         android:id="@+id/container"></FrameLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,11 +21,21 @@
             android:layout_height="match_parent"
             android:id="@+id/relativeTop">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:background="#F99F63"
-                app:srcCompat="@drawable/photonest_banner"></androidx.appcompat.widget.AppCompatImageView>
+                android:background="@color/colorPrimary"
+                >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/banner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    app:srcCompat="@drawable/photonest_banner"
+                     />
+            </RelativeLayout>
+
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"

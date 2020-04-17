@@ -8,13 +8,16 @@ public class User{
     private String fullName;
     private String imageurl;
     private String bio;
+    private String website_link;
 
-    public User(String id, String email, String username, String fullName, String imageurl, String bio) {
+    public User(String id, String email, String username, String fullName,  String website_link,
+                String imageurl, String bio) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.fullName = fullName;
         this.imageurl = imageurl;
+        this.website_link = website_link;
         this.bio = bio;
     }
 
@@ -41,6 +44,10 @@ public class User{
 
     public String getEmail() {
         return email;
+    }
+
+    public String getWebsite_link() {
+        return website_link;
     }
 
     public void setEmail(String email) {
@@ -76,6 +83,7 @@ public class User{
                 ", username='" + username + '\'' +
                 ", full name='" + fullName + '\'' +
                 ", image url='" + imageurl + '\'' +
+                ", website link='" + website_link + '\'' +
                 ", bio='" + bio + '\'' +
                 '}';
     }

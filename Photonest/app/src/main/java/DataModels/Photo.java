@@ -38,8 +38,16 @@ public class Photo{
         return caption;
     }
 
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
     public String getDate_created() {
         return date_created;
+    }
+
+    public void setDate_created(String date_created) {
+        this.date_created = date_created;
     }
 
     public void setUser_id(String user_id) {
@@ -54,12 +62,24 @@ public class Photo{
         return image_path;
     }
 
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
+
     public String getPhoto_id() {
         return photo_id;
     }
 
+    public void setPhoto_id(String photo_id) {
+        this.photo_id = photo_id;
+    }
+
     public String getHashTags() {
         return hashTags;
+    }
+
+    public void setHashTags(String user_id) {
+        this.hashTags =hashTags;
     }
 
     public List<Like> getLikes() {
@@ -70,25 +90,6 @@ public class Photo{
         return comments;
     }
 
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-
-    public void setDate_created(String date_created) {
-        this.date_created = date_created;
-    }
-
-    public void setImage_path(String image_path) {
-        this.image_path = image_path;
-    }
-
-    public void setPhoto_id(String photo_id) {
-        this.photo_id = photo_id;
-    }
-
-    public void setHashTags(String hashTags) {
-        this.hashTags = hashTags;
-    }
 
 
 

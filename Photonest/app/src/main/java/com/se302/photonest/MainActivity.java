@@ -1,47 +1,63 @@
 package com.se302.photonest;
 
+
 import android.content.Context;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 
 import Utils.BottomNavigationViewHelper;
+import Utils.UniversalImageLoader;
 
 public class MainActivity extends AppCompatActivity {
-    private ViewPager myViewPager;
-    private FrameLayout myFrameLayout;
-    private RelativeLayout myRelativeLayout;
-    private RelativeLayout myPhotonestBanner;
-
-    private Context myContext = MainActivity.this;
 
     private static final int ACTIVITY_NUM = 0;
+    private Context mContext = MainActivity.this;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myViewPager = (ViewPager) findViewById(R.id.viewpager_container);
-        myFrameLayout = (FrameLayout) findViewById(R.id.container);
-        myRelativeLayout = (RelativeLayout) findViewById(R.id.relativeParent);
-        myPhotonestBanner = (RelativeLayout) findViewById(R.id.relativeTop);
 
+
+        initImageLoader();
         setupBottomNavBar();
+
+        Fragment mFragment = null;
+        mFragment = new MainFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, mFragment).commit();
+
     }
 
     private void setupBottomNavBar(){
         BottomNavigationViewEx bottomNavBar = (BottomNavigationViewEx) findViewById(R.id.bottomNavBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavBar);
-        BottomNavigationViewHelper.enableNavigation(myContext, this, bottomNavBar);
+        BottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavBar);
         Menu menu = bottomNavBar.getMenu();
         MenuItem mItem = menu.getItem(ACTIVITY_NUM);
         mItem.setChecked(true);
     }
+
+
+    private void initImageLoader(){
+
+        UniversalImageLoader universalImageLoader = new UniversalImageLoader(MainActivity.this);
+        ImageLoader.getInstance().init(universalImageLoader.getConfig());
+    }
+
+
+
+
 }

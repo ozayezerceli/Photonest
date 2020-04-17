@@ -29,7 +29,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import DataModels.Photo;
+import DataModels.Hashtag;
 import DataModels.User;
 import Utils.BottomNavigationViewHelper;
 import Utils.HashListAdapter;
@@ -42,7 +42,7 @@ public class SearchActivity extends AppCompatActivity {
     private UserListAdapter listAdapter;
     private HashListAdapter HListAdapter;
     private ArrayList<User> searchList;
-    private ArrayList<Photo> searchHashList;
+    private ArrayList<Hashtag> searchHashList;
     private FirebaseAuth mAuth;
     private boolean usersClicked = true;
     private TextView hashBtn;
@@ -59,7 +59,7 @@ public class SearchActivity extends AppCompatActivity {
         hashBtn = findViewById(R.id.hashtagsBtn);
         userBtn = findViewById(R.id.usersBtn);
         searchList = new ArrayList<>();
-        searchHashList = new ArrayList<>();
+        searchHashList = new ArrayList<Hashtag>();
         listAdapter = new UserListAdapter(mContext,R.layout.search_view,searchList);
         HListAdapter = new HashListAdapter(mContext,R.layout.search_hash_view,searchHashList);
         listView.setAdapter(listAdapter);
@@ -167,8 +167,7 @@ public class SearchActivity extends AppCompatActivity {
 
         if(keyword.length()>0) {
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-            Query query = myRef.child("dbname_photos")
-                    .orderByChild("hashTags").startAt(keyword).endAt(keyword+"\uf8ff");
+            Query query = myRef.child("hashTags").orderByChild("hashTags").startAt(keyword).endAt(keyword+"\uf8ff");
 
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -176,7 +175,7 @@ public class SearchActivity extends AppCompatActivity {
                    searchHashList.clear();
                     HListAdapter.notifyDataSetChanged();
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                        searchHashList.add(singleSnapshot.getValue(Photo.class));
+                        searchHashList.add(singleSnapshot.getValue(Hashtag.class));
                         HListAdapter.notifyDataSetChanged();
                     }
                 }
