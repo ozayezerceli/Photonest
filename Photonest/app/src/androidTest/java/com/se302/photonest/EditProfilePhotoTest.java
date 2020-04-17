@@ -33,12 +33,12 @@ public class EditProfilePhotoTest {
         intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK,null));
     }
 
-    private Instrumentation.ActivityResult stubActivityResult(){
+    /*private Instrumentation.ActivityResult stubActivityResult(){
         Intent resultdata = new Intent();
-        int uri = //firebasestorage.googleapis.com/v0/b/photonest-11327.appspot.com/o/place_holder_photo.png?alt=media&token=60a9a8bb-5f09-41de-986c-16bc44497adb;
-        resultdata.setData(uri);
+        //int uri = firebasestorage.googleapis.com/v0/b/photonest-11327.appspot.com/o/place_holder_photo.png?alt=media&token=60a9a8bb-5f09-41de-986c-16bc44497adb;
+        //resultdata.setData(uri);
     }
-
+*/
     @After
     public void tearDown() throws Exception {
         profileActivity = null;

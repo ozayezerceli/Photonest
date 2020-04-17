@@ -15,6 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -51,6 +52,9 @@ public class GalleryFragmentTest {
         Espresso.onData(allOf(is(instanceOf(String.class)) , is("camera"))).perform(click());
         Espresso.onData(anything()).inAdapterView(withId(R.id.gridView)).atPosition(0).perform(click());
         Espresso.onView(withId(R.id.nextBtn)).perform(click());
+        Espresso.onView(withId(R.id.upload_post_description)).perform(typeText("#testCaption"));
+        Espresso.onView(withId(R.id.upload_post_add_location_btn)).perform(click());
+        Espresso.onView(withId(R.id.upload_post_post)).perform(click());
     }
 
     @Test

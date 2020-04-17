@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.se302.photonest.R;
@@ -61,6 +62,7 @@ public class GridImageAdapter extends ArrayAdapter<String> {
             String imgURL = getItem(position);
 
             ImageLoader imageLoader = ImageLoader.getInstance();
+            imageLoader.init(ImageLoaderConfiguration.createDefault(Context));
 
             imageLoader.displayImage(append1 + imgURL, holder.image, new ImageLoadingListener() {
                 @Override
