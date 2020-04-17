@@ -15,8 +15,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -89,6 +91,25 @@ public class FirebaseMethods {
                 .child(uid)
                 .child(userID)
                 .removeValue();
+    }
+
+    public int getFollowerCount(DataSnapshot dataSnapshot, String uid){
+        int count = 0;
+        for(DataSnapshot ds : dataSnapshot
+                .child(mActivity.getString(R.string.followers_node))
+                .child(uid).getChildren()){
+            count++;
+        }
+            return count;
+    }
+    public int getFollowingCount(DataSnapshot dataSnapshot,String uid){
+        int count = 0;
+        for(DataSnapshot ds : dataSnapshot
+                .child(mActivity.getString(R.string.following_node))
+                .child(uid).getChildren()){
+            count++;
+        }
+        return count;
     }
 
     public void uploadNewPhoto(String photoType, final String caption, final int count, final String imgUrl,

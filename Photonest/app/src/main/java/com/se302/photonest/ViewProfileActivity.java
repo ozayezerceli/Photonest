@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -38,6 +39,7 @@ import DataModels.PhotoInformation;
 import DataModels.User;
 import DataModels.UserInformation;
 import Utils.BottomNavigationViewHelper;
+import Utils.FirebaseMethods;
 import Utils.GridImageAdapter;
 import Utils.StringManipulation;
 
@@ -59,6 +61,8 @@ public class ViewProfileActivity extends AppCompatActivity {
     private Button follow_Btn, unfollow_Btn, editprofile_Btn;
     private RelativeLayout mrelativelayout;
     private GridView mGridView;
+
+    private FirebaseMethods firebaseMethods;
 
     ImageButton my_photos;
     @Override
@@ -83,6 +87,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         myRef = firebaseDatabase.getReference();
         FirebaseUser user =mAuth.getCurrentUser();
         userID = user.getUid();
+        firebaseMethods = new FirebaseMethods(ViewProfileActivity.this);
 
         init();
         getFollowers();
@@ -93,46 +98,15 @@ public class ViewProfileActivity extends AppCompatActivity {
         follow_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.d(TAG, "onClick: now following: " + mUser.getUsername());
-
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Follow")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("Following")
-                        .child(viewUserID)
-                        .child("user_id")
-                        .setValue(viewUserID);
-
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Follow")
-                        .child(viewUserID)
-                        .child("Followers")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("user_id")
-                        .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                firebaseMethods.addFollowingAndFollowers(viewUserID);
                 setFollowing();
             }
         });
 
-
         unfollow_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.d(TAG, "onClick: now unfollowing: " + mUser.getUsername());
-
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Follow")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("Following")
-                        .child(viewUserID)
-                        .removeValue();
-
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Follow")
-                        .child(viewUserID)
-                        .child("Followers")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .removeValue();
+                firebaseMethods.removeFollowingAndFollowers(viewUserID);
                 setUnfollowing();
             }
         });
@@ -148,8 +122,6 @@ public class ViewProfileActivity extends AppCompatActivity {
                 transaction.commit();
             }
         });
-
-
 
         if(viewUserID.equals(userID)){
             follow_Btn.setVisibility(View.GONE);
@@ -195,7 +167,6 @@ public class ViewProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
-                    //editprofile_Btn.setText("Following");
                     setFollowing();
                 }
             }
@@ -222,13 +193,12 @@ public class ViewProfileActivity extends AppCompatActivity {
     }
 
     private  void getFollowers(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(viewUserID).child("Followers");
-
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                followers.setText(""+dataSnapshot.getChildrenCount());
+                followers.setText(""+firebaseMethods.getFollowerCount(dataSnapshot, viewUserID));
+                following.setText(""+firebaseMethods.getFollowingCount(dataSnapshot, viewUserID));
             }
 
             @Override
@@ -237,37 +207,15 @@ public class ViewProfileActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(viewUserID).child("Following");
-
-        reference2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                following.setText(""+dataSnapshot.getChildrenCount());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void getNrPosts(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int i =0;
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    PhotoInformation post= snapshot.getValue(PhotoInformation.class);
-                    if(post.getPublisher().equals(viewUserID)){ //getPublisher() doldurulacak
-                        i++;
-                    }
-                }
-                posts.setText(""+i);
+                posts.setText(""+firebaseMethods.getImageCount(dataSnapshot));
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -281,7 +229,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
+                final ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     PhotoInformation photoInformation = new PhotoInformation();
                     photoInformation.setCaption(snapshot.child("caption").getValue().toString());
@@ -306,6 +254,23 @@ public class ViewProfileActivity extends AppCompatActivity {
 
                 GridImageAdapter adapter = new GridImageAdapter(ViewProfileActivity.this , R.layout.grid_imageview, "", imgUrls);
                 mGridView.setAdapter(adapter);
+
+                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mrelativelayout.setVisibility(View.GONE);
+                        PostViewFragment fragment = new PostViewFragment();
+                        Bundle args = new Bundle();
+                        args.putParcelable("photo", photoArrayList.get(position));
+                        args.putInt("activityNumber", 1);
+                        fragment.setArguments(args);
+
+                        FragmentTransaction transaction  = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.container, fragment);
+                        transaction.addToBackStack("View Post");
+                        transaction.commit();
+                    }
+                });
             }
 
             @Override
