@@ -49,11 +49,13 @@ import DataModels.PhotoInformation;
 import DataModels.UserInformation;
 import Utils.BottomNavigationViewHelper;
 import Utils.GridImageAdapter;
+import Utils.StringManipulation;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -351,17 +353,19 @@ public class ProfileActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<Photo> photoArrayList = new ArrayList<Photo>();
+                ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Photo photo = new Photo();
-                    photo.setCaption(snapshot.child("caption").getValue().toString());
-                    photo.setPhoto_id(snapshot.child("photo_id").getValue().toString());
-                    photo.setUser_id(snapshot.child("user_id").getValue().toString());
-                    photo.setHashTags(snapshot.child("hashTags").getValue().toString());
-                    photo.setDate_created(snapshot.child("date_created").getValue().toString());
-                    photo.setImage_path(snapshot.child("image_path").getValue().toString());
+                    PhotoInformation photoInformation = new PhotoInformation();
+                    photoInformation.setCaption(snapshot.child("caption").getValue().toString());
+                    photoInformation.setPhoto_id(snapshot.child("photo_id").getValue().toString());
+                    photoInformation.setUser_id(snapshot.child("user_id").getValue().toString());
+                    List<String> hashTags = StringManipulation.getHashTags(photoInformation.getCaption());
+                    photoInformation.setHashTags(hashTags);
+                    photoInformation.setDate_created(snapshot.child("date_created").getValue().toString());
+                    photoInformation.setImage_path(snapshot.child("image_path").getValue().toString());
 
-                    photoArrayList.add(photo);
+
+                    photoArrayList.add(photoInformation);
                 }
                 int gridWidth = getResources().getDisplayMetrics().widthPixels;
                 int imageWidth = gridWidth/3;
