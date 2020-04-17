@@ -2,15 +2,16 @@ package com.se302.photonest;
 
 
 
+
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,9 +29,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+
+
+import java.io.ByteArrayOutputStream;
 
 import Utils.FirebaseMethods;
 import Utils.UniversalImageLoader;
@@ -42,14 +45,10 @@ public class UploadPostActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
     private FirebaseMethods mFirebaseMethods;
-
-    private Uri imageUri;
     private String mAppend = "file:/";
     private int imageCount = 0;
     private String imgUrl;
     private Bitmap bitmap;
-    private StorageTask uploadTask;
-    private StorageReference storageReference;
     private Intent intent;
     private ImageView close, image_added;
     private TextView post;
@@ -69,7 +68,6 @@ public class UploadPostActivity extends AppCompatActivity {
         addLocation = findViewById(R.id.upload_post_add_location_btn);
         setupFirebaseAuth();
         mFirebaseMethods = new FirebaseMethods(UploadPostActivity.this);
-        //storageReference = FirebaseStorage.getInstance().getReference("gs://photonest-11327.appspot.com/");
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,8 +75,6 @@ public class UploadPostActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
 
         mspanable = description.getText();
         description.addTextChangedListener(new TextWatcher() {
@@ -134,7 +130,9 @@ public class UploadPostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(UploadPostActivity.this, "Attempting to upload new photo", Toast.LENGTH_SHORT).show();
                 String caption = description.getText().toString();
-
+                if(caption.isEmpty()){
+                    caption =" ";
+                }
                 if(intent.hasExtra(getString(R.string.selected_image))){
                     imgUrl = intent.getStringExtra(getString(R.string.selected_image));
                     mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgUrl,null);
@@ -189,19 +187,19 @@ public class UploadPostActivity extends AppCompatActivity {
 
     }
 
-
-
     private void setImage(){
         intent = getIntent();
-
+        ImageLoader imageLoader = ImageLoader.getInstance();
         if(intent.hasExtra(getString(R.string.selected_image))){
             imgUrl = intent.getStringExtra(getString(R.string.selected_image));
+
             UniversalImageLoader.setImage(imgUrl, image_added, null, mAppend);
         }
         else if(intent.hasExtra(getString(R.string.selected_bitmap))){
             bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
-            image_added.setImageBitmap(bitmap);
+           image_added.setImageBitmap(bitmap);
         }
+
     }
 
     private void tagCheck(String s, int start, int end) {
@@ -220,6 +218,14 @@ public class UploadPostActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
     }
 
 }

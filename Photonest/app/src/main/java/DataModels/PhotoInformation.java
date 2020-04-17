@@ -164,14 +164,17 @@ public class PhotoInformation implements Parcelable {
 
     @Exclude
     public Map<String, Object> toMap() {
+        //int count = 0;
         HashMap<String, Object> result = new HashMap<>();
         result.put("caption", caption);
         result.put("date_created", date_created);
         result.put("image_path", image_path);
         result.put("photo_id", photo_id);
         result.put("user_id", user_id);
-        result.put("hashTags", hashTags);
-
+        /*for(String hashtag: hashTags){
+            result.put("hashTags"+count, hashtag);
+            count++;
+        }*/
         return result;
     }
 

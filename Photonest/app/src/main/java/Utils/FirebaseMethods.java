@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -153,22 +154,28 @@ public class FirebaseMethods {
         }
     }
 
-    private void addPhotoToDatabase(String caption, String url){
+    private void addPhotoToDatabase(@Nullable String caption, String url){
         List<String> hashTags = StringManipulation.getHashTags(caption);
         String newPhotoKey = myRef.child(mActivity.getString(R.string.dbname_photos)).push().getKey();
         photoInformation = new PhotoInformation();
         photoInformation.setCaption(caption);
         photoInformation.setDate_created(getTimestamp());
         photoInformation.setImage_path(url);
-        photoInformation.setHashTags(hashTags);
+        //photoInformation.setHashTags(hashTags);
         photoInformation.setUser_id(userID);
         photoInformation.setPhoto_id(newPhotoKey);
         Map<String,Object> postValues = photoInformation.toMap();
         //insert into database
+        Map<String, Object> hashtag_list = new HashMap<>();
+        for(String hashtag:hashTags){
+            hashtag_list.put("/hashTags/"+hashtag+"/"+newPhotoKey+"/photoId",newPhotoKey);
+            hashtag_list.put("/hashTags/"+hashtag+"/hashTags",hashtag);
+        }
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(mActivity.getString(R.string.dbname_user_photos)+userID+"/"+newPhotoKey,postValues);
         childUpdates.put(mActivity.getString(R.string.dbname_photos)+newPhotoKey,postValues);
         myRef.updateChildren(childUpdates);
+        myRef.updateChildren(hashtag_list);
     }
 
     private String getTimestamp(){
