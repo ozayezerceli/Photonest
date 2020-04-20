@@ -5,13 +5,17 @@ package com.se302.photonest;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +26,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,15 +35,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
-
-
-import java.io.ByteArrayOutputStream;
 
 import Utils.FirebaseMethods;
 import Utils.UniversalImageLoader;
-
+import Utils.SquareImageView;
 public class UploadPostActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -50,15 +52,19 @@ public class UploadPostActivity extends AppCompatActivity {
     private String imgUrl;
     private Bitmap bitmap;
     private Intent intent;
-    private ImageView close, image_added;
-    private TextView post;
+    private ImageView close;
+    private SquareImageView image_added;
+    private TextView post,post_location;
     private EditText description;
     private Button addLocation;
+
     Spannable mspanable;
     int hashTagIsComing = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_upload_post);
 
         close = findViewById(R.id.upload_post_close);
@@ -66,6 +72,7 @@ public class UploadPostActivity extends AppCompatActivity {
         post = findViewById(R.id.upload_post_post);
         description = findViewById(R.id.upload_post_description);
         addLocation = findViewById(R.id.upload_post_add_location_btn);
+        post_location = findViewById(R.id.tvPlace);
         setupFirebaseAuth();
         mFirebaseMethods = new FirebaseMethods(UploadPostActivity.this);
         close.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +83,46 @@ public class UploadPostActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+        addLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UploadPostActivity.this, MapsActivity.class);
+                intent.putExtra("description",description.getText().toString());
+                if(imgUrl==null){
+                    intent.putExtra(getString(R.string.selected_bitmap), bitmap);
+                }else{
+                    intent.putExtra("imgUrl",imgUrl);
+                }
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
+
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(UploadPostActivity.this, "Attempting to upload new photo", Toast.LENGTH_SHORT).show();
+                String caption = description.getText().toString();
+                if(caption.isEmpty()){
+                    caption =" ";
+                }
+                if(intent.hasExtra(getString(R.string.selected_image))){
+                    imgUrl = intent.getStringExtra(getString(R.string.selected_image));
+                    mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgUrl,null, post_location.getText().toString());
+                }
+                else if(intent.hasExtra(getString(R.string.selected_bitmap))){
+                    bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
+                    mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap, post_location.getText().toString());
+                }
+            }
+        });
+
+        setImage();
         mspanable = description.getText();
         description.addTextChangedListener(new TextWatcher() {
             @Override
@@ -115,36 +162,6 @@ public class UploadPostActivity extends AppCompatActivity {
 
             }
         });
-
-        addLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
-
-        post.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(UploadPostActivity.this, "Attempting to upload new photo", Toast.LENGTH_SHORT).show();
-                String caption = description.getText().toString();
-                if(caption.isEmpty()){
-                    caption =" ";
-                }
-                if(intent.hasExtra(getString(R.string.selected_image))){
-                    imgUrl = intent.getStringExtra(getString(R.string.selected_image));
-                    mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgUrl,null);
-                }
-                else if(intent.hasExtra(getString(R.string.selected_bitmap))){
-                    bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
-                    mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap);
-                }
-            }
-        });
-
-        setImage();
 
     }
 
@@ -189,15 +206,21 @@ public class UploadPostActivity extends AppCompatActivity {
 
     private void setImage(){
         intent = getIntent();
-        ImageLoader imageLoader = ImageLoader.getInstance();
+
         if(intent.hasExtra(getString(R.string.selected_image))){
             imgUrl = intent.getStringExtra(getString(R.string.selected_image));
-
             UniversalImageLoader.setImage(imgUrl, image_added, null, mAppend);
         }
         else if(intent.hasExtra(getString(R.string.selected_bitmap))){
             bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
            image_added.setImageBitmap(bitmap);
+        }
+        if(intent.hasExtra("description") && intent.hasExtra("address_name")){
+            String desFromMap = intent.getStringExtra("description");
+            String addressFromMap = intent.getStringExtra("address_name");
+            description.setText(desFromMap);
+            post_location.setText(addressFromMap);
+            setTags(description,description.getText().toString());
         }
 
     }
@@ -220,13 +243,47 @@ public class UploadPostActivity extends AppCompatActivity {
         }
     }
 
-    public String BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp= Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
+    private void setTags(TextView pTextView, String pTagString) {
+        SpannableString string = new SpannableString(pTagString);
+
+        int start = -1;
+        for (int i = 0; i < pTagString.length(); i++) {
+            if (pTagString.charAt(i) == '#') {
+                start = i;
+            } else if (pTagString.charAt(i) == ' ' || pTagString.charAt(i) == '\n' || (i == pTagString.length() - 1 && start != -1)) {
+                if (start != -1) {
+                    if (i == pTagString.length() - 1) {
+                        i++; // case for if hash is last word and there is no
+                        // space after word
+                    }
+
+                    final String tag = pTagString.substring(start, i);
+                    string.setSpan(new ClickableSpan() {
+
+                        @Override
+                        public void onClick(View widget) {
+                            Log.d("Hash", String.format("Clicked %s!", tag));
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            // link color
+                            ds.setColor(Color.parseColor("#F99F63"));
+                            ds.setUnderlineText(false);
+                        }
+                    }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = -1;
+                }
+            }
+        }
+
+        pTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        pTextView.setText(string);
     }
+
+
+
+
 
 }
 

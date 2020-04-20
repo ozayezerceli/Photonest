@@ -2,6 +2,7 @@ package Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,11 +10,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,10 +27,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.se302.photonest.LoginActivity;
 import com.se302.photonest.MainActivity;
 
 import DataModels.PhotoInformation;
 
+import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;
 
 import java.text.SimpleDateFormat;
@@ -113,7 +119,7 @@ public class FirebaseMethods {
     }
 
     public void uploadNewPhoto(String photoType, final String caption, final int count, final String imgUrl,
-                               Bitmap bm) {
+                               Bitmap bm, final String post_location) {
 
 
         FilePaths filePaths = new FilePaths();
@@ -140,7 +146,7 @@ public class FirebaseMethods {
                     Task<Uri> firebaseUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            addPhotoToDatabase(caption, uri.toString());
+                            addPhotoToDatabase(caption, uri.toString(),post_location);
                         }
                     });
 
@@ -175,7 +181,9 @@ public class FirebaseMethods {
         }
     }
 
-    private void addPhotoToDatabase(@Nullable String caption, String url){
+
+
+    private void addPhotoToDatabase(@Nullable String caption, String url, String post_location){
         List<String> hashTags = StringManipulation.getHashTags(caption);
         String newPhotoKey = myRef.child(mActivity.getString(R.string.dbname_photos)).push().getKey();
         photoInformation = new PhotoInformation();
@@ -185,6 +193,7 @@ public class FirebaseMethods {
         //photoInformation.setHashTags(hashTags);
         photoInformation.setUser_id(userID);
         photoInformation.setPhoto_id(newPhotoKey);
+        photoInformation.setLocation(post_location);
         Map<String,Object> postValues = photoInformation.toMap();
         //insert into database
         Map<String, Object> hashtag_list = new HashMap<>();
@@ -214,5 +223,38 @@ public class FirebaseMethods {
             count++;
         }
         return count;
+    }
+
+    public void deleteUserAccount(){
+        final DatabaseReference user_info_ref= mFirebaseDatabase.getReference().child("Users");
+        final FirebaseUser user = mAuth.getCurrentUser();
+        if(user!=null){
+            new AlertDialog.Builder(mActivity)
+                    .setTitle("Delete")
+                    .setMessage("Your account will be deleted. \nAre you sure?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            user_info_ref.child(user.getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Toast.makeText(mActivity, "Account deleted", Toast.LENGTH_LONG).show();
+                                                Intent i = new Intent(mActivity, LoginActivity.class);
+                                                mActivity.startActivity(i);
+                                                mActivity.finish();
+                                            } else{
+                                                Toast.makeText(mActivity, "Account could not be deleted", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }})
+                    .setNegativeButton(android.R.string.no, null).show();
+        }
     }
 }

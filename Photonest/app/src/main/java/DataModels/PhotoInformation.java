@@ -24,6 +24,7 @@ public class PhotoInformation implements Parcelable {
     public List<String> hashTags;
     public List<Like> likes;
     public List<Comment> comments;
+    public String location;
 
     @Keep
     public PhotoInformation() {
@@ -31,7 +32,7 @@ public class PhotoInformation implements Parcelable {
     }
 
     public PhotoInformation(String caption, String date_created, String image_path, String photo_id,
-                 String user_id, List<String> hashTags, List<Like> likes, List<Comment> comments) {
+                 String user_id, List<String> hashTags, List<Like> likes, List<Comment> comments, String location) {
         this.caption = caption;
         this.date_created = date_created;
         this.image_path = image_path;
@@ -40,6 +41,7 @@ public class PhotoInformation implements Parcelable {
         this.hashTags = hashTags;
         this.likes = likes;
         this.comments = comments;
+        this.location = location;
     }
 
 
@@ -49,6 +51,7 @@ public class PhotoInformation implements Parcelable {
         image_path = in.readString();
         photo_id = in.readString();
         user_id = in.readString();
+        location = in.readString();
     }
 
     public static final Creator<PhotoInformation> CREATOR = new Creator<PhotoInformation>() {
@@ -75,6 +78,7 @@ public class PhotoInformation implements Parcelable {
         parcel.writeString(image_path);
         parcel.writeString(photo_id);
         parcel.writeString(user_id);
+        parcel.writeString(location);
     }
 
     public List<Comment> getComments() {
@@ -145,6 +149,14 @@ public class PhotoInformation implements Parcelable {
         this.likes = likes;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
         return "Photo{" +
@@ -154,7 +166,8 @@ public class PhotoInformation implements Parcelable {
                 ", photo_id='" + photo_id + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", hashTags='" + hashTags + '\'' +
-                ", likes=" + likes +
+                ", likes=" + likes + '\'' +
+                ", location=" + location +
                 '}';
     }
 
@@ -165,17 +178,13 @@ public class PhotoInformation implements Parcelable {
 
     @Exclude
     public Map<String, Object> toMap() {
-        //int count = 0;
         HashMap<String, Object> result = new HashMap<>();
         result.put("caption", caption);
         result.put("date_created", date_created);
         result.put("image_path", image_path);
         result.put("photo_id", photo_id);
         result.put("user_id", user_id);
-        /*for(String hashtag: hashTags){
-            result.put("hashTags"+count, hashtag);
-            count++;
-        }*/
+        result.put("location", location);
         return result;
     }
 

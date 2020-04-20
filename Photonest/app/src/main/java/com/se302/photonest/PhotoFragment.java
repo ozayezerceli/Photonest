@@ -55,7 +55,6 @@ public class PhotoFragment extends Fragment {
         //Ignoring FileUri expose exception
         StrictMode.VmPolicy.Builder newbuilder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(newbuilder.build());
-
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

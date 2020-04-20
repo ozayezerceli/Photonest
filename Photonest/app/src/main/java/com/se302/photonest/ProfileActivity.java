@@ -65,6 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private TextView username;
     private static final int ACTIVITY_NUM = 4;
+    private FirebaseMethods mFirebaseMethods;
     private Context myContext = ProfileActivity.this;
     private String userID;
     private DatabaseReference user_info_ref;
@@ -102,6 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
         edit_profile=findViewById(R.id.edit_profile_button);
         my_photos= findViewById(R.id.my_photos);
         mGridView = findViewById(R.id.grid_view);
+        mFirebaseMethods = new FirebaseMethods(ProfileActivity.this);
 
         firebaseMethods = new FirebaseMethods(ProfileActivity.this);
         mrelativelayout = findViewById(R.id.relativeTop);
@@ -138,35 +140,7 @@ public class ProfileActivity extends AppCompatActivity {
                             finish();
                             break;
                         case R.id.profile_delete_account:
-                            user_info_ref= FirebaseDatabase.getInstance().getReference().child("Users");
-                            if(user!=null){
-                                new AlertDialog.Builder(ProfileActivity.this)
-                                        .setTitle("Delete")
-                                        .setMessage("Your account will be deleted. \nAre you sure?")
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int whichButton) {
-                                                user_info_ref.child(user.getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if(task.isSuccessful()){
-                                                                    Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();
-                                                                    Intent i = new Intent(ProfileActivity.this,LoginActivity.class);
-                                                                    startActivity(i);
-                                                                    finish();
-                                                                } else{
-                                                                    Toast.makeText(ProfileActivity.this, "Account could not be deleted", Toast.LENGTH_LONG).show();
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                            }})
-                                        .setNegativeButton(android.R.string.no, null).show();
-                            }
+                            mFirebaseMethods.deleteUserAccount();
                             break;
                     }
                     return false;
