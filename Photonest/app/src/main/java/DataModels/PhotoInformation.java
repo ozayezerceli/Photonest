@@ -159,6 +159,7 @@ public class PhotoInformation implements Parcelable {
     }
 
     public Object getPublisher() {
+
         return new Object(); // will be changed!!!
     }
 

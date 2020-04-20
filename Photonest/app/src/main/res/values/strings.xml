@@ -37,4 +37,5 @@
     <string name="hashtags">Hashtags</string>
     <string name="following_node">following</string>
     <string name="followers_node">followers</string>
+    <string name="ok_delete">Delete</string>
 </resources>

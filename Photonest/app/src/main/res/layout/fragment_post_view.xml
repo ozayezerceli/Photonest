@@ -9,7 +9,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/relLayout1">
+        android:id="@+id/relLayout1"
+        >
 
         <include layout="@layout/snippet_post_toolbar"/>
 
@@ -38,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:id="@+id/relLayout3"
-                    android:background="#76AA39">
+                    android:background="#F99F63">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="30dp"
@@ -82,7 +83,7 @@
                     android:layout_height="50dp"
                     android:id="@+id/relLayout4"
                     android:layout_below="@+id/post_image"
-                    android:background="#76AA39">
+                    android:background="#F99F63">
 
                     <RelativeLayout
                         android:layout_width="60dp"

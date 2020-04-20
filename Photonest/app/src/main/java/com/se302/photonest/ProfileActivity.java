@@ -13,6 +13,7 @@ import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import DataModels.Photo;
+import Utils.FirebaseMethods;
 import Utils.GlideImageLoader;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import DataModels.PhotoInformation;
@@ -66,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
     private String userID;
     private DatabaseReference user_info_ref;
 
+
    private ImageView image_profile;
     private TextView posts, followers,following, fullname, bio, website_link;
    private Button edit_profile;
@@ -73,6 +77,8 @@ public class ProfileActivity extends AppCompatActivity {
    private String profileid;
    private RelativeLayout mrelativeTop;
     private GridView mGridView;
+    private FirebaseMethods firebaseMethods;
+    private RelativeLayout mrelativelayout;
 
     private Uri ImageUri;
 
@@ -97,8 +103,8 @@ public class ProfileActivity extends AppCompatActivity {
         my_photos= findViewById(R.id.my_photos);
         mGridView = findViewById(R.id.grid_view);
 
-
-
+        firebaseMethods = new FirebaseMethods(ProfileActivity.this);
+        mrelativelayout = findViewById(R.id.relativeTop);
 
 
 
@@ -108,17 +114,6 @@ public class ProfileActivity extends AppCompatActivity {
         setupBottomNavBar();
         setUserPhotos();
 
-
-      /*  image_profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent galeriIntent= new Intent();
-                galeriIntent.setAction(Intent.ACTION_GET_CONTENT);
-                galeriIntent.setType("image/*");
-                startActivityForResult(galeriIntent,GaleriPick);
-
-            }
-        }); */
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -215,22 +210,27 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                     } else if(btn.equals("Follow")){
-                    FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
+                /*    FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
                             .child("Following").child(userID).setValue(true);
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(userID)
-                            .child("Followers").child(firebaseUser.getUid()).setValue(true);
+                            .child("Followers").child(firebaseUser.getUid()).setValue(true); */
+
+                    new FirebaseMethods(ProfileActivity.this).addFollowingAndFollowers(userID); //
 
                 } else if(btn.equals("Following")){
-                    FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
+                  /*  FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
                             .child("Following").child(userID).removeValue();
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(userID)
-                            .child("Followers").child(firebaseUser.getUid()).removeValue();
+                            .child("Followers").child(firebaseUser.getUid()).removeValue(); */
+
+                  new FirebaseMethods((ProfileActivity.this)).removeFollowingAndFollowers(userID);
                 }
             }
         });
 
 
     }
+
 
 
 
@@ -254,7 +254,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private  void getFollowers(){
+  /* private  void getFollowers(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Follow").child(userID).child("Followers");
 
@@ -284,9 +284,25 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+    } */
+    private  void getFollowers(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                followers.setText(""+firebaseMethods.getFollowerCount(dataSnapshot, userID));
+                following.setText(""+firebaseMethods.getFollowingCount(dataSnapshot, userID));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
-    private void getNrPosts(){
+  /*  private void getNrPosts(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("photos");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -307,8 +323,22 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-    }
+    } */
 
+  private void getNrPosts(){
+      DatabaseReference reference= FirebaseDatabase.getInstance().getReference();
+      reference.addValueEventListener(new ValueEventListener() {
+          @Override
+          public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+              posts.setText(""+firebaseMethods.getImageCount(dataSnapshot));
+          }
+
+          @Override
+          public void onCancelled(@NonNull DatabaseError databaseError) {
+
+          }
+      });
+  }
 
 
     private void showData() {
@@ -328,7 +358,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                         //    Uri uri_pp= Uri.parse("R.drawable.place_holder_photo");
                      //       GlideImageLoader.loadImageWithOutTransition(myContext,Image_Url,image_profile);
-                            Glide.with(getApplicationContext()).load(Image_Url).into(image_profile);
+                         //   Glide.with(myContext).load(Image_Url).into(image_profile);
+                           Picasso.get().load(Image_Url).into(image_profile);
 
 
                             username.setText(UserName);
@@ -353,7 +384,7 @@ public class ProfileActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
+                final ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     PhotoInformation photoInformation = new PhotoInformation();
                     photoInformation.setCaption(snapshot.child("caption").getValue().toString());
@@ -377,6 +408,23 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 GridImageAdapter adapter = new GridImageAdapter(ProfileActivity.this , R.layout.grid_imageview, "", imgUrls);
                 mGridView.setAdapter(adapter);
+
+                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mrelativelayout.setVisibility(View.GONE);
+                        PostViewFragment fragment = new PostViewFragment();
+                        Bundle args = new Bundle();
+                        args.putParcelable("photo", photoArrayList.get(position));
+                        args.putInt("activityNumber", 1);
+                        fragment.setArguments(args);
+
+                        FragmentTransaction transaction  = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.container_edit, fragment);
+                        transaction.addToBackStack("View Post");
+                        transaction.commit();
+                    }
+                });
             }
 
             @Override
