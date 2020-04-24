@@ -137,7 +137,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/image_total_comments_main"
+                android:id="@+id/image_comments_link_main"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_caption_main"
