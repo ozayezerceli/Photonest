@@ -11,6 +11,9 @@ public class UserInformation implements Parcelable {
     private String username;
     private String imageurl;
     private String id;
+    private long followers;
+    private long following;
+    private long posts;
 
 
     public UserInformation() {
@@ -24,6 +27,9 @@ public class UserInformation implements Parcelable {
         username = in.readString();
         imageurl = in.readString();
         id = in.readString();
+        this.followers = followers;
+        this.following = following;
+        this.posts = posts;
     }
 
     public static final Creator<UserInformation> CREATOR = new Creator<UserInformation>() {
@@ -93,6 +99,29 @@ public class UserInformation implements Parcelable {
     public void setid(String id) {
         this.id = id;
     }
+    public long getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(long followers) {
+        this.followers = followers;
+    }
+
+    public long getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(long following) {
+        this.following = following;
+    }
+
+    public long getPosts() {
+        return posts;
+    }
+
+    public void setPosts(long posts) {
+        this.posts = posts;
+    }
 
     @Override
     public int describeContents() {
@@ -108,6 +137,10 @@ public class UserInformation implements Parcelable {
         parcel.writeString(username);
         parcel.writeString(imageurl);
         parcel.writeString(id);
+        parcel.writeLong(followers);
+        parcel.writeLong(following);
+        parcel.writeLong(posts);
+
 
     }
 }

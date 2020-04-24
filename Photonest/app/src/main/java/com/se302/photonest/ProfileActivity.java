@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,21 +21,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import DataModels.Photo;
 import Utils.FirebaseMethods;
-import Utils.GlideImageLoader;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ActionMenuView;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,19 +33,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.se302.photonest.Model.FollowersActivity;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImageView;
+
 
 import DataModels.PhotoInformation;
-import DataModels.UserInformation;
+
 import Utils.BottomNavigationViewHelper;
 import Utils.GridImageAdapter;
 import Utils.StringManipulation;
 
-import androidx.fragment.app.Fragment;
+
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
@@ -69,6 +60,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Context myContext = ProfileActivity.this;
     private String userID;
     private DatabaseReference user_info_ref;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private static final String TAG = "ProfileActivity";
 
 
    private ImageView image_profile;
@@ -160,8 +153,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         if(profileid.equals((firebaseUser.getUid()))){
             edit_profile.setText("EDIT PROFILE");
-        } else{
-            checkFollow();
         }
 
 
@@ -184,81 +175,39 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                     } else if(btn.equals("Follow")){
-                /*    FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
-                            .child("Following").child(userID).setValue(true);
-                    FirebaseDatabase.getInstance().getReference().child("Follow").child(userID)
-                            .child("Followers").child(firebaseUser.getUid()).setValue(true); */
 
                     new FirebaseMethods(ProfileActivity.this).addFollowingAndFollowers(userID); //
 
                 } else if(btn.equals("Following")){
-                  /*  FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
-                            .child("Following").child(userID).removeValue();
-                    FirebaseDatabase.getInstance().getReference().child("Follow").child(userID)
-                            .child("Followers").child(firebaseUser.getUid()).removeValue(); */
 
                   new FirebaseMethods((ProfileActivity.this)).removeFollowingAndFollowers(userID);
                 }
             }
         });
 
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(myContext, FollowersActivity.class);
+                intent.putExtra("id",firebaseUser.getUid());
+                intent.putExtra("title", "followers");
+                startActivity(intent);
+            }
+        });
+        following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(myContext, FollowersActivity.class);
+                intent.putExtra("id", firebaseUser.getUid());
+                intent.putExtra("title", "following");
+                startActivity(intent);
+            }
+        });
 
     }
 
 
 
-
-    private  void checkFollow(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(firebaseUser.getUid()).child("Following");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(userID).exists()){
-                    edit_profile.setText("Following");
-                } else {
-                    edit_profile.setText("Follow");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-  /* private  void getFollowers(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(userID).child("Followers");
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                followers.setText(""+dataSnapshot.getChildrenCount());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(userID).child("Following");
-
-        reference2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                following.setText(""+dataSnapshot.getChildrenCount());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    } */
     private  void getFollowers(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.addValueEventListener(new ValueEventListener() {
@@ -276,43 +225,20 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-  /*  private void getNrPosts(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("photos");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int i =0;
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    PhotoInformation post= snapshot.getValue(PhotoInformation.class);
-                    if(post.getPublisher().equals(userID)){ //getPublisher() doldurulacak
-                        i++;
-                    }
-                }
-                posts.setText(""+i);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    } */
-
   private void getNrPosts(){
       DatabaseReference reference= FirebaseDatabase.getInstance().getReference();
       reference.addValueEventListener(new ValueEventListener() {
-          @Override
-          public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-              posts.setText(""+firebaseMethods.getImageCount(dataSnapshot));
-          }
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            posts.setText(""+firebaseMethods.getImageCount(dataSnapshot));
+        }
 
-          @Override
-          public void onCancelled(@NonNull DatabaseError databaseError) {
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-          }
-      });
-  }
+        }
+    });
+}
 
 
     private void showData() {
@@ -329,10 +255,6 @@ public class ProfileActivity extends AppCompatActivity {
                             String website = dataSnapshot.child("website_link").getValue().toString();
                             String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
 
-
-                        //    Uri uri_pp= Uri.parse("R.drawable.place_holder_photo");
-                     //       GlideImageLoader.loadImageWithOutTransition(myContext,Image_Url,image_profile);
-                         //   Glide.with(myContext).load(Image_Url).into(image_profile);
                            Picasso.get().load(Image_Url).into(image_profile);
 
 
@@ -340,7 +262,6 @@ public class ProfileActivity extends AppCompatActivity {
                             fullname.setText(FullName);
                             bio.setText(BIO);
                             website_link.setText(website);
-                            //   Glide.with(getApplicationContext()).load(Image_Url).into(image_profile);
 
                         }
                     }
@@ -387,14 +308,14 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         mrelativelayout.setVisibility(View.GONE);
-                        PostViewFragment fragment = new PostViewFragment();
+                        PostViewFragment post_view_fragment = new PostViewFragment();
                         Bundle args = new Bundle();
                         args.putParcelable("photo", photoArrayList.get(position));
                         args.putInt("activityNumber", 1);
-                        fragment.setArguments(args);
+                        post_view_fragment.setArguments(args);
 
                         FragmentTransaction transaction  = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container_edit, fragment);
+                        transaction.replace(R.id.container_edit, post_view_fragment);
                         transaction.addToBackStack("View Post");
                         transaction.commit();
                     }
@@ -418,8 +339,25 @@ public class ProfileActivity extends AppCompatActivity {
         MenuItem mItem = menu.getItem(ACTIVITY_NUM);
         mItem.setChecked(true);
     }
+    private void setupFirebaseAuth() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
 
 
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
+
+
+    }
 
 
 }

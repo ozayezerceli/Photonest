@@ -1,11 +1,14 @@
 package Utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +36,8 @@ import com.se302.photonest.MainActivity;
 
 import DataModels.Comment;
 import DataModels.PhotoInformation;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;
@@ -57,20 +62,24 @@ public class FirebaseMethods {
     private Activity mActivity;
     private String userID;
     private double mPhotoUploadProgress = 0;
+    private Context Context;
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     public FirebaseMethods(Activity activity) {
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mStorageReference = FirebaseStorage.getInstance().getReference();;
+        mStorageReference = FirebaseStorage.getInstance().getReference();
+        ;
         myRef = mFirebaseDatabase.getReference();
         mActivity = activity;
-        if(mAuth.getCurrentUser() != null){
+        Context = activity.getApplicationContext();
+        if (mAuth.getCurrentUser() != null) {
             userID = mAuth.getCurrentUser().getUid();
         }
     }
 
-    public void addFollowingAndFollowers(String uid){
+    public void addFollowingAndFollowers(String uid) {
 
         FirebaseDatabase.getInstance().getReference()
                 .child(mActivity.getString(R.string.following_node))
@@ -88,7 +97,7 @@ public class FirebaseMethods {
     }
 
 
-    public void removeFollowingAndFollowers(String uid){
+    public void removeFollowingAndFollowers(String uid) {
 
         FirebaseDatabase.getInstance().getReference()
                 .child(mActivity.getString(R.string.following_node))
@@ -103,20 +112,21 @@ public class FirebaseMethods {
                 .removeValue();
     }
 
-    public int getFollowerCount(DataSnapshot dataSnapshot, String uid){
+    public int getFollowerCount(DataSnapshot dataSnapshot, String uid) {
         int count = 0;
-        for(DataSnapshot ds : dataSnapshot
+        for (DataSnapshot ds : dataSnapshot
                 .child(mActivity.getString(R.string.followers_node))
-                .child(uid).getChildren()){
+                .child(uid).getChildren()) {
             count++;
         }
-            return count;
+        return count;
     }
-    public int getFollowingCount(DataSnapshot dataSnapshot,String uid){
+
+    public int getFollowingCount(DataSnapshot dataSnapshot, String uid) {
         int count = 0;
-        for(DataSnapshot ds : dataSnapshot
+        for (DataSnapshot ds : dataSnapshot
                 .child(mActivity.getString(R.string.following_node))
-                .child(uid).getChildren()){
+                .child(uid).getChildren()) {
             count++;
         }
         return count;
@@ -150,7 +160,7 @@ public class FirebaseMethods {
                     Task<Uri> firebaseUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            addPhotoToDatabase(caption, uri.toString(),post_location);
+                            addPhotoToDatabase(caption, uri.toString(), post_location);
                         }
                     });
 
@@ -182,12 +192,67 @@ public class FirebaseMethods {
                 }
             });
 
+        } else if (photoType.equals(mActivity.getString(R.string.profile_photo))) {
+            String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            StorageReference storageReference = mStorageReference
+                    .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
+
+            //convert image url to bitmap
+            if (bm == null) {
+                bm = ImageManager.getBitmap(imgUrl);
+            }
+            byte[] bytes = ImageManager.getBytesFromBitmap(bm, 100);
+
+            UploadTask uploadTask = null;
+            uploadTask = storageReference.putBytes(bytes);
+
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> firebaseUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+
+                    Toast.makeText(mActivity, "photo upload success", Toast.LENGTH_SHORT).show();
+
+                    //insert into 'user_account_settings' node
+                    setProfilePhoto(firebaseUrl.toString());
+
+                 /*   ((AccountSettingsActivity)Context).setViewPager(
+                            ((AccountSettingsActivity)Context).pagerAdapter
+                                    .getFragmentNumber(Context.getString(R.string.edit_profile_fragment))
+                    ); */
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(mActivity, "Photo upload failed ", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                    if (progress - 15 > mPhotoUploadProgress) {
+                        Toast.makeText(mActivity, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                        mPhotoUploadProgress = progress;
+                    }
+
+
+                }
+            });
         }
     }
 
+    private void setProfilePhoto(String url) {
+
+        myRef.child(mActivity.getString(R.string.users_node))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(mActivity.getString(R.string.imageurl))
+                .setValue(url);
+    }
 
 
-    private void addPhotoToDatabase(@Nullable String caption, String url, String post_location){
+    private void addPhotoToDatabase(@Nullable String caption, String url, String post_location) {
         List<String> hashTags = StringManipulation.getHashTags(caption);
         String newPhotoKey = myRef.child(mActivity.getString(R.string.dbname_photos)).push().getKey();
         photoInformation = new PhotoInformation();
@@ -198,41 +263,41 @@ public class FirebaseMethods {
         photoInformation.setUser_id(userID);
         photoInformation.setPhoto_id(newPhotoKey);
         photoInformation.setLocation(post_location);
-        Map<String,Object> postValues = photoInformation.toMap();
+        Map<String, Object> postValues = photoInformation.toMap();
         //insert into database
         Map<String, Object> hashtag_list = new HashMap<>();
-        for(String hashtag:hashTags){
-            hashtag_list.put("/hashTags/"+hashtag+"/"+newPhotoKey+"/photoId",newPhotoKey);
-            hashtag_list.put("/hashTags/"+hashtag+"/hashTags",hashtag);
+        for (String hashtag : hashTags) {
+            hashtag_list.put("/hashTags/" + hashtag + "/" + newPhotoKey + "/photoId", newPhotoKey);
+            hashtag_list.put("/hashTags/" + hashtag + "/hashTags", hashtag);
         }
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(mActivity.getString(R.string.dbname_user_photos)+userID+"/"+newPhotoKey,postValues);
-        childUpdates.put(mActivity.getString(R.string.dbname_photos)+newPhotoKey,postValues);
+        childUpdates.put(mActivity.getString(R.string.dbname_user_photos) + userID + "/" + newPhotoKey, postValues);
+        childUpdates.put(mActivity.getString(R.string.dbname_photos) + newPhotoKey, postValues);
         myRef.updateChildren(childUpdates);
         myRef.updateChildren(hashtag_list);
     }
 
-    private String getTimestamp(){
+    private String getTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss", new Locale("en"));
         sdf.setTimeZone(TimeZone.getTimeZone("Turkey"));
         return sdf.format(new Date());
     }
 
-    public int getImageCount(DataSnapshot dataSnapshot){
+    public int getImageCount(DataSnapshot dataSnapshot) {
         int count = 0;
-        for(DataSnapshot ds: dataSnapshot
+        for (DataSnapshot ds : dataSnapshot
                 .child(mActivity.getString(R.string.dbname_user_photos))
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .getChildren()){
+                .getChildren()) {
             count++;
         }
         return count;
     }
 
-    public void deleteUserAccount(){
-        final DatabaseReference user_info_ref= mFirebaseDatabase.getReference().child("Users");
+    public void deleteUserAccount() {
+        final DatabaseReference user_info_ref = mFirebaseDatabase.getReference().child("Users");
         final FirebaseUser user = mAuth.getCurrentUser();
-        if(user!=null){
+        if (user != null) {
             new AlertDialog.Builder(mActivity)
                     .setTitle("Delete")
                     .setMessage("Your account will be deleted. \nAre you sure?")
@@ -245,27 +310,28 @@ public class FirebaseMethods {
                                     user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()){
+                                            if (task.isSuccessful()) {
                                                 Toast.makeText(mActivity, "Account deleted", Toast.LENGTH_LONG).show();
                                                 Intent i = new Intent(mActivity, LoginActivity.class);
                                                 mActivity.startActivity(i);
                                                 mActivity.finish();
-                                            } else{
+                                            } else {
                                                 Toast.makeText(mActivity, "Account could not be deleted", Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     });
                                 }
                             });
-                        }})
+                        }
+                    })
                     .setNegativeButton(android.R.string.no, null).show();
         }
     }
 
-    public void addNewComment(final String node, final String mediaId, final String comment){
+    public void addNewComment(final String node, final String mediaId, final String comment) {
 
         final String commentId = myRef.push().getKey();
-        final SimpleDateFormat sdf= new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss", new Locale("en"));
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss", new Locale("en"));
         sdf.setTimeZone(TimeZone.getTimeZone("Turkey"));
         final String dateAdded = sdf.format(Calendar.getInstance().getTime());
         Query query = myRef.child(mActivity.getString(R.string.users_node)).child(userID);
@@ -285,4 +351,26 @@ public class FirebaseMethods {
             }
         });
     }
+
+    public void sendVerificationEmail() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+
+                            } else {
+                                Toast.makeText(Context, "couldn't send verification email.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
+
 }
+
+
+

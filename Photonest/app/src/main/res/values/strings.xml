@@ -5,6 +5,7 @@
         Click the link in the email and press the activate button to get started!</string>
     <string name="activate_button">Activate</string>
     <string name="photonestImg"></string>
+    <string name="edit_profile_fragment">Edit Profile</string>
     <string name="login_btn">Login</string>
     <string name="email_field">E-mail address</string>
     <string name="password_field">Password</string>
@@ -52,4 +53,6 @@
     <string name="addCommentHint">Add comment</string>
     <string name="postComment">Post</string>
     <string name="commentBanner">Comments</string>
+    <string name="imageurl">imageurl</string>
+    <string name="profile_photo">ProfilePhoto</string>
 </resources>

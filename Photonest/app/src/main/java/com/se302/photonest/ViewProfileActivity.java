@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.se302.photonest.Model.FollowersActivity;
 
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     private String userID;
     private User muser;
     private String viewUserID;
+
 
     private ImageView image_profile;
     private TextView posts, followers,following, fullname, bio;
@@ -130,6 +132,27 @@ public class ViewProfileActivity extends AppCompatActivity {
         } else{
             checkFollow();
         }
+
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(myContext, FollowersActivity.class);
+                intent.putExtra("id",viewUserID);
+                intent.putExtra("title", "followers");
+                startActivity(intent);
+            }
+        });
+        following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(myContext, FollowersActivity.class);
+                intent.putExtra("id", viewUserID);
+                intent.putExtra("title", "following");
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     private void init(){
@@ -224,6 +247,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void setUserPhotos(){

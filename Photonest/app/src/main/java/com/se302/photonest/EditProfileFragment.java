@@ -149,7 +149,15 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 updateData();
-                startActivity(new Intent(getActivity(),ProfileActivity.class));
+                if(ImageUri != null){
+                    uploadImage();
+                    Toast.makeText(getActivity(), "Profile Edited!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(),ProfileActivity.class));
+                }else{
+                    Toast.makeText(getActivity(), "Profile Edited!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(),ProfileActivity.class));
+                }
+
 
 
             }
@@ -166,62 +174,6 @@ public class EditProfileFragment extends Fragment {
 
 
 
-
-      /*  delete_photo.setOnClickListener(new View.OnClickListener() { //if the request of deletion profile photo comes from user
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(getActivity().getApplicationContext(),R.style.Theme_AppCompat_Dialog_Alert)
-                        .setTitle("Delete")
-                        .setMessage("Your account will be deleted. \nAre you sure?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-
-                                myRef.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                        String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
-                                        if(!Image_Url.equals(def_image)){
-                                            Toast.makeText(getActivity(), "Deleting profile photo...", Toast.LENGTH_SHORT).show();
-
-                                            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(Image_Url);
-                                            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    myRef.child("imageurl").setValue(def_image);
-                                                    Picasso.get().load(Uri.parse(def_image)).into(edit_profile_image);
-                                                    Toast.makeText(getActivity(), "Profile photo is deleted", Toast.LENGTH_SHORT).show();
-                                                    Log.d(TAG, "onSuccess: deleted file");
-
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception exception) {
-                                                    Toast.makeText(getActivity(), "Profile photo is not deleted.", Toast.LENGTH_SHORT).show();
-                                                    Log.d(TAG, "onFailure: did not delete file");
-                                                }
-                                            });
-
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }})
-                        .setNegativeButton(android.R.string.no, null).show();
-
-
-
-            }
-        }); */
-
-
-
         myRef.addValueEventListener(new ValueEventListener() { //to get information of user
             @SuppressLint("ResourceType")
             @Override
@@ -231,11 +183,7 @@ public class EditProfileFragment extends Fragment {
                 EditUsername.setText(uInfo.getUsername());
                 EditBio.setText(uInfo.getBio());
                 EditWebsite.setText(uInfo.getWebsite_link());
-                String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
-
-             //   GlideImageLoader.loadImageWithOutTransition(getActivity().getApplicationContext(),Image_Url,edit_profile_image);
-              //  Glide.with(getActivity().getApplicationContext()).load(Uri.parse(imageurll)).into(edit_profile_image);
-            //    Picasso.get().load(Uri.parse(Image_Url)).into(edit_profile_image);
+                String Image_Url= uInfo.getImageurl();
                 Picasso.get().load(Image_Url).into(edit_profile_image);
 
 
@@ -311,28 +259,13 @@ public class EditProfileFragment extends Fragment {
 
      if (requestCode==GaleriPick && resultCode==RESULT_OK && data!=null){
          ImageUri=data.getData();
-         uploadImage();
+
          edit_profile_image.setImageURI(ImageUri);
-         final StorageReference filePath=user_image_ref
-                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-
-
      }  else {
          Toast.makeText(getActivity(),"Something gone wrong!", Toast.LENGTH_SHORT).show();
 
      }
  }
-
-
-
-
-    private  String getFileExtension(Uri uri){
-
-        ContentResolver  contentResolver = getActivity().getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
 
     private void uploadImage(){
 
@@ -410,9 +343,9 @@ public class EditProfileFragment extends Fragment {
                                             if (task.isSuccessful())
                                             {
 
-                                                Toast.makeText(getActivity(), "Profile Photo is changed.", Toast.LENGTH_SHORT).show();
-                                                getActivity().finish();
-                                                startActivity(new Intent(getActivity(),ProfileActivity.class));
+                                              //  Toast.makeText(getActivity().getApplicationContext(), "Profile Photo is changed.", Toast.LENGTH_SHORT).show();
+                                                  getActivity().finish();
+                                            //    startActivity(new Intent(getActivity(),ProfileActivity.class));
 
                                             }
                                         }
@@ -438,7 +371,6 @@ public class EditProfileFragment extends Fragment {
 
 
                     } //first if ends
-
 
                     if(Image_Url.equals(default_image)) { //if current photo is equal to defa image
                      //   final StorageReference storageReference= user_image_ref.child(System.currentTimeMillis()
@@ -488,9 +420,9 @@ public class EditProfileFragment extends Fragment {
                                             if (task.isSuccessful())
                                             {
 
-                                                Toast.makeText(getActivity(), "Profile Photo is changed.", Toast.LENGTH_SHORT).show();
+                                               // Toast.makeText(getActivity(), "Profile Photo is changed.", Toast.LENGTH_SHORT).show();
                                                 getActivity().finish();
-                                                startActivity(new Intent(getActivity(),ProfileActivity.class));
+                                             //   startActivity(new Intent(getActivity(),ProfileActivity.class));
 
                                             }
                                         }
@@ -544,15 +476,15 @@ public class EditProfileFragment extends Fragment {
                 }
                 if(!dataSnapshot.child("fullName").getValue().toString().equals(fullname)){
                     myRef.child("fullName").setValue(fullname);
-                    Toast.makeText(getActivity(), "Full name changed!", Toast.LENGTH_SHORT).show();
+
                 }
                 if(!dataSnapshot.child("bio").getValue().toString().equals(bio)){
                     myRef.child("bio").setValue(bio);
-                    Toast.makeText(getActivity(), "Bio changed!", Toast.LENGTH_SHORT).show();
+
                 }
                 if(!dataSnapshot.child("website_link").getValue().toString().equals(websitelink)){
                     myRef.child("website_link").setValue(websitelink);
-                    Toast.makeText(getActivity(), "WebSite Link Changed!", Toast.LENGTH_SHORT).show();
+
                 }
                 /*if(!dataSnapshot.child("WebsiteLink").getValue().toString().equals(websitelink)){
                     myRef.child("WebsiteLink").setValue(websitelink);
@@ -596,51 +528,7 @@ public class EditProfileFragment extends Fragment {
         });
     }
 
-    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
-            final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        (Activity) context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    showDialog("External storage", context,
-                            Manifest.permission.READ_EXTERNAL_STORAGE);
 
-                } else {
-                    ActivityCompat
-                            .requestPermissions(
-                                    (Activity) context,
-                                    new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
-                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                }
-                return false;
-            } else {
-                return true;
-            }
-
-        } else {
-            return true;
-        }
-    }
-    public void showDialog(final String msg, final Context context,
-                           final String permission) {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
-        alertBuilder.setCancelable(true);
-        alertBuilder.setTitle("Permission necessary");
-        alertBuilder.setMessage(msg + " permission is necessary");
-        alertBuilder.setPositiveButton(android.R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions((Activity) context,
-                                new String[] { permission },
-                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                    }
-                });
-        AlertDialog alert = alertBuilder.create();
-        alert.show();
-    }
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
