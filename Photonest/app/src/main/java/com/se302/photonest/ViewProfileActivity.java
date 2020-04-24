@@ -162,7 +162,10 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     private  void checkFollow(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference.child("Follow").child(userID).child("Following").orderByChild("user_id").equalTo(viewUserID);
+        Query query = reference.child(getString(R.string.following_node))
+                .child(userID)
+                .orderByChild(getString(R.string.users_id))
+                .equalTo(viewUserID);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

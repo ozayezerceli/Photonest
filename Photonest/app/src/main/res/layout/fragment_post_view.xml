@@ -32,21 +32,22 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="#FDEDE3">
 
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:id="@+id/relLayout3"
-                    android:background="#F99F63">
+                    android:background="@drawable/banner_border">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:id="@+id/profile_photo"
                         android:layout_marginTop="20dp"
-                        app:civ_border_color="#000000"
+                        app:civ_border_color="@color/colorPrimaryDark"
                         app:civ_border_width="0.5dp"
                         android:layout_marginLeft="25dp"
                         android:layout_centerVertical="true"/>
@@ -64,8 +65,15 @@
                         android:textColor="#000000"
                         />
 
-
-
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_post_option"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:id="@+id/btn_postOption"
+                        android:visibility="gone"/>
 
                 </RelativeLayout>
 
@@ -83,7 +91,7 @@
                     android:layout_height="50dp"
                     android:id="@+id/relLayout4"
                     android:layout_below="@+id/post_image"
-                    android:background="#F99F63">
+                    android:background="@drawable/banner_border">
 
                     <RelativeLayout
                         android:layout_width="60dp"
@@ -131,33 +139,42 @@
                     android:layout_marginBottom="50dp">
 
                     <TextView
+                        android:id="@+id/image_likes_info_main"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="#hashTags"
-                        android:textColor="#000000"
-                        android:textSize="18sp"
+                        android:text="... liked this post."
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="15sp" />
+
+                    <TextView
                         android:id="@+id/image_caption"
-                        android:layout_marginTop="15dp"/>
-
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View all comments"
-                        android:textColor="#808080"
-                        android:textSize="18sp"
-                        android:layout_below="@+id/image_caption"
+                        android:layout_below="@+id/image_likes_info_main"
+                        android:layout_marginTop="1dp"
+                        android:text=""
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="15sp"/>
+
+                    <TextView
                         android:id="@+id/image_comments_link"
-                        android:layout_marginTop="15dp"/>
-
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="date_created"
-                        android:textColor="#808080"
-                        android:textSize="18sp"
-                        android:layout_below="@+id/image_comments_link"
+                        android:layout_below="@+id/image_caption"
+                        android:layout_marginTop="1dp"
+                        android:text=""
+                        android:textColor="@color/colorAccent"
+                        android:textSize="15sp"/>
+
+                    <TextView
                         android:id="@+id/image_time_posted"
-                        android:layout_marginTop="15dp"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/image_comments_link"
+                        android:layout_marginTop="1dp"
+                        android:text=""
+                        android:textColor="@color/colorAccent"
+                        android:textSize="15sp"/>
 
                 </RelativeLayout>
 

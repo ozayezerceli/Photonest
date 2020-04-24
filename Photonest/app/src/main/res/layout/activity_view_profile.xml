@@ -54,7 +54,8 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
                 android:layout_below="@+id/username_action_menu">
 
                 <LinearLayout
@@ -233,8 +234,10 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/grid_view"
                         android:numColumns="3"
-                        android:gravity="center"/>
-
+                        android:gravity="center"
+                        android:verticalSpacing="1.5dp"
+                        android:horizontalSpacing="1.5dp"
+                        android:stretchMode="none"/>
 
                 </LinearLayout>
 

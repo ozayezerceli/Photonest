@@ -4,7 +4,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#76AA39">
+        android:background="@drawable/banner_border">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
