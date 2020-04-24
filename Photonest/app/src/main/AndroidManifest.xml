@@ -15,10 +15,14 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="fullSensor"
+            tools:ignore="InnerclassSeparator"></activity>
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".EmailVerification" />
+        <activity android:name="Utils.CommentActivity" />
         <activity android:name=".NotificationActivity" />
         <activity android:name=".PostActivity" />
         <activity

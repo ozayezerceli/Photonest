@@ -1,6 +1,7 @@
 package Utils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         if(Objects.requireNonNull(object).getClass()==Photo.class) {
             photo = (Photo) object;
             setProfileInfo(photo.getUser_id(), holder.profileImage, holder.username);
+            launchComment(mContext.getString(R.string.dbname_photos),photo.getPhoto_id(),convertView);
             GlideImageLoader.loadImageWithTransition(mContext, photo.getImage_path(), holder.post, holder.progressBar);
             holder.caption.setText(photo.getCaption());
             holder.date.setText(photo.getDate_created());
@@ -118,6 +120,30 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
+    private void launchComment(String mediaNode,String mediaId,View view) {
+
+        ImageView comment = view.findViewById(R.id.comment_main);
+        TextView viewComments = view.findViewById(R.id.image_comments_link_main);
+        final Intent mediaIntent = new Intent(mContext, CommentActivity.class);
+        mediaIntent.putExtra("mediaID", mediaId);
+        mediaIntent.putExtra("mediaNode", mediaNode);
+        mediaIntent.putExtra(mContext.getString(R.string.profilePhotoField), profileImgUrl);
+
+        viewComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(mediaIntent);
+            }
+        });
+
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(mediaIntent);
+            }
         });
     }
 

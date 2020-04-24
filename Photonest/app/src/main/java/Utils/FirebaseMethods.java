@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -30,17 +31,20 @@ import com.google.firebase.storage.UploadTask;
 import com.se302.photonest.LoginActivity;
 import com.se302.photonest.MainActivity;
 
+import DataModels.Comment;
 import DataModels.PhotoInformation;
 
 import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class FirebaseMethods {
@@ -256,5 +260,29 @@ public class FirebaseMethods {
                         }})
                     .setNegativeButton(android.R.string.no, null).show();
         }
+    }
+
+    public void addNewComment(final String node, final String mediaId, final String comment){
+
+        final String commentId = myRef.push().getKey();
+        final SimpleDateFormat sdf= new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss", new Locale("en"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Turkey"));
+        final String dateAdded = sdf.format(Calendar.getInstance().getTime());
+        Query query = myRef.child(mActivity.getString(R.string.users_node)).child(userID);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                String username = Objects.requireNonNull(dataSnapshot.child(mActivity.getString(R.string.usernameField)).getValue()).toString();
+                String profileImage = Objects.requireNonNull(dataSnapshot.child(mActivity.getString(R.string.profilePhotoField)).getValue()).toString();
+                Comment comment_model = new Comment(comment, dateAdded, username, profileImage, 0);
+                myRef.child(node).child(mediaId).child(mActivity.getString(R.string.fieldComment))
+                        .child(Objects.requireNonNull(commentId)).setValue(comment_model);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }

@@ -37,6 +37,9 @@
     <string name="hashtags">Hashtags</string>
     <string name="following_node">following</string>
     <string name="followers_node">followers</string>
+    <string name="profilePhotoField">imageurl</string>
+    <string name="fieldComment">comment</string>
+    <string name="dateField">date_added</string>
     <string name="ok_delete">Delete</string>
     <string name="title_activity_maps">Map</string>
     <string name="current_place">Current Place</string>
@@ -46,4 +49,7 @@
     <string name="gps_network_not_enabled">GPS network not enabled</string>
     <string name="open_location_settings">Open Location Settings</string>
     <string name="Cancel">Cancel</string>
+    <string name="addCommentHint">Add comment</string>
+    <string name="postComment">Post</string>
+    <string name="commentBanner">Comments</string>
 </resources>

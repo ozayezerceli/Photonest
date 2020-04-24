@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_comments_link_main"
                 android:layout_marginTop="1dp"
-                android:text="Someone: comment"
+                android:text=""
                 android:textColor="@color/colorAccent"
                 android:textSize="15sp" />
 
