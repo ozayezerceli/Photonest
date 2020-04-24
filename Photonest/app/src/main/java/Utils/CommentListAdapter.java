@@ -41,7 +41,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         //TextView commentLike;
         TextView dateAdded;
         ImageView addLike;
-        TextView commentReply;
     }
 
     @NonNull
@@ -58,7 +57,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             //holder.commentLike = convertView.findViewById(R.id.commentLike);
             holder.dateAdded = convertView.findViewById(R.id.date_added);
             holder.addLike = convertView.findViewById(R.id.comment_heart);
-            holder.commentReply = convertView.findViewById(R.id.commentReply);
             convertView.setTag(holder);
         }else {
             holder = (ViewHolder)convertView.getTag();
