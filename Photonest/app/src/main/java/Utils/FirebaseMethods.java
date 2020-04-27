@@ -161,22 +161,18 @@ public class FirebaseMethods {
                         @Override
                         public void onSuccess(Uri uri) {
                             addPhotoToDatabase(caption, uri.toString(), post_location);
+                            Intent intent = new Intent(mActivity, MainActivity.class);
+                            mActivity.startActivity(intent);
+                            Toast.makeText(mActivity, "Photo upload success", Toast.LENGTH_SHORT).show();
                         }
                     });
 
-                    Toast.makeText(mActivity, "photo upload success", Toast.LENGTH_SHORT).show();
-
-                    //add the new photo to 'photos' node and 'user_photos' node
-
-
                     //navigate to the main feed so the user can see their photo
-                    Intent intent = new Intent(mActivity, MainActivity.class);
-                    mActivity.startActivity(intent);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(mActivity, "Photo upload failed ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "Photo upload failed", Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -184,7 +180,7 @@ public class FirebaseMethods {
                     double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
                     if (progress - 15 > mPhotoUploadProgress) {
-                        Toast.makeText(mActivity, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "Photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
                         mPhotoUploadProgress = progress;
                     }
 
@@ -216,10 +212,6 @@ public class FirebaseMethods {
                     //insert into 'user_account_settings' node
                     setProfilePhoto(firebaseUrl.toString());
 
-                 /*   ((AccountSettingsActivity)Context).setViewPager(
-                            ((AccountSettingsActivity)Context).pagerAdapter
-                                    .getFragmentNumber(Context.getString(R.string.edit_profile_fragment))
-                    ); */
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
