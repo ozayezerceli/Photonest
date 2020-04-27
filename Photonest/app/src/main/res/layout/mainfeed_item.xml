@@ -84,7 +84,7 @@
                     android:layout_height="35dp"
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/liked_egg"
+                    android:src="@drawable/liked_egg_main_color"
                     android:visibility="invisible" />
 
                 <ImageView
@@ -93,7 +93,7 @@
                     android:layout_height="35dp"
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/not_liked_egg"
+                    android:src="@drawable/not_liked_egg_main_color"
                     android:visibility="visible" />
 
             </RelativeLayout>
@@ -142,6 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_caption_main"
                 android:layout_marginTop="1dp"
+                android:padding="3dp"
                 android:text=""
                 android:textColor="@color/colorAccent"
                 android:textSize="15sp" />

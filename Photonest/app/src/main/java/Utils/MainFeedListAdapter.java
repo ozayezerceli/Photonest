@@ -49,7 +49,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
     }
 
 
-    private static class ViewHolder{
+    private static class ViewHolder {
         ImageView post;
         TextView likedBy;
         CircularImageView profileImage;
@@ -58,6 +58,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         ImageView unlikedEgg;
         TextView caption;
         TextView date;
+        TextView commentsLink;
         ProgressBar progressBar;
     }
 
@@ -80,22 +81,38 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             holder.unlikedEgg = convertView.findViewById(R.id.image_egg_not_liked);
             holder.caption = convertView.findViewById(R.id.image_caption_main);
             holder.date = convertView.findViewById(R.id.image_time_posted_main);
+            holder.commentsLink = convertView.findViewById(R.id.image_comments_link_main);
             convertView.setTag(holder);
 
-        }else {
-            holder = (ViewHolder)convertView.getTag();
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
 
         Object object = getItem(position);
 
-        if(Objects.requireNonNull(object).getClass()==Photo.class) {
+        if (Objects.requireNonNull(object).getClass() == Photo.class) {
             photo = (Photo) object;
             setProfileInfo(photo.getUser_id(), holder.profileImage, holder.username);
-            launchComment(mContext.getString(R.string.dbname_photos),photo.getPhoto_id(),convertView);
+            launchComment(mContext.getString(R.string.dbname_photos), photo.getPhoto_id(), convertView);
             GlideImageLoader.loadImageWithTransition(mContext, photo.getImage_path(), holder.post, holder.progressBar);
             holder.caption.setText(photo.getCaption());
             holder.date.setText(photo.getDate_created());
+            reference.child(mContext.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).child(mContext.getString(R.string.fieldComment)).orderByChild(mContext.getString(R.string.dateField))
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.getChildrenCount()==0){
+                                holder.commentsLink.setText("Be first to comment");
+                            }else {
+                                holder.commentsLink.setText("View all " + dataSnapshot.getChildrenCount() + " comments");
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
         }
         return convertView;
     }
@@ -118,12 +135,14 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                     username.setText(Objects.requireNonNull(ds.getValue(UserInformation.class)).getUsername());
                 }
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
     }
 
-    private void launchComment(String mediaNode,String mediaId,View view) {
+    private void launchComment(String mediaNode, String mediaId, View view) {
 
         ImageView comment = view.findViewById(R.id.comment_main);
         TextView viewComments = view.findViewById(R.id.image_comments_link_main);
@@ -146,5 +165,4 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             }
         });
     }
-
 }

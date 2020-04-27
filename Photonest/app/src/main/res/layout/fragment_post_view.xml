@@ -104,7 +104,7 @@
                             android:id="@+id/image_heart_red"
                             android:layout_centerInParent="true"
                             android:layout_marginLeft="20dp"
-                            android:src="@drawable/liked_egg"
+                            android:src="@drawable/liked_egg_main_color"
                             android:visibility="invisible"/>
 
                         <ImageView
@@ -113,7 +113,7 @@
                             android:id="@+id/image_heart"
                             android:layout_centerInParent="true"
                             android:layout_marginLeft="20dp"
-                            android:src="@drawable/not_liked_egg"
+                            android:src="@drawable/not_liked_egg_main_color"
                             android:visibility="visible"/>
 
                     </RelativeLayout>
