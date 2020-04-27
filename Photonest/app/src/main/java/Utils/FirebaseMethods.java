@@ -35,6 +35,7 @@ import com.se302.photonest.LoginActivity;
 import com.se302.photonest.MainActivity;
 
 import DataModels.Comment;
+import DataModels.Photo;
 import DataModels.PhotoInformation;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -360,6 +361,35 @@ public class FirebaseMethods {
                         }
                     });
         }
+    }
+
+    /*Code below deletes the choosen post from firebase database and storage */
+    public void deletePost(PhotoInformation photo1){
+        final PhotoInformation photo = photo1;
+        StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(photo.getImage_path());
+        photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // File deleted successfully
+                myRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).removeValue();
+                myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(photo.getPhoto_id()).removeValue();
+                List<String> hashTags = StringManipulation.getHashTags(photo.getCaption());
+                for(String hashTag : hashTags){
+                    myRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue();
+                }
+
+                Toast.makeText(mActivity,"Photo deleted successfully.",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(mActivity, ProfileActivity.class);
+                mActivity.startActivity(intent);
+                mActivity.finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                Toast.makeText(mActivity,"Error occured during process!",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }
