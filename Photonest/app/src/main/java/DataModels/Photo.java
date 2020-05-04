@@ -1,12 +1,11 @@
 package DataModels;
 
-import com.se302.photonest.Like;
-
 import org.w3c.dom.Comment;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Photo{
+public class Photo implements Serializable {
 
     private String caption;
     private String date_created;

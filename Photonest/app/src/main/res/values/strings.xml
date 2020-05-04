@@ -22,27 +22,23 @@
     <string name="gallery">Gallery</string>
     <string name="selected_image">selected_image</string>
     <string name="selected_bitmap">selected_bitmap</string>
-    <string name="new_photo">new_photo</string>
-    <string name="dbname_photos">/dbname_photos/</string>
-    <string name="dbname_user_photos">/dbname_user_photos/</string>
     <string name="camera">Camera</string>
     <string name="open_cam_txt">Open Camera</string>
     <string name="user_account_settings_node">user_account_settings</string>
-    <string name="usernameField">username</string>
-    <string name="users_node">Users</string>
-    <string name="users_id">user_id</string>
+
+    <string name="Cancel">Cancel</string>
     <string name="profile_fragment">Profile</string>
     <string name="selected_user">selected user</string>
     <string name="do_you_have_an_account">Do you have an account?</string>
     <string name="login_from_registration">Login</string>
     <string name="hashtags">Hashtags</string>
-    <string name="following_node">following</string>
-    <string name="followers_node">followers</string>
-    <string name="profilePhotoField">imageurl</string>
-    <string name="fieldComment">comment</string>
-    <string name="dateField">date_added</string>
+    <string name="addCommentHint">Add comment</string>
+    <string name="postComment">Post</string>
+    <string name="commentBanner">Comments</string>
+    <string name="profile_photo">ProfilePhoto</string>
     <string name="photodateField">date_created</string>
     <string name="ok_delete">Delete</string>
+    <!-- Google Maps API fields -->
     <string name="title_activity_maps">Map</string>
     <string name="current_place">Current Place</string>
     <string name="action_geolocate">Pick Place</string>
@@ -50,10 +46,18 @@
     <string name="default_info_snippet">No places found, because location permission is disabled.</string>
     <string name="gps_network_not_enabled">GPS network not enabled</string>
     <string name="open_location_settings">Open Location Settings</string>
-    <string name="Cancel">Cancel</string>
-    <string name="addCommentHint">Add comment</string>
-    <string name="postComment">Post</string>
-    <string name="commentBanner">Comments</string>
+    <!-- Firebase database fields -->
+    <string name="following_node">following</string>
+    <string name="followers_node">followers</string>
+    <string name="profilePhotoField">imageurl</string>
+    <string name="fieldComment">comment</string>
+    <string name="dateField">date_added</string>
+    <string name="users_id">user_id</string>
+    <string name="users_node">Users</string>
     <string name="imageurl">imageurl</string>
-    <string name="profile_photo">ProfilePhoto</string>
+    <string name="new_photo">new_photo</string>
+    <string name="dbname_photos">/dbname_photos/</string>
+    <string name="dbname_user_photos">/dbname_user_photos/</string>
+    <string name="usernameField">username</string>
+    <string name="field_likes">likes</string>
 </resources>

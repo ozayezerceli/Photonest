@@ -3,6 +3,7 @@ package Utils;
 import android.app.Activity;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +38,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
     private static class ViewHolder{
 
         ImageView profileImage;
-        TextView comment;
-        //TextView commentLike;
+        TextView comment,likes;
         TextView dateAdded;
         ImageView addLike;
     }
@@ -53,8 +53,8 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             holder = new ViewHolder();
 
             holder.profileImage = convertView.findViewById(R.id.comment_profile);
-            holder.comment = convertView.findViewById(R.id.comment_text);
-            //holder.commentLike = convertView.findViewById(R.id.commentLike);
+            holder.comment = convertView.findViewById(R.id.comment);
+            holder.likes = convertView.findViewById(R.id.commentLike);
             holder.dateAdded = convertView.findViewById(R.id.date_added);
             holder.addLike = convertView.findViewById(R.id.comment_heart);
             convertView.setTag(holder);
@@ -76,6 +76,13 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         if(position>=limit-1) {
             limit+=20;
             utilityInterface.loadMore(limit);
+        }
+        try{
+            if(position == 0){
+                holder.addLike.setVisibility(View.GONE);
+                holder.likes.setVisibility(View.GONE);
+            }
+        }catch (NullPointerException e){
         }
 
         return  convertView;

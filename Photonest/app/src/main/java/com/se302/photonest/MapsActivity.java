@@ -59,9 +59,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // location retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
 
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.
-    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+
+    private final LatLng mDefaultLocation = new LatLng(41.015137, 28.979530);
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
@@ -80,7 +79,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            Toast.makeText(this, "GPS is Enabled in your devide", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "GPS is Enabled in your device", Toast.LENGTH_SHORT).show();
         }else{
             showGPSDisabledAlertToUser();
         }
@@ -119,7 +118,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.action_geolocate:
                 pickCurrentPlace();
                 return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -165,23 +163,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng turkey = new LatLng(41.015137, 28.979530);
+        mMap.addMarker(new MarkerOptions().position(turkey).title("Marker in Turkey"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(turkey));
 
         // Enable the zoom controls for the map
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -241,8 +231,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     break;
                                 }
                             }
-
-
                             fillPlacesList();
                         } else {
                             Exception exception = task.getException();
@@ -298,7 +286,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             mMap.moveCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                         }
-
                         getCurrentPlaceLikelihoods();
                     }
                 });
@@ -312,7 +299,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mMap == null) {
             return;
         }
-
         if (mLocationPermissionGranted) {
             getDeviceLocation();
         } else {

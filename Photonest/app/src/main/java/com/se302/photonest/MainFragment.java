@@ -21,6 +21,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import DataModels.Photo;
@@ -96,7 +97,6 @@ public class MainFragment extends Fragment {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     Photo photo = ds.getValue(Photo.class);
@@ -110,7 +110,6 @@ public class MainFragment extends Fragment {
         });
 
     }
-
 
 
     private void setSelfFollowing(){

@@ -448,6 +448,20 @@ public class FirebaseMethods {
     }
 
 
+    public void addNewLike(String node,String mediaId){
+
+        String likesId = myRef.push().getKey();
+        myRef.child(node).child(mediaId).child(mActivity.getString(R.string.field_likes))
+                .child(likesId).child(mActivity.getString(R.string.users_id)).setValue(userID);
+    }
+
+
+    public void removeNewLike(String node,String mediaId,String likesId){
+
+        myRef.child(node).child(mediaId).child(mActivity.getString(R.string.field_likes))
+                .child(likesId).removeValue();
+    }
+
 }
 
 

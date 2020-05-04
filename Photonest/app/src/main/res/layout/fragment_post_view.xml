@@ -103,7 +103,7 @@
                         <ImageView
                             android:layout_width="35dp"
                             android:layout_height="35dp"
-                            android:id="@+id/image_heart_red"
+                            android:id="@+id/image_egg_liked_post"
                             android:layout_centerInParent="true"
                             android:layout_marginLeft="20dp"
                             android:src="@drawable/liked_egg_main_color"
@@ -112,11 +112,11 @@
                         <ImageView
                             android:layout_width="35dp"
                             android:layout_height="35dp"
-                            android:id="@+id/image_heart"
+                            android:id="@+id/image_egg_unliked_post"
                             android:layout_centerInParent="true"
                             android:layout_marginLeft="20dp"
                             android:src="@drawable/not_liked_egg_main_color"
-                            android:visibility="visible"/>
+                            />
 
                     </RelativeLayout>
 
@@ -142,9 +142,10 @@
 
                     <TextView
                         android:id="@+id/image_likes_info_main"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="... liked this post."
+                        android:padding="2dp"
+                        android:paddingStart="5dp"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 

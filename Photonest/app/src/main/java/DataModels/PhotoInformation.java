@@ -6,11 +6,9 @@ import android.os.Parcelable;
 import androidx.annotation.Keep;
 
 import com.google.firebase.database.Exclude;
-import com.se302.photonest.Like;
 
 import org.w3c.dom.Comment;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

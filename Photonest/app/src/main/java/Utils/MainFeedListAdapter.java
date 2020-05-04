@@ -2,6 +2,7 @@ package Utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import DataModels.Photo;
+import DataModels.User;
 import DataModels.UserInformation;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -38,6 +40,11 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
     private String profileImgUrl = "";
     private FirebaseMethods firebaseMethods;
     private Photo photo;
+    private Egg mEgg;
+    private String likeId;
+    private String mLikesString;
+    private boolean mLikedByCurrentUser = false;
+    private StringBuilder mStringBuilder;
 
     public MainFeedListAdapter(@NonNull Activity context, int resource, @NonNull List<Object> list) {
         super(context, resource, list);
@@ -46,6 +53,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         reference = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         firebaseMethods = new FirebaseMethods(mContext);
+        mEgg = new Egg();
     }
 
 
@@ -90,9 +98,11 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
 
 
         Object object = getItem(position);
+        setLikeListeners(holder.unlikedEgg,holder.likedEgg,object,holder.likedBy);
 
         if (Objects.requireNonNull(object).getClass() == Photo.class) {
             photo = (Photo) object;
+            setUserLikes(holder.unlikedEgg,holder.likedEgg,mContext.getString(R.string.field_likes),photo.getPhoto_id(),holder.likedBy);
             setProfileInfo(photo.getUser_id(), holder.profileImage, holder.username);
             launchComment(mContext.getString(R.string.dbname_photos), photo.getPhoto_id(), convertView);
             GlideImageLoader.loadImageWithTransition(mContext, photo.getImage_path(), holder.post, holder.progressBar);
@@ -165,4 +175,157 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             }
         });
     }
+
+    private void setLikeListeners(final ImageView unlikedEgg, final ImageView likedEgg, final Object object, final TextView likedBy){
+
+        unlikedEgg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleLike(unlikedEgg,likedEgg,object,likedBy);
+            }
+        });
+        likedEgg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleLike(unlikedEgg,likedEgg,object,likedBy);
+            }
+        });
+    }
+
+    private void setUserLikes(final ImageView unlikedEgg, final ImageView likedEgg,String mediaNode, String mediaId,final TextView likedBy){
+
+        Query query = reference.child(mediaNode).child(mediaId)
+                .child(mContext.getString(R.string.field_likes));
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(!dataSnapshot.exists()){
+                    unlikedEgg.setVisibility(View.VISIBLE);
+                    likedEgg.setVisibility(View.GONE);
+                    likedBy.setText("");
+                }else {
+                    likedEgg.setVisibility(View.GONE);
+                    unlikedEgg.setVisibility(View.VISIBLE);
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                        if (ds.child(mContext.getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
+                            unlikedEgg.setVisibility(View.GONE);
+                            likedEgg.setVisibility(View.VISIBLE);
+                        }
+                        setLikeText(ds,likedBy);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
+    private void toggleLike(final ImageView unlikedEgg, final ImageView likedEgg, Object object, final TextView likedBy) {
+
+        mLikedByCurrentUser  = false;
+        if (Objects.requireNonNull(object).getClass()==Photo.class) {
+            photo = (Photo)object;
+
+            Query query = reference.child(mContext.getString(R.string.field_likes)).child(photo.getPhoto_id()).child(mContext.getString(R.string.field_likes));
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if(!dataSnapshot.exists()){
+                        mLikesString = "";
+                        mLikedByCurrentUser = false;
+                        likedEgg.setVisibility(View.GONE);
+                        unlikedEgg.setVisibility(View.VISIBLE);
+                    }else {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                            if (ds.child(mContext.getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
+                                mLikedByCurrentUser = true;
+                                likeId = ds.getKey();
+                                Log.d("TAG", "LikeID = " + likedBy);
+                                unlikedEgg.setVisibility(View.GONE);
+                                likedEgg.setVisibility(View.VISIBLE);
+                                mEgg.toggleLike(unlikedEgg, likedEgg);
+                                firebaseMethods.removeNewLike(mContext.getString(R.string.field_likes), photo.getPhoto_id(), likeId);
+                                setUserLikes(unlikedEgg,likedEgg,mContext.getString(R.string.field_likes),photo.getPhoto_id(),likedBy);
+                            }
+                        }
+                    }
+
+                    if(!mLikedByCurrentUser){
+                        Log.d("TAG","Datasnapshot doesn't exists");
+                        unlikedEgg.setVisibility(View.VISIBLE);
+                        likedEgg.setVisibility(View.GONE);
+                        mEgg.toggleLike(unlikedEgg, likedEgg);
+                        firebaseMethods.addNewLike(mContext.getString(R.string.field_likes),photo.getPhoto_id());
+                        setUserLikes(unlikedEgg,likedEgg,mContext.getString(R.string.field_likes),photo.getPhoto_id(),likedBy);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
+            });
+
+        }
+
+    }
+
+
+    private void setLikeText(DataSnapshot dataSnapshot, final TextView likedBy){
+
+        mStringBuilder = new StringBuilder();
+        Query query = reference.child(mContext.getString(R.string.users_node)).orderByChild(mContext.getString(R.string.users_id))
+                .equalTo(dataSnapshot.child(mContext.getString(R.string.users_id)).getValue().toString());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    User mUser = Objects.requireNonNull(singleSnapshot.getValue(User.class));
+                    System.out.println("username: "+mUser.getUsername());
+                    mStringBuilder.append(mUser.getUsername());
+                    mStringBuilder.append(",");
+
+                }
+                String[] splitUsers = mStringBuilder.toString().split(",");
+                int length = splitUsers.length;
+                System.out.println("users: "+mStringBuilder.toString());
+                System.out.println("liked users:"+splitUsers[0]+"-"+length);
+                if(length == 1){
+                    mLikesString = "Liked by " + splitUsers[0];
+                }
+                else if(length == 2){
+                    mLikesString = "Liked by " + splitUsers[0]
+                            + " and " + splitUsers[1];
+                }
+                else if(length == 3){
+                    mLikesString = "Liked by " + splitUsers[0]
+                            + ", " + splitUsers[1]
+                            + " and " + splitUsers[2];
+
+                }
+                else if(length == 4){
+                    mLikesString = "Liked by " + splitUsers[0]
+                            + ", " + splitUsers[1]
+                            + ", " + splitUsers[2]
+                            + " and " + splitUsers[3];
+                }
+                else if(length > 4){
+                    mLikesString = "Liked by " + splitUsers[0]
+                            + ", " + splitUsers[1]
+                            + ", " + splitUsers[2]
+                            + " and " + (dataSnapshot.getChildrenCount() - 3) + " others";
+                }
+                likedBy.setText(mLikesString);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 }
