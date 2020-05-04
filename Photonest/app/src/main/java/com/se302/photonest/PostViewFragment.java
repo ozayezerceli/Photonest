@@ -89,7 +89,7 @@ public class PostViewFragment extends Fragment {
         mTimestamp = view.findViewById(R.id.image_time_posted);
         likedEgg = view.findViewById(R.id.image_egg_liked_post);
         likedBy = view.findViewById(R.id.image_likes_info_main);
-        unlikedEgg = view.findViewById(R.id.image_egg_unliked_post);
+        unlikedEgg = view.findViewById(R.id.image_egg_unliked_post_view);
         mProfileImage = view.findViewById(R.id.profile_photo);
         postOptions = view.findViewById(R.id.btn_postOption);
         firebaseMethods = new FirebaseMethods(getActivity());
