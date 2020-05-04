@@ -37,8 +37,6 @@ import com.se302.photonest.MainActivity;
 import DataModels.Comment;
 import DataModels.Photo;
 import DataModels.PhotoInformation;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;

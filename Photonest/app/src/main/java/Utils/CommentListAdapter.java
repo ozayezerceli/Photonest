@@ -53,7 +53,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             holder = new ViewHolder();
 
             holder.profileImage = convertView.findViewById(R.id.comment_profile);
-            holder.comment = convertView.findViewById(R.id.comment);
+            holder.comment = convertView.findViewById(R.id.comment_text);
             //holder.commentLike = convertView.findViewById(R.id.commentLike);
             holder.dateAdded = convertView.findViewById(R.id.date_added);
             holder.addLike = convertView.findViewById(R.id.comment_heart);

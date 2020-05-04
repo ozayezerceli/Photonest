@@ -56,9 +56,9 @@ public class EditProfilePhotoTest {
         Intent resultData = new Intent();
         //Resources resources = InstrumentationRegistry.getInstrumentation().getContext().getResources();
         Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                profileActivityActivityTestRule.getActivity().getResources().getResourcePackageName(R.drawable.liked_egg) + "/" +
-                profileActivityActivityTestRule.getActivity().getResources().getResourceTypeName(R.drawable.liked_egg) + "/" +
-                profileActivityActivityTestRule.getActivity().getResources().getResourceEntryName(R.drawable.liked_egg));
+                profileActivityActivityTestRule.getActivity().getResources().getResourcePackageName(R.drawable.liked_egg_main_color) + "/" +
+                profileActivityActivityTestRule.getActivity().getResources().getResourceTypeName(R.drawable.liked_egg_main_color) + "/" +
+                profileActivityActivityTestRule.getActivity().getResources().getResourceEntryName(R.drawable.liked_egg_main_color));
         resultData.setData(uri);
 
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);

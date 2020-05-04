@@ -41,6 +41,7 @@
     <string name="profilePhotoField">imageurl</string>
     <string name="fieldComment">comment</string>
     <string name="dateField">date_added</string>
+    <string name="photodateField">date_created</string>
     <string name="ok_delete">Delete</string>
     <string name="title_activity_maps">Map</string>
     <string name="current_place">Current Place</string>
