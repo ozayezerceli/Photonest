@@ -119,6 +119,9 @@ public class PostViewFragment extends Fragment {
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.edit_post:
+
+                            String photo_id = photo.getPhoto_id();
+                            firebaseMethods.editPost(photo_id, photo, getContext());
                             break;
                         case R.id.delete_post:
                             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());

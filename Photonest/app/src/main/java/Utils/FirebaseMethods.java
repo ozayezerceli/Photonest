@@ -1,14 +1,13 @@
 package Utils;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -187,7 +186,7 @@ public class FirebaseMethods {
                 }
             });
 
-        } else if (photoType.equals(mActivity.getString(R.string.profile_photo))) {
+        } else if (photoType.equals(Context.getString(R.string.profile_photo))) {
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
             StorageReference storageReference = mStorageReference
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
@@ -211,6 +210,10 @@ public class FirebaseMethods {
                     //insert into 'user_account_settings' node
                     setProfilePhoto(firebaseUrl.toString());
 
+              /*    ((AccountSettingsActivity)Context).setViewPager(
+                            ((AccountSettingsActivity)Context).pagerAdapter
+                                    .getFragmentNumber(Context.getString(R.string.edit_profile_fragment))
+                    ); */
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -389,6 +392,61 @@ public class FirebaseMethods {
             }
         });
     }
+
+
+
+    public void editPost(final String postid, final PhotoInformation photo,Context context){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setTitle("Edit Post");
+
+        final EditText editText = new EditText(context);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        editText.setLayoutParams(lp);
+        alertDialog.setView(editText);
+
+        getText(postid, photo,editText);
+
+        alertDialog.setNeutralButton("Edit",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        List<String> hashTags = StringManipulation.getHashTags(photo.getCaption());
+                        for(String hashTag : hashTags){
+                            myRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue(); //first remove photoid from old hastags
+                        }
+                        //then updates new ones
+                        myRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).child("caption").setValue(editText.getText().toString()); //dbname_photos updated
+                        myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(photo.getPhoto_id())
+                                .child("caption").setValue(editText.getText().toString()); //dbname_user_photos updated
+
+                        List<String> hashTags2 = StringManipulation.getHashTags(editText.getText().toString()); //new caption's tags taken
+
+                        String newPhotoKey = myRef.child(mActivity.getString(R.string.dbname_photos)).push().getKey();
+
+                        Map<String, Object> hashtag_list = new HashMap<>();
+                        for (String hashtag : hashTags2) {
+                            hashtag_list.put("/hashTags/" + hashtag + "/" + photo.getPhoto_id() + "/photoId", photo.getPhoto_id());
+                            hashtag_list.put("/hashTags/" + hashtag + "/hashTags", hashtag);
+                        }
+                        myRef.updateChildren(hashtag_list);
+                        Toast.makeText(mActivity,"Photo is edited  successfully.",Toast.LENGTH_LONG).show();
+
+                    }
+                });
+        alertDialog.show();
+
+
+    }
+
+    private void getText(String postid, PhotoInformation photo,final EditText editText){
+        final  PhotoInformation photo1= photo;
+        editText.setText(photo1.getCaption());
+
+    }
+
 
 }
 

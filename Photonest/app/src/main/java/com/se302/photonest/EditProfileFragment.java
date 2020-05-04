@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +25,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import Utils.FilePaths;
+import Utils.FirebaseMethods;
 import Utils.GlideImageLoader;
+import Utils.UniversalImageLoader;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -74,7 +77,7 @@ public class EditProfileFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
-    //private FirebaseMethods mFirebaseMethods;
+    private FirebaseMethods mFirebaseMethods;
     private String userID;
     private FirebaseUser user;
     private UserInformation uInfo;
@@ -88,7 +91,9 @@ public class EditProfileFragment extends Fragment {
     private StorageReference user_image_ref;
     private  Context context= getActivity();
     private String downloadURL;
-
+    private Intent intent;
+    private String imgUrl;
+    private Bitmap bitmap;
 
 
     //EditProfile Fragment widgets
@@ -105,7 +110,7 @@ public class EditProfileFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         EditFullName = view.findViewById(R.id.EditFullName);
         EditUsername = view.findViewById(R.id.EditUsername);
@@ -117,7 +122,7 @@ public class EditProfileFragment extends Fragment {
 
 
 
-       edit_profile_image.setOnClickListener(new View.OnClickListener() {
+      edit_profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent galeriIntent= new Intent();
@@ -128,6 +133,18 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+    /*   edit_profile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity().getApplicationContext(), "Attempting to upload new photo", Toast.LENGTH_SHORT).show();
+
+                if(intent.hasExtra(getString(R.string.selected_image))){
+                    imgUrl = intent.getStringExtra(getString(R.string.selected_image));
+                    mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), null, 0, imgUrl,null, edit_profile_image.toString());
+
+                }
+            }
+        }); */
 
 
         mAuth=FirebaseAuth.getInstance();
@@ -149,14 +166,11 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 updateData();
-                if(ImageUri != null){
+             if(ImageUri != null){
                     uploadImage();
-                    Toast.makeText(getActivity(), "Profile Edited!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getActivity(),ProfileActivity.class));
-                }else{
-                    Toast.makeText(getActivity(), "Profile Edited!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getActivity(),ProfileActivity.class));
-                }
+             }
+             Toast.makeText(getActivity(), "Profile Edited!", Toast.LENGTH_SHORT).show();
+             startActivity(new Intent(getActivity(),ProfileActivity.class));
 
 
 
@@ -253,19 +267,20 @@ public class EditProfileFragment extends Fragment {
 
 
 
- @Override
+  @Override
  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
      super.onActivityResult(requestCode, resultCode, data);
 
      if (requestCode==GaleriPick && resultCode==RESULT_OK && data!=null){
-         ImageUri=data.getData();
-
-         edit_profile_image.setImageURI(ImageUri);
+        imgUrl=data.getData().toString();
+        edit_profile_image.setImageURI(ImageUri);
      }  else {
          Toast.makeText(getActivity(),"Something gone wrong!", Toast.LENGTH_SHORT).show();
 
      }
  }
+
+
 
     private void uploadImage(){
 
@@ -277,23 +292,6 @@ public class EditProfileFragment extends Fragment {
 
                     String Image_Url = dataSnapshot.child("imageurl").getValue().toString(); // get the current profile photo
                     if(!Image_Url.equals(default_image)){ //if current profile photo is not equal to the default one
-
-
-                      /*  final StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(Image_Url); //current photo is removed
-                        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "Current photo is removed");
-
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                Log.d(TAG, "Failed when current photo is removed");
-                            }
-                        }); */
-
 
                         String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         FilePaths filePaths = new FilePaths();
@@ -334,7 +332,7 @@ public class EditProfileFragment extends Fragment {
                                     hashMap.put("imageurl",""+downloadURL);
                                     reference.child("imageurl").setValue(downloadURL);
 
-
+                                    edit_profile_image.setImageURI(task.getResult());
 
                                     reference.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -345,7 +343,7 @@ public class EditProfileFragment extends Fragment {
 
                                               //  Toast.makeText(getActivity().getApplicationContext(), "Profile Photo is changed.", Toast.LENGTH_SHORT).show();
                                                   getActivity().finish();
-                                            //    startActivity(new Intent(getActivity(),ProfileActivity.class));
+                                                  startActivity(new Intent(getActivity(),ProfileActivity.class));
 
                                             }
                                         }
@@ -364,9 +362,6 @@ public class EditProfileFragment extends Fragment {
                                 Toast.makeText(getActivity(), e.getMessage(),Toast.LENGTH_SHORT).show();
                             }
                         });
-
-
-
 
 
 
@@ -413,6 +408,7 @@ public class EditProfileFragment extends Fragment {
 
                                     edit_profile_image.setImageURI(task.getResult());
 
+
                                     reference.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task)
@@ -422,7 +418,7 @@ public class EditProfileFragment extends Fragment {
 
                                                // Toast.makeText(getActivity(), "Profile Photo is changed.", Toast.LENGTH_SHORT).show();
                                                 getActivity().finish();
-                                             //   startActivity(new Intent(getActivity(),ProfileActivity.class));
+                                                startActivity(new Intent(getActivity(),ProfileActivity.class));
 
                                             }
                                         }
