@@ -112,7 +112,7 @@
                         <ImageView
                             android:layout_width="35dp"
                             android:layout_height="35dp"
-                            android:id="@+id/image_egg_unliked_post"
+                            android:id="@+id/image_egg_unliked_post_view"
                             android:layout_centerInParent="true"
                             android:layout_marginLeft="20dp"
                             android:src="@drawable/not_liked_egg_main_color"
