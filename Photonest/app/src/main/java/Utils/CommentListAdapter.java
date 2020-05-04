@@ -78,7 +78,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             utilityInterface.loadMore(limit);
         }
         try{
-            if(position == 0){
+            if(position == -1){
                 holder.addLike.setVisibility(View.GONE);
                 holder.likes.setVisibility(View.GONE);
             }
