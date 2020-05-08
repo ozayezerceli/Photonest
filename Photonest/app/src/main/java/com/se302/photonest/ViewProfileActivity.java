@@ -152,7 +152,6 @@ public class ViewProfileActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void init(){

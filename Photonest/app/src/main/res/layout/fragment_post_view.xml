@@ -165,7 +165,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/image_caption"
                         android:layout_marginTop="1dp"
-                        android:text=""
+                        android:text="Click here to see comments."
                         android:textColor="@color/colorAccent"
                         android:textSize="15sp"/>
 

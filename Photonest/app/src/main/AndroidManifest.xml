@@ -28,6 +28,10 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Model.FollowersActivity"
             />
+
+        <activity android:name=".BlockUserActivity"></activity>
+
+
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"

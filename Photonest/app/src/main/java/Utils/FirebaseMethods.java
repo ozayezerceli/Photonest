@@ -463,6 +463,29 @@ public class FirebaseMethods {
                 .child(likesId).removeValue();
     }
 
+
+    public void blockUser(String blockedUserID){
+        myRef.child("Blocked").child(userID).child(blockedUserID)
+                .child(mActivity.getString(R.string.users_id)).setValue(blockedUserID);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child(mActivity.getString(R.string.following_node))
+                .child(blockedUserID)
+                .child(userID)
+                .removeValue();
+
+        FirebaseDatabase.getInstance().getReference()
+                .child(mActivity.getString(R.string.followers_node))
+                .child(userID)
+                .child(blockedUserID)
+                .removeValue();
+    }
+
+    public void unblockUser(String blockedUserID){
+        myRef.child("Blocked").child(userID)
+                .child(blockedUserID).removeValue();
+    }
+
 }
 
 

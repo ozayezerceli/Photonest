@@ -33,6 +33,7 @@ import java.util.Objects;
 import DataModels.PhotoInformation;
 import DataModels.UserInformation;
 import Utils.Egg;
+import Utils.CommentActivity;
 import Utils.FirebaseMethods;
 import Utils.SquareImageView;
 import Utils.UniversalImageLoader;
@@ -42,10 +43,15 @@ public class PostViewFragment extends Fragment {
 
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
-    private TextView mBackLabel, mCaption, mUsername, mTimestamp, likedBy;
-    private ImageView mBackArrow, postOptions, likedEgg, unlikedEgg, mProfileImage;
+
+    private TextView mBackLabel, mCaption, mUsername, mTimestamp, likedBy, mtxtComment;
+    private ImageView mBackArrow, postOptions, likedEgg, unlikedEgg, mProfileImage, mComments;
     private UserInformation userInformation;
     private boolean mLikedByCurrentUser = false;
+
+    private String profilePhotoURL = "";
+
+
     private PhotoInformation photo;
     private String likeId;
     private FirebaseMethods firebaseMethods;
@@ -80,6 +86,9 @@ public class PostViewFragment extends Fragment {
         unlikedEgg = view.findViewById(R.id.image_egg_unliked_post_view);
         mProfileImage = view.findViewById(R.id.profile_photo);
         postOptions = view.findViewById(R.id.btn_postOption);
+        mComments = view.findViewById(R.id.speech_bubble);
+        mtxtComment = view.findViewById(R.id.image_comments_link);
+
         firebaseMethods = new FirebaseMethods(getActivity());
         ImageView mBackArrow = view.findViewById(R.id.backArrow);
         mBackArrow.setOnClickListener(new View.OnClickListener() {
@@ -108,8 +117,33 @@ public class PostViewFragment extends Fragment {
         init();
         getPhotoDetails();
 
+        init();
+        getPhotoDetails();
+        launchComment(getString(R.string.dbname_photos), photo.getPhoto_id());
 
         return view;
+    }
+
+    private void launchComment(String mediaNode, String mediaId) {
+
+        final Intent mediaIntent = new Intent(getActivity(), CommentActivity.class);
+        mediaIntent.putExtra("mediaID", mediaId);
+        mediaIntent.putExtra("mediaNode", mediaNode);
+        mediaIntent.putExtra(getString(R.string.profilePhotoField), profilePhotoURL);
+
+        mComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(mediaIntent);
+            }
+        });
+
+        mtxtComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(mediaIntent);
+            }
+        });
     }
 
     private void init(){
@@ -171,6 +205,7 @@ public class PostViewFragment extends Fragment {
                 }
                 UniversalImageLoader.setImage(userInformation.getImageurl(), mProfileImage, null, "");
                 mUsername.setText(userInformation.getUsername());
+                profilePhotoURL = userInformation.getImageurl();
             }
 
             @Override

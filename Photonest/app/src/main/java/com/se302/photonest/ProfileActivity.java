@@ -71,7 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
 
    private ImageView image_profile;
     private TextView posts, followers,following, fullname, bio, website_link;
-   private Button edit_profile;
+   private Button edit_profile, block;
    private FirebaseUser firebaseUser;
    private String profileid;
    private RelativeLayout mrelativeTop;
@@ -102,6 +102,7 @@ public class ProfileActivity extends AppCompatActivity {
         edit_profile=findViewById(R.id.edit_profile_button);
         my_photos= findViewById(R.id.my_photos);
         mGridView = findViewById(R.id.grid_view_profile);
+        block = findViewById(R.id.btn_block_profile);
         mFirebaseMethods = new FirebaseMethods(ProfileActivity.this);
 
         firebaseMethods = new FirebaseMethods(ProfileActivity.this);
@@ -206,6 +207,17 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent= new Intent(myContext, FollowersActivity.class);
                 intent.putExtra("id", firebaseUser.getUid());
                 intent.putExtra("title", "following");
+                startActivity(intent);
+            }
+        });
+
+
+        block.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(ProfileActivity.this, BlockUserActivity.class);
+                intent.putExtra("id",firebaseUser.getUid());
+                intent.putExtra("title", "Block");
                 startActivity(intent);
             }
         });
