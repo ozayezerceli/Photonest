@@ -101,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
         website_link = findViewById(R.id.website_link_profile);
         edit_profile=findViewById(R.id.edit_profile_button);
         my_photos= findViewById(R.id.my_photos);
-        mGridView = findViewById(R.id.grid_view);
+        mGridView = findViewById(R.id.grid_view_profile);
         mFirebaseMethods = new FirebaseMethods(ProfileActivity.this);
 
         firebaseMethods = new FirebaseMethods(ProfileActivity.this);

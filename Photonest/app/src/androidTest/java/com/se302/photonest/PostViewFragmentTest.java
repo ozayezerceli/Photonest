@@ -1,21 +1,30 @@
 package com.se302.photonest;
 
 
+import android.os.SystemClock;
+
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.matcher.RootMatchers;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
+
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 
 public class PostViewFragmentTest {
@@ -26,34 +35,55 @@ public class PostViewFragmentTest {
 
     @Before
     public void setUp() throws Exception {
-        Espresso.onData(anything())
-                .inAdapterView(allOf(withId(R.id.grid_view)))
-                .atPosition(0).perform(click());
+        SystemClock.sleep(3000);
+        mActivityRule.getActivity().getSupportFragmentManager().beginTransaction();
+        onData(anything())
+                .inAdapterView(withId(R.id.grid_view_profile))
+                .atPosition(0)
+                .onChildView(withId(R.id.gridImageView))
+                .perform(click());
     }
 
     @Test
     public void testUserDeletePost() {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        Espresso.onView(withText("Delete Post"))
+        onView(withId( R.id.btn_postOption)).perform(click());
+        onView(ViewMatchers.withContentDescription("delete"))
+                .inRoot(RootMatchers.isPlatformPopup())
+                .perform(ViewActions.click());
+        onView(withText("OK")).inRoot(isDialog())
+                .check(matches(isDisplayed()))
+                .perform(click());
+    }
+
+    @Test
+    public void testUserEditPost() {
+        onView(withId( R.id.btn_postOption)).perform(click());
+        onView(ViewMatchers.withContentDescription("edit"))
+                .inRoot(RootMatchers.isPlatformPopup())
+                .perform(ViewActions.click());
+        Espresso.onView(withContentDescription("new caption")).perform(replaceText("Test new caption #test"));
+        Espresso.closeSoftKeyboard();
+        onView(withText("Edit")).inRoot(isDialog())
+                .check(matches(isDisplayed()))
                 .perform(click());
     }
 
     @Test
     public void testLaunch(){
-        Espresso.onView(withId(R.id.post_image)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.backArrow)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.tvBackLabel)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.image_caption)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.username)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.image_time_posted)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.image_egg_unliked_post_view)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.profile_photo)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.btn_postOption)).check(matches(isDisplayed()));
+        onView(withId(R.id.post_image)).check(matches(isDisplayed()));
+        onView(withId(R.id.backArrow)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvBackLabel)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_caption)).check(matches(isDisplayed()));
+        onView(withId(R.id.username)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_time_posted)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_egg_unliked_post_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.profile_photo)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_postOption)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testUserQuitPostView() {
-        Espresso.onView(withId(R.id.backArrow)).perform(click());
+        onView(withId(R.id.backArrow)).perform(click());
     }
 }
 

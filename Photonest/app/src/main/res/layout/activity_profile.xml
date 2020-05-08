@@ -227,7 +227,7 @@
                     <GridView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/grid_view"
+                        android:id="@+id/grid_view_profile"
                         android:numColumns="3"
                         android:gravity="center"
                         android:verticalSpacing="1.5dp"

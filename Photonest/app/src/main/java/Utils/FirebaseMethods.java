@@ -400,6 +400,7 @@ public class FirebaseMethods {
         alertDialog.setTitle("Edit Post");
 
         final EditText editText = new EditText(context);
+        editText.setContentDescription("new caption");
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);

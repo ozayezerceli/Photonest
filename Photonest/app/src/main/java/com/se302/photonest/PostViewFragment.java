@@ -128,6 +128,7 @@ public class PostViewFragment extends Fragment {
     }
 
     public void showpopupMenu(View v) {
+
         PopupMenu popup = new PopupMenu(getContext(), v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.view_post_menu, popup.getMenu());

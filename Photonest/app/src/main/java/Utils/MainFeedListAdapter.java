@@ -273,11 +273,9 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
     }
 
 
-    private void setLikeText(DataSnapshot dataSnapshot, final TextView likedBy){
-
+    private void setLikeText(Object dataSnapshot, final TextView likedBy){
         mStringBuilder = new StringBuilder();
-        Query query = reference.child(mContext.getString(R.string.users_node)).orderByChild(mContext.getString(R.string.users_id))
-                .equalTo(dataSnapshot.child(mContext.getString(R.string.users_id)).getValue().toString());
+        Query query = reference.child(mContext.getString(R.string.users_node)).orderByChild(mContext.getString(R.string.users_id)).equalTo(dataSnapshot.toString());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
