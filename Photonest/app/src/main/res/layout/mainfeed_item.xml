@@ -119,19 +119,19 @@
             android:padding="2dp">
 
             <TextView
-                android:id="@+id/image_likes_info_main"
+                android:id="@+id/image_likes_info_main_feed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="2dp"
-                android:paddingStart="5dp"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:clickable="true"/>
 
             <TextView
                 android:id="@+id/image_caption_main"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/image_likes_info_main"
+                android:layout_below="@+id/image_likes_info_main_feed"
                 android:layout_marginTop="1dp"
                 android:text=""
                 android:textColor="@color/colorPrimaryDark"

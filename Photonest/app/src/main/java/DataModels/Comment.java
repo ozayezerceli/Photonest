@@ -1,7 +1,7 @@
 package DataModels;
 
 public class Comment {
-
+    private String id;
     private String comment;
     private String date_added;
     private String username;
@@ -12,12 +12,17 @@ public class Comment {
     }
 
 
-    public Comment(String comment, String date_added, String username, String profileImage, long commentLikes) {
+    public Comment(String id,String comment, String date_added, String username, String profileImage, long commentLikes) {
+        this.id = id;
         this.comment = comment;
         this.date_added = date_added;
         this.username = username;
         this.profile_image = profileImage;
         this.comment_likes = commentLikes;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getComment() {

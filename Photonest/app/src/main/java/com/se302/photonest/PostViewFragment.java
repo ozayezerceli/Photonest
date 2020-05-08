@@ -1,48 +1,36 @@
 package com.se302.photonest;
 
-import android.annotation.SuppressLint;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.ActionMenuView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.se302.photonest.Model.FollowersActivity;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
-import DataModels.Photo;
 import DataModels.PhotoInformation;
-import DataModels.User;
 import DataModels.UserInformation;
 import Utils.Egg;
 import Utils.FirebaseMethods;
@@ -106,11 +94,19 @@ public class PostViewFragment extends Fragment {
                 showpopupMenu(view);
             }
         });
-        detector = new GestureDetector(getActivity(),new GestureListener());
         mEgg = new Egg();
+        setLikeListeners(unlikedEgg,likedEgg,photo,likedBy);
+        likedBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(getActivity(), FollowersActivity.class);
+                intent.putExtra("id",photo.getPhoto_id());
+                intent.putExtra("title", "likes");
+                startActivity(intent);
+            }
+        });
         init();
         getPhotoDetails();
-        setLikeListeners();
 
 
         return view;
@@ -124,7 +120,7 @@ public class PostViewFragment extends Fragment {
         if(photo.getUser_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
             postOptions.setVisibility(View.VISIBLE);
         }
-        likesSetup(getString(R.string.field_likes),photo.getPhoto_id());
+        setUserLikes(unlikedEgg,likedEgg,getActivity().getString(R.string.field_likes),photo.getPhoto_id(),likedBy);
     }
 
     public void showpopupMenu(View v) {
@@ -192,59 +188,118 @@ public class PostViewFragment extends Fragment {
         }
     }
 
-    private void setLikeListeners(){
+    private void setLikeListeners(final ImageView unlikedEgg, final ImageView likedEgg, final Object object, final TextView likedBy){
 
         unlikedEgg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleLike();
+                toggleLike(unlikedEgg,likedEgg,object,likedBy);
             }
         });
-
         likedEgg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleLike();
+                toggleLike(unlikedEgg,likedEgg,object,likedBy);
             }
         });
-
-
-
     }
 
-    private void toggleLike(){
+    private void setUserLikes(final ImageView unlikedEgg, final ImageView likedEgg,String mediaNode, String mediaId,final TextView likedBy){
 
-            if(!mLikedByCurrentUser){
-                unlikedEgg.setVisibility(View.VISIBLE);
-                likedEgg.setVisibility(View.GONE);
-                mEgg.toggleLike(unlikedEgg,likedEgg);
-                firebaseMethods.addNewLike(getActivity().getString(R.string.field_likes),photo.getPhoto_id());
-            }else {
-                unlikedEgg.setVisibility(View.GONE);
-                likedEgg.setVisibility(View.VISIBLE);
-                mEgg.toggleLike(unlikedEgg,likedEgg);
-                mLikedByCurrentUser = false;
-                firebaseMethods.removeNewLike(getActivity().getString(R.string.field_likes),photo.getPhoto_id(),likeId);
-            }
+        Query query = myRef.child(mediaNode).child(mediaId)
+                .child(getActivity().getString(R.string.field_likes));
 
-    }
-
-    private void setUserLikes(DataSnapshot dataSnapshot){
-
-        mStringBuilder = new StringBuilder();
-        Query query = myRef.child(getString(R.string.users_node)).orderByChild(getString(R.string.users_id))
-                .equalTo(dataSnapshot.child(getString(R.string.users_id)).getValue().toString());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    mStringBuilder.append(Objects.requireNonNull(singleSnapshot.getValue(User.class)).getUsername());
-                    mStringBuilder.append(",");
-                }
-                String[] splitUsers = mStringBuilder.toString().split(",");
+                if(!dataSnapshot.exists()){
+                    likedBy.setClickable(false);
+                    unlikedEgg.setVisibility(View.VISIBLE);
+                    likedEgg.setVisibility(View.GONE);
+                    likedBy.setText("No one liked this post! Be first!");
+                }else {
+                    likedBy.setClickable(true);
+                    likedEgg.setVisibility(View.GONE);
+                    unlikedEgg.setVisibility(View.VISIBLE);
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
+                        if (ds.child(getActivity().getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
+                            unlikedEgg.setVisibility(View.GONE);
+                            likedEgg.setVisibility(View.VISIBLE);
+                        }
+                        String ds1 =  ds.child("user_id").getValue().toString();
+                        setLikeText(ds1,likedBy);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
+    private void toggleLike(final ImageView unlikedEgg, final ImageView likedEgg, Object object, final TextView likedBy) {
+
+        mLikedByCurrentUser  = false;
+
+            Query query = myRef.child(getActivity().getString(R.string.field_likes)).child(photo.getPhoto_id()).child(getActivity().getString(R.string.field_likes));
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if(!dataSnapshot.exists()){
+                        mLikesString = "";
+                        mLikedByCurrentUser = false;
+                        likedEgg.setVisibility(View.GONE);
+                        unlikedEgg.setVisibility(View.VISIBLE);
+                    }else {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                            if (ds.child(getActivity().getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
+                                mLikedByCurrentUser = true;
+                                likeId = ds.getKey();
+                                unlikedEgg.setVisibility(View.GONE);
+                                likedEgg.setVisibility(View.VISIBLE);
+                                mEgg.toggleLike(unlikedEgg, likedEgg);
+                                firebaseMethods.removeNewLike(getActivity().getString(R.string.field_likes), photo.getPhoto_id(), likeId);
+                                setUserLikes(unlikedEgg,likedEgg,getActivity().getString(R.string.field_likes),photo.getPhoto_id(),likedBy);
+                            }
+                        }
+                    }
+
+                    if(!mLikedByCurrentUser){
+                        unlikedEgg.setVisibility(View.VISIBLE);
+                        likedEgg.setVisibility(View.GONE);
+                        mEgg.toggleLike(unlikedEgg, likedEgg);
+                        firebaseMethods.addNewLike(getActivity().getString(R.string.field_likes),photo.getPhoto_id());
+                        setUserLikes(unlikedEgg,likedEgg,getActivity().getString(R.string.field_likes),photo.getPhoto_id(),likedBy);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
+            });
+
+
+    }
+
+
+    private void setLikeText(String dataSnapshot, final TextView likedBy){
+
+        mStringBuilder = new StringBuilder();
+        Query query = myRef.child(getActivity().getString(R.string.users_node)).child(dataSnapshot);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> userInfo = new ArrayList<>();
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    userInfo.add(singleSnapshot.getValue().toString());
+                }
+                mStringBuilder.append(userInfo.get(5));
+                mStringBuilder.append(",");
+                String[] splitUsers = mStringBuilder.toString().split(",");
                 int length = splitUsers.length;
+                System.out.println("users: "+mStringBuilder.toString());
+                System.out.println("liked users:"+splitUsers[0]+"-"+length);
                 if(length == 1){
                     mLikesString = "Liked by " + splitUsers[0];
                 }
@@ -277,61 +332,6 @@ public class PostViewFragment extends Fragment {
 
             }
         });
-    }
-
-    private void likesSetup(final String mediaNode, final String mediaId){
-
-        firebaseMethods = new FirebaseMethods(getActivity());
-        System.out.println("MediaID:"+ mediaId);
-        Query query = myRef.child(mediaNode).child(mediaId)
-                .child(getString(R.string.field_likes));
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-
-                    setUserLikes(singleSnapshot);
-                    if(singleSnapshot.child(getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())){
-                        likeId = singleSnapshot.getKey();
-                        likedBy.setVisibility(View.VISIBLE);
-                        unlikedEgg.setVisibility(View.GONE);
-                        mLikedByCurrentUser = true;
-                    }
-                }
-
-                if(!dataSnapshot.exists()){
-                    mLikesString = "";
-                    mLikedByCurrentUser = false;
-                    likedBy.setVisibility(View.GONE);
-                    unlikedEgg.setVisibility(View.VISIBLE);
-                    likedBy.setText("");
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-    }
-
-    class GestureListener extends android.view.GestureDetector.SimpleOnGestureListener{
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-
-            return true ;
-        }
-
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-
-            toggleLike();
-            return true;
-        }
-
     }
 
 }

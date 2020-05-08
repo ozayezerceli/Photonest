@@ -95,6 +95,9 @@ public class FollowersActivity extends AppCompatActivity {
              case "likes":
                  getLikes();
                  break;
+             case "commentLikes":
+                 getCommentLikes();
+                 break;
              case "following":
                  getFollowing();
                  break;
@@ -107,9 +110,29 @@ public class FollowersActivity extends AppCompatActivity {
 
      }
 
+    private void getCommentLikes() {
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference().child(getString(R.string.field_likes_comment))
+                .child(id).child(getString(R.string.field_likes));
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                idList.clear();
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    idList.add(snapshot.child("user_id").getValue().toString());
+                }
+                showUsers();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void getFollowing() {
 
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference().child("following")
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference().child(getString(R.string.following_node))
                 .child(id);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -132,7 +155,7 @@ public class FollowersActivity extends AppCompatActivity {
 
 
     private void getFollowers() {
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference().child("followers")
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference().child(getString(R.string.followers_node))
                 .child(id);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -152,6 +175,23 @@ public class FollowersActivity extends AppCompatActivity {
     }
 
     private void getLikes() {
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference().child(getString(R.string.field_likes))
+                .child(id).child(getString(R.string.field_likes));
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                idList.clear();
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    idList.add(snapshot.child("user_id").getValue().toString());
+                }
+                showUsers();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

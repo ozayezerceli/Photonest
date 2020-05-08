@@ -60,4 +60,5 @@
     <string name="dbname_user_photos">/dbname_user_photos/</string>
     <string name="usernameField">username</string>
     <string name="field_likes">likes</string>
+    <string name="field_likes_comment">commentLikes</string>
 </resources>

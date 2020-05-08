@@ -2,7 +2,6 @@ package Utils;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +20,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.se302.photonest.Model.FollowersActivity;
 import com.se302.photonest.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import DataModels.Photo;
-import DataModels.User;
 import DataModels.UserInformation;
-
 import com.mikhaellopez.circularimageview.CircularImageView;
+
 
 public class MainFeedListAdapter extends ArrayAdapter<Object> {
     private int mResource;
@@ -82,7 +82,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
 
             holder.post = convertView.findViewById(R.id.post_image_main);
             holder.progressBar = convertView.findViewById(R.id.progressBar);
-            holder.likedBy = convertView.findViewById(R.id.image_likes_info_main);
+            holder.likedBy = convertView.findViewById(R.id.image_likes_info_main_feed);
             holder.profileImage = convertView.findViewById(R.id.profile_photo_main);
             holder.username = convertView.findViewById(R.id.username_main);
             holder.likedEgg = convertView.findViewById(R.id.image_egg_liked);
@@ -95,11 +95,19 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-
         Object object = getItem(position);
         setLikeListeners(holder.unlikedEgg,holder.likedEgg,object,holder.likedBy);
-
+        holder.likedBy.setTag(position);
+        holder.likedBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pp=(Integer)v.getTag();
+                Intent intent= new Intent(mContext, FollowersActivity.class);
+                intent.putExtra("id",Objects.requireNonNull((Photo)getItem(pp)).getPhoto_id());
+                intent.putExtra("title", "likes");
+                mContext.startActivity(intent);
+            }
+        });
         if (Objects.requireNonNull(object).getClass() == Photo.class) {
             photo = (Photo) object;
             setUserLikes(holder.unlikedEgg,holder.likedEgg,mContext.getString(R.string.field_likes),photo.getPhoto_id(),holder.likedBy);
@@ -124,6 +132,9 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                         }
                     });
         }
+
+
+
         return convertView;
     }
 
@@ -202,10 +213,13 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if(!dataSnapshot.exists()){
+                    likedBy.setClickable(false);
                     unlikedEgg.setVisibility(View.VISIBLE);
                     likedEgg.setVisibility(View.GONE);
-                    likedBy.setText("");
+                    likedBy.setText("No one liked this post! Be first!");
+
                 }else {
+                    likedBy.setClickable(true);
                     likedEgg.setVisibility(View.GONE);
                     unlikedEgg.setVisibility(View.VISIBLE);
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -214,7 +228,8 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                             unlikedEgg.setVisibility(View.GONE);
                             likedEgg.setVisibility(View.VISIBLE);
                         }
-                        setLikeText(ds,likedBy);
+                        String ds1 =  ds.child("user_id").getValue().toString();
+                        setLikeText(ds1,likedBy);
                     }
                 }
             }
@@ -228,7 +243,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         mLikedByCurrentUser  = false;
         if (Objects.requireNonNull(object).getClass()==Photo.class) {
             photo = (Photo)object;
-
             Query query = reference.child(mContext.getString(R.string.field_likes)).child(photo.getPhoto_id()).child(mContext.getString(R.string.field_likes));
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -245,7 +259,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                             if (ds.child(mContext.getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
                                 mLikedByCurrentUser = true;
                                 likeId = ds.getKey();
-                                Log.d("TAG", "LikeID = " + likedBy);
                                 unlikedEgg.setVisibility(View.GONE);
                                 likedEgg.setVisibility(View.VISIBLE);
                                 mEgg.toggleLike(unlikedEgg, likedEgg);
@@ -256,7 +269,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                     }
 
                     if(!mLikedByCurrentUser){
-                        Log.d("TAG","Datasnapshot doesn't exists");
                         unlikedEgg.setVisibility(View.VISIBLE);
                         likedEgg.setVisibility(View.GONE);
                         mEgg.toggleLike(unlikedEgg, likedEgg);
@@ -273,24 +285,21 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
     }
 
 
-    private void setLikeText(Object dataSnapshot, final TextView likedBy){
+    private void setLikeText(final String user_id, final TextView likedBy){
+
         mStringBuilder = new StringBuilder();
-        Query query = reference.child(mContext.getString(R.string.users_node)).orderByChild(mContext.getString(R.string.users_id)).equalTo(dataSnapshot.toString());
+        Query query = reference.child(mContext.getString(R.string.users_node)).child(user_id);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                ArrayList<String> userInfo = new ArrayList<>();
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    User mUser = Objects.requireNonNull(singleSnapshot.getValue(User.class));
-                    System.out.println("username: "+mUser.getUsername());
-                    mStringBuilder.append(mUser.getUsername());
-                    mStringBuilder.append(",");
-
+                    userInfo.add(singleSnapshot.getValue().toString());
                 }
+                mStringBuilder.append(userInfo.get(5));
+                mStringBuilder.append(",");
                 String[] splitUsers = mStringBuilder.toString().split(",");
                 int length = splitUsers.length;
-                System.out.println("users: "+mStringBuilder.toString());
-                System.out.println("liked users:"+splitUsers[0]+"-"+length);
                 if(length == 1){
                     mLikesString = "Liked by " + splitUsers[0];
                 }

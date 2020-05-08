@@ -52,6 +52,19 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
+            android:id="@+id/comment_heart_liked"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/liked_egg_main_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="invisible"
+            />
+
+        <ImageView
             android:id="@+id/comment_heart"
             android:layout_width="20dp"
             android:layout_height="20dp"
@@ -60,7 +73,10 @@
             android:src="@drawable/not_liked_egg_background_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
 
         <TextView
             android:id="@+id/date_added"
@@ -83,7 +99,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="10dp"
-            android:text="82 likes"
             android:textSize="12dp"
             android:textColor="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
