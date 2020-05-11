@@ -2,7 +2,20 @@ package Utils;
 
 import android.content.Context;
 import android.content.Intent;
+
+import android.graphics.Color;
 import android.os.Bundle;
+
+import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,6 +50,10 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
     private CommentListAdapter listAdapter;
     private boolean isCommentAdded = false;
     private long startLimit = -1;
+    Intent intent;
+    private EditText commentText;
+    int hashTagIsComing = 0;
+    Spannable mspanable;
 
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
@@ -48,7 +65,7 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-
+        commentText = findViewById(R.id.comment);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -62,13 +79,58 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
         setCommentProfileImage(profileImage);
         addComment(mediaNode, mediaId);
 
+
         commentList = findViewById(R.id.comment_list);
         list = new ArrayList<>();
         listAdapter = new CommentListAdapter(CommentActivity.this, R.layout.comment_item, list);
         retrieveAllComments(mediaNode, mediaId, 20);
         commentList.setAdapter(listAdapter);
 
+        setCommentTags();
+        mspanable = commentText.getText();
+        commentText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String startChar = null;
+                try{
+                    startChar = Character.toString(s.charAt(start));
+                    Log.i(getClass().getSimpleName(), "CHARACTER OF NEW WORD: " + startChar);
+                }
+                catch(Exception ex){
+                    startChar = " ";
+                }
+
+                if (startChar.equals("#")) {
+                    tagCheck(s.toString().substring(start), start, start + count);
+                    hashTagIsComing++;
+                }
+
+                if(startChar.equals(" ")){
+                    hashTagIsComing = 0;
+                }
+
+                if(hashTagIsComing != 0) {
+                    tagCheck(s.toString().substring(start), start, start + count);
+                    hashTagIsComing++;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         goBack();
+    }
+
+    private void tagCheck(String s, int start, int end) {
+        mspanable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_hashtag)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void retrieveAllComments(String mediaNode, String mediaId, final long endLimit){
@@ -95,6 +157,7 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                 }
                 startLimit = endLimit;
                 listAdapter.notifyDataSetChanged();
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -102,10 +165,22 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
         });
     }
 
+    private void setCommentTags(){
+
+        intent=getIntent();
+        if(intent.hasExtra("commentText")){
+            String comment = intent.getStringExtra("commentText");
+            commentText.setText(comment);
+            setTags(commentText,commentText.getText().toString());
+
+        }
+    }
+
+
 
     private void addComment(final String mediaNode, final String mediaId){
 
-        TextView postComment = findViewById(R.id.post_comment);
+        final TextView postComment = findViewById(R.id.post_comment);
         final EditText commentText = findViewById(R.id.comment);
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,9 +188,49 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                 if(commentText.getText().toString().length()>0) {
                     isCommentAdded = true;
                     firebaseMethods.addNewComment(mediaNode,mediaId, commentText.getText().toString());
+
+
                 }
             }
         });
+    }
+
+    private void setTags(TextView pTextView, String pTagString) {
+        SpannableString string = new SpannableString(pTagString);
+
+        int start = -1;
+        for (int i = 0; i < pTagString.length(); i++) {
+            if (pTagString.charAt(i) == '#') {
+                start = i;
+            } else if (pTagString.charAt(i) == ' ' || pTagString.charAt(i) == '\n' || (i == pTagString.length() - 1 && start != -1)) {
+                if (start != -1) {
+                    if (i == pTagString.length() - 1) {
+                        i++; // case for if hash is last word and there is no
+                        // space after word
+                    }
+
+                    final String tag = pTagString.substring(start, i);
+                    string.setSpan(new ClickableSpan() {
+
+                        @Override
+                        public void onClick(View widget) {
+                            Log.d("Hash", String.format("Clicked %s!", tag));
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            // link color
+                            ds.setColor(Color.parseColor("#F99F63"));
+                            ds.setUnderlineText(false);
+                        }
+                    }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = -1;
+                }
+            }
+        }
+
+        pTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        pTextView.setText(string);
     }
 
     private void setCommentProfileImage(String image){

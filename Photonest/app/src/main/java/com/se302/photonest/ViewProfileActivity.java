@@ -239,7 +239,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                posts.setText(""+firebaseMethods.getImageCount(dataSnapshot));
+                posts.setText(""+firebaseMethods.getImageCount2(dataSnapshot, viewUserID));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

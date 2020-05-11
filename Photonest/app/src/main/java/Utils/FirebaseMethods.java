@@ -5,9 +5,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +46,7 @@ import DataModels.Comment;
 import DataModels.Photo;
 import DataModels.PhotoInformation;
 
+import com.se302.photonest.PostViewFragment;
 import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;
 
@@ -288,6 +298,16 @@ public class FirebaseMethods {
         }
         return count;
     }
+    public int getImageCount2(DataSnapshot dataSnapshot, String id) {
+        int count = 0;
+        for (DataSnapshot ds : dataSnapshot
+                .child(mActivity.getString(R.string.dbname_user_photos))
+                .child(id)
+                .getChildren()) {
+            count++;
+        }
+        return count;
+    }
 
     public void deleteUserAccount() {
         final DatabaseReference user_info_ref = mFirebaseDatabase.getReference().child("Users");
@@ -333,7 +353,7 @@ public class FirebaseMethods {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+             //   setTags(tv, comment);
                 String username = Objects.requireNonNull(dataSnapshot.child(mActivity.getString(R.string.usernameField)).getValue()).toString();
                 String profileImage = Objects.requireNonNull(dataSnapshot.child(mActivity.getString(R.string.profilePhotoField)).getValue()).toString();
                 Comment comment_model = new Comment(commentId,comment, dateAdded, username, profileImage, 0);
@@ -396,7 +416,8 @@ public class FirebaseMethods {
 
 
 
-    public void editPost(final String postid, final PhotoInformation photo,Context context){
+    public String editPost(final String postid, final PhotoInformation photo, final Context context, final TextView tv){
+        final Intent intent= new Intent(context, PostViewFragment.class);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle("Edit Post");
 
@@ -434,12 +455,15 @@ public class FirebaseMethods {
                             hashtag_list.put("/hashTags/" + hashtag + "/hashTags", hashtag);
                         }
                         myRef.updateChildren(hashtag_list);
+                        setTags(tv,editText.getText().toString());
+
                         Toast.makeText(mActivity,"Photo is edited  successfully.",Toast.LENGTH_LONG).show();
 
                     }
                 });
         alertDialog.show();
 
+        return editText.getText().toString();
 
     }
 
@@ -464,7 +488,6 @@ public class FirebaseMethods {
                 .child(likesId).removeValue();
     }
 
-
     public void blockUser(String blockedUserID){
         myRef.child("Blocked").child(userID).child(blockedUserID)
                 .child(mActivity.getString(R.string.users_id)).setValue(blockedUserID);
@@ -487,6 +510,43 @@ public class FirebaseMethods {
                 .child(blockedUserID).removeValue();
     }
 
+    private void setTags(TextView pTextView, String pTagString) {
+        SpannableString string = new SpannableString(pTagString);
+
+        int start = -1;
+        for (int i = 0; i < pTagString.length(); i++) {
+            if (pTagString.charAt(i) == '#') {
+                start = i;
+            } else if (pTagString.charAt(i) == ' ' || pTagString.charAt(i) == '\n' || (i == pTagString.length() - 1 && start != -1)) {
+                if (start != -1) {
+                    if (i == pTagString.length() - 1) {
+                        i++; // case for if hash is last word and there is no
+                        // space after word
+                    }
+
+                    final String tag = pTagString.substring(start, i);
+                    string.setSpan(new ClickableSpan() {
+
+                        @Override
+                        public void onClick(View widget) {
+                            Log.d("Hash", String.format("Clicked %s!", tag));
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            // link color
+                            ds.setColor(Color.parseColor("#F99F63"));
+                            ds.setUnderlineText(false);
+                        }
+                    }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = -1;
+                }
+            }
+        }
+
+        pTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        pTextView.setText(string);
+    }
 }
 
 

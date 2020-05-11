@@ -272,8 +272,11 @@ public class EditProfileFragment extends Fragment {
      super.onActivityResult(requestCode, resultCode, data);
 
      if (requestCode==GaleriPick && resultCode==RESULT_OK && data!=null){
-        imgUrl=data.getData().toString();
-        edit_profile_image.setImageURI(ImageUri);
+     /*   imgUrl=data.getData().toString();
+        edit_profile_image.setImageURI(ImageUri); */
+         ImageUri=data.getData();
+
+         edit_profile_image.setImageURI(ImageUri);
      }  else {
          Toast.makeText(getActivity(),"Something gone wrong!", Toast.LENGTH_SHORT).show();
 

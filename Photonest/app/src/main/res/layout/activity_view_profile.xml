@@ -70,10 +70,12 @@
                         android:id="@+id/top_bar"
                         android:padding="16dp">
 
-                        <ImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/View_profile_image"
                             android:layout_width="80dp"
-                            android:layout_height="80dp" />
+                            android:layout_height="80dp"
+                            app:civ_border_width="2dp"
+                            app:civ_border_color="#FF000000"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"

@@ -2,8 +2,13 @@ package Utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +77,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         if(convertView==null) {
             convertView = LayoutInflater.from(mContext).inflate(layoutResource, parent, false);
             holder = new ViewHolder();
-
             holder.profileImage = convertView.findViewById(R.id.comment_profile);
             holder.comment = convertView.findViewById(R.id.comment_text);
             holder.likes = convertView.findViewById(R.id.commentLike);
@@ -80,6 +84,9 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             holder.likedEgg = convertView.findViewById(R.id.comment_heart_liked);
             holder.unlikedEgg = convertView.findViewById(R.id.comment_heart);
             convertView.setTag(holder);
+            setTags(holder.comment, holder.comment.getText().toString());
+
+
         }else {
             holder = (ViewHolder)convertView.getTag();
         }
@@ -100,10 +107,12 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         SpannableStringBuilder str = new SpannableStringBuilder(username+" "+commentData.getComment());
         str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, username.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.comment.setText(str);
+        setTags(holder.comment, holder.comment.getText().toString());
         //Setting date
         holder.dateAdded.setText(commentData.getDate_added());
         setLikeListeners(holder.unlikedEgg,holder.likedEgg,commentData,holder.likes);
         setUserLikes(holder.unlikedEgg,holder.likedEgg,mContext.getString(R.string.field_likes_comment),commentData.getId(),holder.likes);
+
         if(position>=limit-1) {
             limit+=20;
             utilityInterface.loadMore(limit);
@@ -138,40 +147,40 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
     private void toggleLike(final ImageView unlikedEgg, final ImageView likedEgg, final Comment comment, final TextView likes) {
 
         mLikedByCurrentUser  = false;
-            Query query = reference.child(mContext.getString(R.string.field_likes_comment)).child(comment.getId()).child(mContext.getString(R.string.field_likes));
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(!dataSnapshot.exists()){
-                        mLikedByCurrentUser = false;
-                        likedEgg.setVisibility(View.GONE);
-                        unlikedEgg.setVisibility(View.VISIBLE);
-                    }else {
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            if (ds.child(mContext.getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
-                                mLikedByCurrentUser = true;
-                                likeId = ds.getKey();
-                                unlikedEgg.setVisibility(View.GONE);
-                                likedEgg.setVisibility(View.VISIBLE);
-                                mEgg.toggleLike(unlikedEgg, likedEgg);
-                                firebaseMethods.removeNewLike(mContext.getString(R.string.field_likes_comment), comment.getId(), likeId);
-                                setUserLikes(unlikedEgg,likedEgg,mContext.getString(R.string.field_likes_comment),comment.getId(),likes);
-                            }
+        Query query = reference.child(mContext.getString(R.string.field_likes_comment)).child(comment.getId()).child(mContext.getString(R.string.field_likes));
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()){
+                    mLikedByCurrentUser = false;
+                    likedEgg.setVisibility(View.GONE);
+                    unlikedEgg.setVisibility(View.VISIBLE);
+                }else {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (ds.child(mContext.getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
+                            mLikedByCurrentUser = true;
+                            likeId = ds.getKey();
+                            unlikedEgg.setVisibility(View.GONE);
+                            likedEgg.setVisibility(View.VISIBLE);
+                            mEgg.toggleLike(unlikedEgg, likedEgg);
+                            firebaseMethods.removeNewLike(mContext.getString(R.string.field_likes_comment), comment.getId(), likeId);
+                            setUserLikes(unlikedEgg,likedEgg,mContext.getString(R.string.field_likes_comment),comment.getId(),likes);
                         }
                     }
-
-                    if(!mLikedByCurrentUser){
-                        Log.d("TAG","Datasnapshot doesn't exists");
-                        unlikedEgg.setVisibility(View.VISIBLE);
-                        likedEgg.setVisibility(View.GONE);
-                        mEgg.toggleLike(unlikedEgg, likedEgg);
-                        firebaseMethods.addNewLike(mContext.getString(R.string.field_likes_comment),comment.getId());
-                        setUserLikes(unlikedEgg,likedEgg,mContext.getString(R.string.field_likes_comment),comment.getId(),likes);
-                    }
                 }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
+
+                if(!mLikedByCurrentUser){
+                    Log.d("TAG","Datasnapshot doesn't exists");
+                    unlikedEgg.setVisibility(View.VISIBLE);
+                    likedEgg.setVisibility(View.GONE);
+                    mEgg.toggleLike(unlikedEgg, likedEgg);
+                    firebaseMethods.addNewLike(mContext.getString(R.string.field_likes_comment),comment.getId());
+                    setUserLikes(unlikedEgg,likedEgg,mContext.getString(R.string.field_likes_comment),comment.getId(),likes);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
 
     private void setUserLikes(final ImageView unlikedEgg, final ImageView likedEgg, String mediaNode, final String mediaId, final TextView likes){
@@ -224,6 +233,43 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
 
             }
         });
+    }
+    private void setTags(TextView pTextView, String pTagString) {
+        SpannableString string = new SpannableString(pTagString);
+
+        int start = -1;
+        for (int i = 0; i < pTagString.length(); i++) {
+            if (pTagString.charAt(i) == '#') {
+                start = i;
+            } else if (pTagString.charAt(i) == ' ' || pTagString.charAt(i) == '\n' || (i == pTagString.length() - 1 && start != -1)) {
+                if (start != -1) {
+                    if (i == pTagString.length() - 1) {
+                        i++; // case for if hash is last word and there is no
+                        // space after word
+                    }
+
+                    final String tag = pTagString.substring(start, i);
+                    string.setSpan(new ClickableSpan() {
+
+                        @Override
+                        public void onClick(View widget) {
+                            Log.d("Hash", String.format("Clicked %s!", tag));
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            // link color
+                            ds.setColor(Color.parseColor("#F99F63"));
+                            ds.setUnderlineText(false);
+                        }
+                    }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = -1;
+                }
+            }
+        }
+
+        pTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        pTextView.setText(string);
     }
 
 }

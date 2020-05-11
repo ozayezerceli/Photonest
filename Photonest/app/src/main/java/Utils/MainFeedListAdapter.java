@@ -2,6 +2,13 @@ package Utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +98,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             holder.date = convertView.findViewById(R.id.image_time_posted_main);
             holder.commentsLink = convertView.findViewById(R.id.image_comments_link_main);
             convertView.setTag(holder);
+            setTags(holder.caption, holder.caption.getText().toString());
 
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -115,6 +123,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             launchComment(mContext.getString(R.string.dbname_photos), photo.getPhoto_id(), convertView);
             GlideImageLoader.loadImageWithTransition(mContext, photo.getImage_path(), holder.post, holder.progressBar);
             holder.caption.setText(photo.getCaption());
+            setTags(holder.caption, holder.caption.getText().toString());
             holder.date.setText(photo.getDate_created());
             reference.child(mContext.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).child(mContext.getString(R.string.fieldComment)).orderByChild(mContext.getString(R.string.dateField))
                     .addValueEventListener(new ValueEventListener() {
@@ -334,5 +343,41 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         });
     }
 
+    private void setTags(TextView pTextView, String pTagString) {
+        SpannableString string = new SpannableString(pTagString);
 
+        int start = -1;
+        for (int i = 0; i < pTagString.length(); i++) {
+            if (pTagString.charAt(i) == '#') {
+                start = i;
+            } else if (pTagString.charAt(i) == ' ' || pTagString.charAt(i) == '\n' || (i == pTagString.length() - 1 && start != -1)) {
+                if (start != -1) {
+                    if (i == pTagString.length() - 1) {
+                        i++; // case for if hash is last word and there is no
+                        // space after word
+                    }
+
+                    final String tag = pTagString.substring(start, i);
+                    string.setSpan(new ClickableSpan() {
+
+                        @Override
+                        public void onClick(View widget) {
+                            Log.d("Hash", String.format("Clicked %s!", tag));
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            // link color
+                            ds.setColor(Color.parseColor("#F99F63"));
+                            ds.setUnderlineText(false);
+                        }
+                    }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = -1;
+                }
+            }
+        }
+
+        pTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        pTextView.setText(string);
+    }
 }

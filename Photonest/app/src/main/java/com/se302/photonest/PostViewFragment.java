@@ -4,7 +4,14 @@ package com.se302.photonest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -27,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.se302.photonest.Model.FollowersActivity;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -62,6 +70,7 @@ public class PostViewFragment extends Fragment {
     private StringBuilder mStringBuilder;
     private String mLikesString;
     private Egg mEgg;
+    Intent intent;
     public PostViewFragment() {
         // Required empty public constructor
     }
@@ -88,6 +97,7 @@ public class PostViewFragment extends Fragment {
         postOptions = view.findViewById(R.id.btn_postOption);
         mComments = view.findViewById(R.id.speech_bubble);
         mtxtComment = view.findViewById(R.id.image_comments_link);
+       // setTags(mCaption, mCaption.getText().toString());
 
         firebaseMethods = new FirebaseMethods(getActivity());
         ImageView mBackArrow = view.findViewById(R.id.backArrow);
@@ -147,12 +157,14 @@ public class PostViewFragment extends Fragment {
         photo = getPhotoFromBundle();
         UniversalImageLoader.setImage(photo.getImage_path(), mPostImage, null, "");
         mTimestamp.setText(photo.getDate_created());
-        mCaption.setText(photo.getCaption());
+      //  mCaption.setText(photo.getCaption());
+        setTags(mCaption, photo.getCaption());
         if(photo.getUser_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
             postOptions.setVisibility(View.VISIBLE);
         }
         setUserLikes(unlikedEgg,likedEgg,getActivity().getString(R.string.field_likes),photo.getPhoto_id(),likedBy);
     }
+
 
     public void showpopupMenu(View v) {
 
@@ -167,7 +179,8 @@ public class PostViewFragment extends Fragment {
                         case R.id.edit_post:
 
                             String photo_id = photo.getPhoto_id();
-                            firebaseMethods.editPost(photo_id, photo, getContext());
+                            String new_caption = firebaseMethods.editPost(photo_id, photo, getContext(),mCaption);
+
                             break;
                         case R.id.delete_post:
                             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -365,5 +378,43 @@ public class PostViewFragment extends Fragment {
             }
         });
     }
+    private void setTags(TextView pTextView, String pTagString) {
+        SpannableString string = new SpannableString(pTagString);
+
+        int start = -1;
+        for (int i = 0; i < pTagString.length(); i++) {
+            if (pTagString.charAt(i) == '#') {
+                start = i;
+            } else if (pTagString.charAt(i) == ' ' || pTagString.charAt(i) == '\n' || (i == pTagString.length() - 1 && start != -1)) {
+                if (start != -1) {
+                    if (i == pTagString.length() - 1) {
+                        i++; // case for if hash is last word and there is no
+                        // space after word
+                    }
+
+                    final String tag = pTagString.substring(start, i);
+                    string.setSpan(new ClickableSpan() {
+
+                        @Override
+                        public void onClick(View widget) {
+                            Log.d("Hash", String.format("Clicked %s!", tag));
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            // link color
+                            ds.setColor(Color.parseColor("#F99F63"));
+                            ds.setUnderlineText(false);
+                        }
+                    }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = -1;
+                }
+            }
+        }
+
+        pTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        pTextView.setText(string);
+    }
+
 
 }

@@ -2,23 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1b4b7e09-d46d-4ebd-9956-c96bedf20963" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Photonest/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/LoginActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/RegistrationActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Photonest/app/src/main/res/drawable/button_background.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Photonest/app/src/main/res/drawable/button_black.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Photonest/app/src/main/res/drawable/edittext_background.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Photonest/app/src/main/res/layout/activity_login.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Photonest/app/src/main/res/layout/activity_registration.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Photonest/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Photonest/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/res/values/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Photonest/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Photonest/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/java/Utils/CommentActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/Utils/CommentActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/java/Utils/CommentListAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/Utils/CommentListAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/java/Utils/FirebaseMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/Utils/FirebaseMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/java/Utils/MainFeedListAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/Utils/MainFeedListAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/EditProfileFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/EditProfileFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/PostViewFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/PostViewFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/ViewProfileActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/java/com/se302/photonest/ViewProfileActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Photonest/app/src/main/res/layout/activity_view_profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Photonest/app/src/main/res/layout/activity_view_profile.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
