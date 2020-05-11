@@ -15,7 +15,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/recycler_view_followers"
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="0dp"
@@ -26,7 +26,8 @@
     <RelativeLayout
         android:id="@+id/relativeParent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <include layout="@layout/bottom_navigation_bar" />
     </RelativeLayout>

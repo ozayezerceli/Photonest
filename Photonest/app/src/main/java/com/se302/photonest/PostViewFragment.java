@@ -116,9 +116,6 @@ public class PostViewFragment extends Fragment {
         });
         init();
         getPhotoDetails();
-
-        init();
-        getPhotoDetails();
         launchComment(getString(R.string.dbname_photos), photo.getPhoto_id());
 
         return view;

@@ -72,6 +72,7 @@ public class GalleryFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), UploadPostActivity.class);
                 intent.putExtra(getString(R.string.selected_image), selectedImage);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
         init();

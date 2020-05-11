@@ -162,6 +162,7 @@ public class FirebaseMethods {
                             Intent intent = new Intent(mActivity, MainActivity.class);
                             mActivity.startActivity(intent);
                             Toast.makeText(mActivity, "Photo upload success", Toast.LENGTH_SHORT).show();
+                            mActivity.finish();
                         }
                     });
 
