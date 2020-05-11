@@ -183,12 +183,17 @@ public class PostViewFragment extends Fragment {
 
                             break;
                         case R.id.delete_post:
-                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                            alert.setMessage("Your profile photo will be deleted. \nAre you sure?");
-                            alert.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                            alert.setMessage("Your post will be deleted. \nAre you sure?");
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     firebaseMethods.deletePost(photo);
+                                }
+                            });
+                            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
                                 }
                             });
                             alert.show();

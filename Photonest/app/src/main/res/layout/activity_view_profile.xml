@@ -44,11 +44,11 @@
                     android:layout_weight="1" />
 
                 <androidx.appcompat.widget.ActionMenuView
-                    android:id="@+id/profile_menu_view"
+                    android:id="@+id/view_profile_menu_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    app:menu="@menu/profile_menu" />
+                    app:menu="@menu/view_profile_menu" />
 
             </LinearLayout>
 

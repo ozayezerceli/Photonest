@@ -29,8 +29,6 @@
         <activity android:name=".Model.FollowersActivity"
             />
 
-        <activity android:name=".BlockUserActivity"></activity>
-
 
         <activity
             android:name=".MapsActivity"

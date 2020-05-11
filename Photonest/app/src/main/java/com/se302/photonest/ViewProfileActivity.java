@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ActionMenuView;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
@@ -180,6 +181,46 @@ public class ViewProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "something went wrong", Toast.LENGTH_SHORT).show();
         }
 
+        final FirebaseMethods firebaseMethods = new FirebaseMethods(ViewProfileActivity.this);
+        ActionMenuView actionMenuView = findViewById(R.id.view_profile_menu_view);
+        Menu bottomMenu = actionMenuView.getMenu();
+        getMenuInflater().inflate(R.menu.view_profile_menu, bottomMenu);
+        final MenuItem item = bottomMenu.getItem(0);
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference.child("Blocked").child(userID);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(viewUserID).exists()){
+                    item.setTitle("Unblock User"); }
+                else{
+                    item.setTitle("Block User"); }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        for(int i=0; i<bottomMenu.size() ;i++) {
+            bottomMenu.getItem(i).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.view_profile_block:
+                            if(menuItem.getTitle().toString().equals("Block User")) {
+                                firebaseMethods.blockUser(viewUserID);
+                                menuItem.setTitle("Unblock User");
+                            }else {
+                                firebaseMethods.unblockUser(viewUserID);
+                                menuItem.setTitle("Block User");
+                            }
+                            break;
+                    }
+                    return false;
+                }
+            });
+        }
     }
 
     private  void checkFollow(){
