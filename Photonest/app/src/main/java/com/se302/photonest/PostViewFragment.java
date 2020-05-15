@@ -8,9 +8,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -269,7 +271,7 @@ public class PostViewFragment extends Fragment {
                     likedBy.setClickable(false);
                     unlikedEgg.setVisibility(View.VISIBLE);
                     likedEgg.setVisibility(View.GONE);
-                    likedBy.setText("No one liked this post! Be first!");
+                    likedBy.setText("No Likes!");
                 }else {
                     likedBy.setClickable(true);
                     likedEgg.setVisibility(View.GONE);
@@ -350,8 +352,6 @@ public class PostViewFragment extends Fragment {
                 mStringBuilder.append(",");
                 String[] splitUsers = mStringBuilder.toString().split(",");
                 int length = splitUsers.length;
-                System.out.println("users: "+mStringBuilder.toString());
-                System.out.println("liked users:"+splitUsers[0]+"-"+length);
                 if(length == 1){
                     mLikesString = "Liked by " + splitUsers[0];
                 }
