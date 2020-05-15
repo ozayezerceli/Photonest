@@ -27,6 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Model.FollowersActivity"
+            android:screenOrientation="portrait"
             />
 
 
