@@ -16,16 +16,26 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import DataModels.Comment;
+import DataModels.UserInformation;
 
 public class CommentActivity extends AppCompatActivity implements UtilityInterface {
     Context mContext = CommentActivity.this;
@@ -60,6 +71,9 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
     FirebaseDatabase database;
     private FirebaseMethods firebaseMethods;
 
+    private ActionMode mode;
+    private Comment commentSelected;
+    private String photoUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +89,7 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
         mediaId = mediaIntent.getStringExtra("mediaID");
         mediaNode = mediaIntent.getStringExtra("mediaNode");
         profileImage = mediaIntent.getStringExtra(getString(R.string.profilePhotoField));
+        photoUserID = mediaIntent.getStringExtra("photoUser");
 
         setCommentProfileImage(profileImage);
         addComment(mediaNode, mediaId);
@@ -127,7 +142,82 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
         });
 
         goBack();
+
+        commentList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, final View view, final int i, long l) {
+                if(mode != null){
+                    return false;
+                }
+
+                Query query = myRef.child(getString(R.string.users_node))
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserInformation user = dataSnapshot.getValue(UserInformation.class);
+                        if (user.getUsername().equals(list.get(i).getUser_name()) || photoUserID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                            mode = startActionMode(modeCallBack);
+                            view.setSelected(true);
+                            commentSelected = list.get(i);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+                return true;
+            }
+        });
+
     }
+
+    private ActionMode.Callback modeCallBack = new ActionMode.Callback() {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            getMenuInflater().inflate(R.menu.selected_comment_menu,menu);
+            findViewById(R.id.relativeL13).setVisibility(View.GONE);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem) {
+            switch (menuItem.getItemId()){
+                case R.id.action_delete_comment:
+                    final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(mediaNode).child(mediaId).child(getString(R.string.fieldComment));
+                    reference.child(commentSelected.getId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            list.remove(commentSelected);
+                            listAdapter.notifyDataSetChanged();
+                            actionMode.finish();
+                            Toast.makeText(CommentActivity.this, "Comment deleted.", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(CommentActivity.this, "Error occured!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            mode = null;
+            findViewById(R.id.relativeL13).setVisibility(View.VISIBLE);
+        }
+    };
 
     private void tagCheck(String s, int start, int end) {
         mspanable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_hashtag)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

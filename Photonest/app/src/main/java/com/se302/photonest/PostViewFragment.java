@@ -38,6 +38,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import DataModels.Photo;
 import DataModels.PhotoInformation;
 import DataModels.UserInformation;
 import Utils.Egg;
@@ -137,6 +138,7 @@ public class PostViewFragment extends Fragment {
         mediaIntent.putExtra("mediaID", mediaId);
         mediaIntent.putExtra("mediaNode", mediaNode);
         mediaIntent.putExtra(getString(R.string.profilePhotoField), profilePhotoURL);
+        mediaIntent.putExtra("photoUser",photo.getUser_id());
 
         mComments.setOnClickListener(new View.OnClickListener() {
             @Override

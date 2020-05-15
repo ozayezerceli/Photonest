@@ -138,7 +138,7 @@ public class SearchActivity extends AppCompatActivity {
         listAdapter.notifyDataSetChanged();
 
         if(keyword.length()>0) {
-            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+            final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
             Query query = myRef.child(getString(R.string.users_node))
                     .orderByChild(getString(R.string.usernameField)).startAt(keyword).endAt(keyword+"\uf8ff");
 
@@ -147,9 +147,22 @@ public class SearchActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     searchList.clear();
                     listAdapter.notifyDataSetChanged();
-                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                        searchList.add(singleSnapshot.getValue(User.class));
-                        listAdapter.notifyDataSetChanged();
+                    for (final DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                        User user = singleSnapshot.getValue(User.class);
+                        Query query1 = myRef.child("Blocked").child(user.getId());
+                        query1.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(!dataSnapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).exists()){
+                                    searchList.add(singleSnapshot.getValue(User.class));
+                                    listAdapter.notifyDataSetChanged();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) { }
+                        });
+                        //searchList.add(singleSnapshot.getValue(User.class));
+                        //listAdapter.notifyDataSetChanged();
                     }
                 }
 

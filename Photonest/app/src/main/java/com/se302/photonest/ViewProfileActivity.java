@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ActionMenuView;
 import androidx.fragment.app.FragmentTransaction;
@@ -61,9 +62,10 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     private ImageView image_profile;
     private TextView posts, followers,following, fullname, bio;
-    private Button follow_Btn, unfollow_Btn, editprofile_Btn;
+    private Button follow_Btn, unfollow_Btn, editprofile_Btn, unblock_Btn;
     private RelativeLayout mrelativelayout;
     private GridView mGridView;
+    private Menu bottomMenu;
 
     private FirebaseMethods firebaseMethods;
 
@@ -84,6 +86,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         image_profile = findViewById(R.id.View_profile_image);
         mrelativelayout = findViewById(R.id.relativeTop);
         mGridView = findViewById(R.id.grid_view);
+        unblock_Btn = findViewById(R.id.Unblock_button);
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -96,7 +99,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         getFollowers();
         getNrPosts();
         setupBottomNavBar();
-        setUserPhotos();
+        //setUserPhotos();
 
         follow_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +134,24 @@ public class ViewProfileActivity extends AppCompatActivity {
             unfollow_Btn.setVisibility(View.GONE);
             editprofile_Btn.setVisibility(View.VISIBLE);
         } else{
-            checkFollow();
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+            reference.child("Blocked").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.child(viewUserID).exists()){
+                        setBlocked();
+                    }else{
+                        checkFollow();
+                        setUserPhotos();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            //checkFollow();
         }
 
         followers.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +170,16 @@ public class ViewProfileActivity extends AppCompatActivity {
                 intent.putExtra("id", viewUserID);
                 intent.putExtra("title", "following");
                 startActivity(intent);
+            }
+        });
+
+        unblock_Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firebaseMethods.unblockUser(viewUserID);
+                setUnBlocked();
+                setUserPhotos();
+                bottomMenu.getItem(0).setTitle("Block User");
             }
         });
 
@@ -183,7 +213,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
         final FirebaseMethods firebaseMethods = new FirebaseMethods(ViewProfileActivity.this);
         ActionMenuView actionMenuView = findViewById(R.id.view_profile_menu_view);
-        Menu bottomMenu = actionMenuView.getMenu();
+        bottomMenu = actionMenuView.getMenu();
         getMenuInflater().inflate(R.menu.view_profile_menu, bottomMenu);
         final MenuItem item = bottomMenu.getItem(0);
 
@@ -210,10 +240,14 @@ public class ViewProfileActivity extends AppCompatActivity {
                         case R.id.view_profile_block:
                             if(menuItem.getTitle().toString().equals("Block User")) {
                                 firebaseMethods.blockUser(viewUserID);
-                                menuItem.setTitle("Unblock User");
+                                //menuItem.setTitle("Unblock User");
+                                startActivity(getIntent());
+                                finish();
                             }else {
                                 firebaseMethods.unblockUser(viewUserID);
-                                menuItem.setTitle("Block User");
+                                //menuItem.setTitle("Block User");
+                                startActivity(getIntent());
+                                finish();
                             }
                             break;
                     }
@@ -256,6 +290,18 @@ public class ViewProfileActivity extends AppCompatActivity {
         follow_Btn.setVisibility(View.VISIBLE);
         unfollow_Btn.setVisibility(View.GONE);
         editprofile_Btn.setVisibility(View.GONE);
+    }
+
+    private void setBlocked(){
+        unblock_Btn.setVisibility(View.VISIBLE);
+        follow_Btn.setVisibility(View.GONE);
+        unfollow_Btn.setVisibility(View.GONE);
+    }
+
+    private void setUnBlocked(){
+        unblock_Btn.setVisibility(View.GONE);
+        follow_Btn.setVisibility(View.VISIBLE);
+        unfollow_Btn.setVisibility(View.GONE);
     }
 
     private  void getFollowers(){

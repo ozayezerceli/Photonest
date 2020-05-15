@@ -180,6 +180,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         mediaIntent.putExtra("mediaID", mediaId);
         mediaIntent.putExtra("mediaNode", mediaNode);
         mediaIntent.putExtra(mContext.getString(R.string.profilePhotoField), profileImgUrl);
+        mediaIntent.putExtra("photoUser",photo.getUser_id());
 
         viewComments.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -77,7 +77,7 @@ public class PhotoFragmentTest {
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         Espresso.onView(withId(R.id.launch_camera)).perform(click());
         Espresso.onView(withId(R.id.upload_post_description)).perform(typeText("#testCaption"));
-        Espresso.onView(withId(R.id.upload_post_add_location_btn)).perform(click());
+        Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.upload_post_post)).perform(click());
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         //intended(toPackage("com.android.camera2"));

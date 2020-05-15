@@ -178,8 +178,17 @@
                                 android:layout_marginTop="8dp"
                                 android:id="@+id/View_editprofile_button"
                                 android:text="Edit Profile"
-                                android:background="@drawable/button_background" />
+                                android:background="@drawable/button_background"
+                                android:visibility="gone"/>
 
+                            <Button
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:id="@+id/Unblock_button"
+                                android:text="Unblock User"
+                                android:background="@drawable/button_background"
+                                android:visibility="gone"/>
                         </LinearLayout>
 
                     </LinearLayout>

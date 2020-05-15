@@ -503,6 +503,77 @@ public class FirebaseMethods {
                 .child(userID)
                 .child(blockedUserID)
                 .removeValue();
+
+        FirebaseDatabase.getInstance().getReference()
+                .child(mActivity.getString(R.string.following_node))
+                .child(userID)
+                .child(blockedUserID)
+                .removeValue();
+
+        FirebaseDatabase.getInstance().getReference()
+                .child(mActivity.getString(R.string.followers_node))
+                .child(blockedUserID)
+                .child(userID)
+                .removeValue();
+
+        deleteAllUserCommentsAndLikesFromAnotherUser(userID,blockedUserID);
+        deleteAllUserCommentsAndLikesFromAnotherUser(blockedUserID,userID);
+    }
+
+    private void deleteAllUserCommentsAndLikesFromAnotherUser(final String user1, final String user2){
+        myRef.child(mActivity.getString(R.string.users_node))
+                .child(user2).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                final String username = dataSnapshot.child("username").getValue(String.class);
+
+                myRef.child(mActivity.getString(R.string.dbname_photos))
+                        .orderByChild(mActivity.getString(R.string.users_id)).equalTo(user1).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds : dataSnapshot.getChildren()){
+                            final String postkey = ds.getKey();
+                            myRef.child(mActivity.getString(R.string.dbname_photos)).child(postkey)
+                                    .child(mActivity.getString(R.string.fieldComment))
+                                    .orderByChild("user_name").equalTo(username).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot ds1 : dataSnapshot.getChildren()){
+                                        myRef.child(mActivity.getString(R.string.dbname_photos)).child(postkey)
+                                                .child(mActivity.getString(R.string.fieldComment)).child(ds1.getKey()).removeValue();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                }
+                            });
+
+                            myRef.child(mActivity.getString(R.string.field_likes)).child(postkey).child(mActivity.getString(R.string.field_likes))
+                                    .orderByChild(mActivity.getString(R.string.users_id)).equalTo(user2).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot ds : dataSnapshot.getChildren()){
+                                        myRef.child(mActivity.getString(R.string.field_likes)).child(postkey).child(mActivity.getString(R.string.field_likes)).child(Objects.requireNonNull(ds.getKey())).removeValue();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     public void unblockUser(String blockedUserID){
