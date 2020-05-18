@@ -151,23 +151,11 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                     return false;
                 }
 
-                Query query = myRef.child(getString(R.string.users_node))
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        UserInformation user = dataSnapshot.getValue(UserInformation.class);
-                        if (user.getUsername().equals(list.get(i).getUser_name()) || photoUserID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                            mode = startActionMode(modeCallBack);
-                            view.setSelected(true);
-                            commentSelected = list.get(i);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
+                if(list.get(i).getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) || photoUserID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                    mode = startActionMode(modeCallBack);
+                    view.setSelected(true);
+                    commentSelected = list.get(i);
+                }
                 return true;
             }
         });
@@ -198,6 +186,8 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                         public void onSuccess(Void aVoid) {
                             list.remove(commentSelected);
                             listAdapter.notifyDataSetChanged();
+                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference().child(getString(R.string.field_likes_comment));
+                            reference1.child(commentSelected.getId()).removeValue();
                             actionMode.finish();
                             Toast.makeText(CommentActivity.this, "Comment deleted.", Toast.LENGTH_LONG).show();
                         }
