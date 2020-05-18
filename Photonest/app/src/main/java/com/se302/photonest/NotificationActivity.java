@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -22,6 +24,11 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
         setupBottomNavBar();
+        Fragment mFragment = null;
+        mFragment = new NotificationFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container_notification, mFragment).commit();
     }
 
     private void setupBottomNavBar(){

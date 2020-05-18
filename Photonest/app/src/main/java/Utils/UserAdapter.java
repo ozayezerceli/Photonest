@@ -16,11 +16,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import com.se302.photonest.R;
 import com.se302.photonest.ViewProfileActivity;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -81,9 +83,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
                     FirebaseDatabase.getInstance().getReference().child("following").child(firebaseUser.getUid())
                             .child(user.getId()).child("user_id").setValue(user.getId());
 
+                    addNotifications(user.getId());
 
-
-                   // addNotification(user.getId());
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("following").child(firebaseUser.getUid())
                             .child(user.getId()).removeValue();
@@ -111,6 +112,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
 
 
     }
+
+    private void addNotifications(String userid){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+        HashMap<String,Object> hash = new HashMap<>();
+        hash.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        hash.put("text", "has followed you");
+        hash.put("postid","");
+        hash.put("ispost", false);
+        ref.push().setValue(hash);
+    }
+
 
     @Override
     public int getItemCount() {

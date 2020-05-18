@@ -38,6 +38,7 @@ import com.se302.photonest.Model.FollowersActivity;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import DataModels.Photo;
@@ -248,6 +249,7 @@ public class PostViewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 toggleLike(unlikedEgg,likedEgg,object,likedBy);
+                addNotifications(photo.getUser_id(), photo.getPhoto_id());
             }
         });
         likedEgg.setOnClickListener(new View.OnClickListener() {
@@ -421,6 +423,17 @@ public class PostViewFragment extends Fragment {
 
         pTextView.setMovementMethod(LinkMovementMethod.getInstance());
         pTextView.setText(string);
+    }
+
+    private void addNotifications(String userid, String postid){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+        HashMap<String,Object> hash = new HashMap<>();
+        hash.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        hash.put("text", "liked your post");
+        hash.put("postid",postid);
+        hash.put("ispost", true);
+
+        ref.push().setValue(hash);
     }
 
 

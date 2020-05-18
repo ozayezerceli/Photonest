@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +32,7 @@ import com.se302.photonest.Model.FollowersActivity;
 import com.se302.photonest.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import DataModels.Comment;
@@ -134,14 +136,26 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             @Override
             public void onClick(View v) {
                 toggleLike(unlikedEgg,likedEgg,comment,likes);
+                addNotificationsLike(comment.getUserId(), comment.getPhotoId());
             }
         });
         likedEgg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleLike(unlikedEgg,likedEgg,comment,likes);
+                toggleLike(unlikedEgg, likedEgg, comment, likes);
             }
         });
+    }
+
+    private void addNotificationsLike(String userid, String postid){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+        HashMap<String,Object> hash = new HashMap<>();
+        hash.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        hash.put("text", "liked your comment");
+        hash.put("postid",postid);
+        hash.put("ispost", true);
+
+        ref.push().setValue(hash);
     }
 
     private void toggleLike(final ImageView unlikedEgg, final ImageView likedEgg, final Comment comment, final TextView likes) {
@@ -271,5 +285,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         pTextView.setMovementMethod(LinkMovementMethod.getInstance());
         pTextView.setText(string);
     }
+
 
 }

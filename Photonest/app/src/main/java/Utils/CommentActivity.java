@@ -46,6 +46,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.se302.photonest.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import DataModels.Comment;
@@ -278,11 +279,21 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                 if(commentText.getText().toString().length()>0) {
                     isCommentAdded = true;
                     firebaseMethods.addNewComment(mediaNode,mediaId, commentText.getText().toString());
-
-
+                    addNotificationsComment(photoUserID,mediaId, commentText.getText().toString());
                 }
             }
         });
+    }
+
+    private void addNotificationsComment(String userid, String postid, String text){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+        HashMap<String,Object> hash = new HashMap<>();
+        hash.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        hash.put("text", "commented: "+text);
+        hash.put("postid",postid);
+        hash.put("ispost", true);
+
+        ref.push().setValue(hash);
     }
 
     private void setTags(TextView pTextView, String pTagString) {

@@ -31,6 +31,7 @@ import com.se302.photonest.Model.FollowersActivity;
 import com.se302.photonest.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -203,6 +204,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             @Override
             public void onClick(View v) {
                 toggleLike(unlikedEgg,likedEgg,object,likedBy);
+                addNotifications(photo.getUser_id(), photo.getPhoto_id());
             }
         });
         likedEgg.setOnClickListener(new View.OnClickListener() {
@@ -212,6 +214,17 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             }
         });
     }
+    private void addNotifications(String userid, String postid){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+        HashMap<String,Object> hash = new HashMap<>();
+        hash.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        hash.put("text", "liked your post");
+        hash.put("postid",postid);
+        hash.put("ispost", true);
+
+        ref.push().setValue(hash);
+    }
+
 
     private void setUserLikes(final ImageView unlikedEgg, final ImageView likedEgg,String mediaNode, String mediaId,final TextView likedBy){
 

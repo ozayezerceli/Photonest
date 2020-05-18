@@ -102,8 +102,20 @@ public class FirebaseMethods {
                 .child(userID)
                 .child(mActivity.getString(R.string.users_id))
                 .setValue(userID);
+
+        addNotifications(uid);
+
     }
 
+    private void addNotifications(String userid){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+        HashMap<String,Object> hash = new HashMap<>();
+        hash.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        hash.put("text", "has followed you");
+        hash.put("postid","");
+        hash.put("ispost", false);
+        ref.push().setValue(hash);
+    }
 
     public void removeFollowingAndFollowers(String uid) {
 
