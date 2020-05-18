@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.se302.photonest.Model.FollowersActivity;
+import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;
 
 import java.util.ArrayList;
@@ -38,6 +42,7 @@ import java.util.Objects;
 import DataModels.Photo;
 import DataModels.UserInformation;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.se302.photonest.ViewProfileActivity;
 
 
 public class MainFeedListAdapter extends ArrayAdapter<Object> {
@@ -50,7 +55,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
     private Photo photo;
     private Egg mEgg;
     private String likeId;
-    private String mLikesString;
+    private String mLikesString = "";
     private boolean mLikedByCurrentUser = false;
     private StringBuilder mStringBuilder;
 
@@ -121,6 +126,18 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             photo = (Photo) object;
             setUserLikes(holder.unlikedEgg,holder.likedEgg,mContext.getString(R.string.field_likes),photo.getPhoto_id(),holder.likedBy);
             setProfileInfo(photo.getUser_id(), holder.profileImage, holder.username);
+            holder.profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(photo.getUser_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        mContext.startActivity(new Intent(mContext, ProfileActivity.class));
+                    }else {
+                        Intent intent = new Intent(mContext, ViewProfileActivity.class);
+                        intent.putExtra(mContext.getString(R.string.users_id), photo.getUser_id());
+                        mContext.startActivity(intent);
+                    }
+                }
+            });
             launchComment(mContext.getString(R.string.dbname_photos), photo.getPhoto_id(), convertView);
             GlideImageLoader.loadImageWithTransition(mContext, photo.getImage_path(), holder.post, holder.progressBar);
             holder.caption.setText(photo.getCaption());
@@ -164,6 +181,18 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                     }
                     GlideImageLoader.loadImageWithOutTransition(mContext, ds.getValue(UserInformation.class).getImageurl(), profileImage);
                     username.setText(Objects.requireNonNull(ds.getValue(UserInformation.class)).getUsername());
+                    username.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(userId.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                mContext.startActivity(new Intent(mContext, ProfileActivity.class));
+                            }else {
+                                Intent intent = new Intent(mContext, ViewProfileActivity.class);
+                                intent.putExtra(mContext.getString(R.string.users_id),userId);
+                                mContext.startActivity(intent);
+                            }
+                        }
+                    });
                 }
             }
 
@@ -239,19 +268,18 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                     likedBy.setClickable(false);
                     unlikedEgg.setVisibility(View.VISIBLE);
                     likedEgg.setVisibility(View.GONE);
-                    likedBy.setText("No one liked this post! Be first!");
+                    likedBy.setText("No likes!");
 
                 }else {
                     likedBy.setClickable(true);
                     likedEgg.setVisibility(View.GONE);
                     unlikedEgg.setVisibility(View.VISIBLE);
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
                         if (ds.child(mContext.getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
                             unlikedEgg.setVisibility(View.GONE);
                             likedEgg.setVisibility(View.VISIBLE);
                         }
-                        String ds1 =  ds.child("user_id").getValue().toString();
+                        String ds1 = ds.child("user_id").getValue().toString();
                         setLikeText(ds1,likedBy);
                     }
                 }

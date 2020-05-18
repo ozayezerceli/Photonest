@@ -226,6 +226,30 @@ public class PostViewFragment extends Fragment {
                 UniversalImageLoader.setImage(userInformation.getImageurl(), mProfileImage, null, "");
                 mUsername.setText(userInformation.getUsername());
                 profilePhotoURL = userInformation.getImageurl();
+                mProfileImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(photo.getUser_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                            getActivity().startActivity(new Intent(getActivity(), ProfileActivity.class));
+                        }else {
+                            Intent intent = new Intent(getActivity(), ViewProfileActivity.class);
+                            intent.putExtra(getActivity().getString(R.string.users_id), photo.getUser_id());
+                            getActivity().startActivity(intent);
+                        }
+                    }
+                });
+                mUsername.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(photo.getUser_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                            getActivity().startActivity(new Intent(getActivity(), ProfileActivity.class));
+                        }else {
+                            Intent intent = new Intent(getActivity(), ViewProfileActivity.class);
+                            intent.putExtra(getActivity().getString(R.string.users_id), photo.getUser_id());
+                            getActivity().startActivity(intent);
+                        }
+                    }
+                });
             }
 
             @Override

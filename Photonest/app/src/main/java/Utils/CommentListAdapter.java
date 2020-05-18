@@ -6,9 +6,11 @@ import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.se302.photonest.Model.FollowersActivity;
+import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;
+import com.se302.photonest.ViewProfileActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,9 +109,23 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             }
         });
         GlideImageLoader.loadImageWithOutTransition(mContext, Objects.requireNonNull(commentData).getProfile_image(),holder.profileImage);
+        holder.profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(commentData.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    mContext.startActivity(new Intent(mContext, ProfileActivity.class));
+                }else {
+                    Intent intent = new Intent(mContext, ViewProfileActivity.class);
+                    intent.putExtra(mContext.getString(R.string.users_id), commentData.getUserId());
+                    mContext.startActivity(intent);
+                }
+            }
+        });
         String username = Objects.requireNonNull(commentData).getUser_name();
-        SpannableStringBuilder str = new SpannableStringBuilder(username+" "+commentData.getComment());
-        str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, username.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        String ss = username+" "+commentData.getComment();
+        SpannableString str = new SpannableString(ss);
+        ForegroundColorSpan fcsDark = new ForegroundColorSpan(Color.parseColor("#F99F63"));
+        str.setSpan(fcsDark, 0, username.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.comment.setText(str);
         setTags(holder.comment, holder.comment.getText().toString());
         //Setting date
