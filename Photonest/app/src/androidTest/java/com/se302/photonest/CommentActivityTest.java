@@ -56,12 +56,19 @@ public class CommentActivityTest {
         }
 
 
+        @Test
+        public void testUserLikeComment(){
+
+        }
+
     @Test
     public void testLaunch() {
         Espresso.onView(withId(R.id.post_comment)).check(matches(isDisplayed()));
         Espresso.onView(withId(R.id.comment_profile_image)).check(matches(isDisplayed()));
         Espresso.onView(withId(R.id.comment)).check(matches(isDisplayed()));
         Espresso.onView(withId(R.id.back)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.comment_list)).check(matches(isDisplayed()));
+
     }
 
     @Test

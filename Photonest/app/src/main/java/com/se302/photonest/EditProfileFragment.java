@@ -95,6 +95,7 @@ public class EditProfileFragment extends Fragment {
     private String imgUrl;
     private boolean profilechanged= false;
     private boolean uploaded = false;
+    private boolean photoDeleted=false;
     private Bitmap bitmap;
 
 
@@ -159,6 +160,7 @@ public class EditProfileFragment extends Fragment {
                     uploadImage();
                  Toast.makeText(getActivity(), "Changes are being loaded.", Toast.LENGTH_SHORT).show();
              }
+
              else {
                  startActivity(new Intent(getActivity(), ProfileActivity.class));
                  Toast.makeText(getActivity(), "Profile Edited!", Toast.LENGTH_SHORT).show();
@@ -171,8 +173,37 @@ public class EditProfileFragment extends Fragment {
         delete_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deletePhoto();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete")
+                        .setMessage("Your profile photo will be deleted. \nAre you sure?")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                                            //Toast.makeText(getActivity(), "Deleting profile photo...", Toast.LENGTH_SHORT).show();
+                                            DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                            Picasso.get().load(def_image).into(edit_profile_image);
+                                            Toast.makeText(getActivity(), "Profile photo is deleted", Toast.LENGTH_SHORT).show();
+
+                                            HashMap<String,Object> hashMap = new HashMap<>();
+                                            hashMap.put("imageurl",""+def_image);
+                                            reference.child("imageurl").setValue(def_image);
+
+                                            reference.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task)
+                                                {
+                                                    if (task.isSuccessful()) {
+                                                        photoDeleted=true;
+                                                        edit_profile_image.setImageURI(Uri.parse(def_image));
+                                                        startActivity(new Intent(getActivity(), ProfileActivity.class));
+                                                        Toast.makeText(getActivity().getApplicationContext(), "Profile Photo is deleted.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                            }})
+                        .setNegativeButton("NO", null).show();
             }
+
 
         });
 
@@ -200,58 +231,6 @@ public class EditProfileFragment extends Fragment {
         });
 
         return view;
-    }
-    private void deletePhoto(){
-        new AlertDialog.Builder(getContext())
-                .setTitle("Delete")
-                .setMessage("Your profile photo will be deleted. \nAre you sure?")
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        myRef.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
-                                if(!Image_Url.equals(def_image)){
-                                    //Toast.makeText(getActivity(), "Deleting profile photo...", Toast.LENGTH_SHORT).show();
-
-                                    StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(Image_Url);
-                                    storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            myRef.child("imageurl").setValue(def_image);
-                                            Picasso.get().load(def_image).into(edit_profile_image);
-                                            Toast.makeText(getActivity(), "Profile photo is deleted", Toast.LENGTH_SHORT).show();
-                                            //    getActivity().finish();
-                                            startActivity(new Intent(getActivity(),ProfileActivity.class));
-                                            Log.d(TAG, "onSuccess: deleted file");
-
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception exception) {
-                                            Toast.makeText(getActivity(), "Profile photo is not deleted.", Toast.LENGTH_SHORT).show();
-                                            //   getActivity().finish();
-                                            startActivity(new Intent(getActivity(),ProfileActivity.class));
-                                            Log.d(TAG, "onFailure: did not delete file");
-                                        }
-                                    });
-
-                                } else {
-                                    //  Toast.makeText(getActivity(), "You cannot delete profile photo.", Toast.LENGTH_SHORT).show();
-                                    //  getActivity().finish();
-                                    startActivity(new Intent(getActivity(),ProfileActivity.class));
-                                }
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }})
-                .setNegativeButton("NO", null).show();
     }
 
 

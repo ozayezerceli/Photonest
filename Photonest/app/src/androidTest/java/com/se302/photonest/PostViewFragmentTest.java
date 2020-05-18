@@ -1,9 +1,11 @@
 package com.se302.photonest;
 
 
+import android.content.Intent;
 import android.os.SystemClock;
 
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -17,6 +19,7 @@ import org.junit.Test;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
@@ -26,6 +29,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.is;
 
 public class PostViewFragmentTest {
     @Rule
@@ -67,7 +71,19 @@ public class PostViewFragmentTest {
                 .check(matches(isDisplayed()))
                 .perform(click());
     }
+    @Test
+    public void testUserLikePost(){
+        onView(withId(R.id.image_egg_unliked_post_view)).perform(click());
+        onView(withId(R.id.image_egg_liked_post)).check(matches(isDisplayed()));
 
+    }
+
+    @Test
+    public void testUserUnlikePost(){
+        onView(withId(R.id.image_egg_liked_post)).perform(click());
+        onView(withId(R.id.image_egg_unliked_post_view)).check(matches(isDisplayed()));
+
+    }
     @Test
     public void testLaunch(){
         onView(withId(R.id.post_image)).check(matches(isDisplayed()));
@@ -79,6 +95,7 @@ public class PostViewFragmentTest {
         onView(withId(R.id.image_egg_unliked_post_view)).check(matches(isDisplayed()));
         onView(withId(R.id.profile_photo)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_postOption)).check(matches(isDisplayed()));
+
     }
 
     @Test
