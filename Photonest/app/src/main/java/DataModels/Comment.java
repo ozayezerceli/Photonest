@@ -2,6 +2,8 @@ package DataModels;
 
 public class Comment {
     private String id;
+    private String userId;
+    private String photoId;
     private String comment;
     private String date_added;
     private String username;
@@ -12,7 +14,12 @@ public class Comment {
     }
 
 
-    public Comment(String id,String comment, String date_added, String username, String profileImage, long commentLikes) {
+
+
+
+    public Comment(String userId, String photoId, String id, String comment, String date_added, String username, String profileImage, long commentLikes) {
+        this.userId = userId;
+        this.photoId = photoId;
         this.id = id;
         this.comment = comment;
         this.date_added = date_added;
@@ -37,16 +44,8 @@ public class Comment {
         return date_added;
     }
 
-    public void setDate_added(String date_added) {
-        this.date_added = date_added;
-    }
-
     public String getUser_name() {
         return username;
-    }
-
-    public void setUser_name(String username) {
-        this.username = username;
     }
 
     public String getProfile_image() {
@@ -63,6 +62,20 @@ public class Comment {
 
     public void setComment_likes(long comment_likes) {
         this.comment_likes = comment_likes;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+
+    public String getUsername() {
+        return username;
     }
 
 }

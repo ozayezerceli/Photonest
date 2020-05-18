@@ -356,7 +356,7 @@ public class FirebaseMethods {
              //   setTags(tv, comment);
                 String username = Objects.requireNonNull(dataSnapshot.child(mActivity.getString(R.string.usernameField)).getValue()).toString();
                 String profileImage = Objects.requireNonNull(dataSnapshot.child(mActivity.getString(R.string.profilePhotoField)).getValue()).toString();
-                Comment comment_model = new Comment(commentId,comment, dateAdded, username, profileImage, 0);
+                Comment comment_model = new Comment(userID, mediaId, commentId, comment, dateAdded, username, profileImage, 0);
                 myRef.child(node).child(mediaId).child(mActivity.getString(R.string.fieldComment))
                         .child(Objects.requireNonNull(commentId)).setValue(comment_model);
             }
@@ -535,7 +535,7 @@ public class FirebaseMethods {
                             final String postkey = ds.getKey();
                             myRef.child(mActivity.getString(R.string.dbname_photos)).child(postkey)
                                     .child(mActivity.getString(R.string.fieldComment))
-                                    .orderByChild("user_name").equalTo(username).addValueEventListener(new ValueEventListener() {
+                                    .orderByChild("username").equalTo(username).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for(DataSnapshot ds1 : dataSnapshot.getChildren()){
