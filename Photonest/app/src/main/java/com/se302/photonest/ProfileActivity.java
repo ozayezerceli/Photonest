@@ -300,17 +300,6 @@ public class ProfileActivity extends AppCompatActivity {
                     photoInformation.setHashTags(hashTags);
                     photoInformation.setDate_created(snapshot.child("date_created").getValue().toString());
                     photoInformation.setImage_path(snapshot.child("image_path").getValue().toString());
-
-                    List<Like> likesList = new ArrayList<Like>();
-                    for (DataSnapshot dSnapshot : snapshot
-                            .child(getString(R.string.field_likes)).getChildren()){
-                        Like like = new Like();
-                        like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
-                        likesList.add(like);
-                    }
-                    photoInformation.setLikes(likesList);
-
-
                     photoArrayList.add(photoInformation);
                 }
                 int gridWidth = getResources().getDisplayMetrics().widthPixels;

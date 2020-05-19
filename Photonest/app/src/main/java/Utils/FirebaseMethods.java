@@ -59,6 +59,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TimeZone;
+import java.util.UUID;
 
 public class FirebaseMethods {
     private FirebaseAuth mAuth;
@@ -161,8 +162,9 @@ public class FirebaseMethods {
         if (photoType.equals(mActivity.getString(R.string.new_photo))) {
 
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String id = UUID.randomUUID().toString();
             StorageReference storageReference = mStorageReference
-                    .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (count + 1));
+                    .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (id));
 
             //convert image url to bitmap
             if (bm == null) {
