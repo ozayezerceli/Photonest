@@ -25,4 +25,12 @@
         <item name="android:progressDrawable">@drawable/rating_bar_bg</item>
     </style>
 
+    <style name="Base.Widget.AppCompat.ActionMode" parent="">
+        <item name="background">@drawable/banner_border</item>
+        <item name="backgroundSplit">?attr/actionModeSplitBackground</item>
+        <item name="height">?attr/actionBarSize</item>
+        <item name="titleTextStyle">@style/TextAppearance.AppCompat.Widget.ActionMode.Title</item>
+        <item name="subtitleTextStyle">@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle</item>
+        <item name="closeItemLayout">@layout/abc_action_mode_close_item_material</item>
+    </style>
 </resources>
