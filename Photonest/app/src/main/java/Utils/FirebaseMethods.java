@@ -414,6 +414,22 @@ public class FirebaseMethods {
                     myRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue();
                 }
 
+                myRef.child(mActivity.getString(R.string.field_likes)).child(photo.getPhoto_id()).removeValue();
+
+                myRef.child("Notifications").child(photo.getUser_id())
+                        .orderByChild("postid").equalTo(photo.getPhoto_id()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds : dataSnapshot.getChildren()){
+                            myRef.child("Notifications").child(photo.getUser_id()).child(ds.getKey()).removeValue();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(mActivity,"Notification deleting error.",Toast.LENGTH_LONG).show();
+                    }
+                });
+
                 Toast.makeText(mActivity,"Photo deleted successfully.",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(mActivity, ProfileActivity.class);
                 mActivity.startActivity(intent);

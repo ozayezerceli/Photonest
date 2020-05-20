@@ -2,6 +2,7 @@ package com.se302.photonest;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -234,6 +235,10 @@ public class PostViewFragment extends Fragment {
                             alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    ProgressDialog progressDialog = new ProgressDialog(getContext());
+                                    progressDialog.setMessage("Deleting post!");
+                                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                    progressDialog.show();
                                     firebaseMethods.deletePost(photo);
                                 }
                             });
