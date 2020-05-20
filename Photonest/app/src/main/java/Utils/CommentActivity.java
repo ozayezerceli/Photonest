@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,7 +90,7 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
         Intent mediaIntent = getIntent();
         mediaId = mediaIntent.getStringExtra("mediaID");
         mediaNode = mediaIntent.getStringExtra("mediaNode");
-        profileImage = mediaIntent.getStringExtra(getString(R.string.profilePhotoField));
+        profileImage = mediaIntent.getStringExtra("imageurl");
         photoUserID = mediaIntent.getStringExtra("photoUser");
 
         setCommentProfileImage(profileImage);
@@ -325,9 +326,9 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
     }
 
     private void setCommentProfileImage(String image){
-
-        CircularImageView profileImage = findViewById(R.id.comment_profile_image);
-        GlideImageLoader.loadImageWithOutTransition(mContext,image,profileImage);
+        CircularImageView profileImageView = findViewById(R.id.comment_profile_image);
+        GlideImageLoader.loadImageWithOutTransition(mContext,image,profileImageView);
+        System.out.println("yey");
     }
 
 

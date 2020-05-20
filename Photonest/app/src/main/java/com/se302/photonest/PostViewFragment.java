@@ -61,6 +61,7 @@ public class PostViewFragment extends Fragment {
     private UserInformation userInformation;
     private boolean mLikedByCurrentUser = false;
 
+    private String currentprofile = "";
     private String profilePhotoURL = "";
 
 
@@ -130,22 +131,57 @@ public class PostViewFragment extends Fragment {
         });
         init();
         getPhotoDetails();
+        getCurrentProfile();
         launchComment(getString(R.string.dbname_photos), photo.getPhoto_id());
+        myRef.child(getContext().getString(R.string.dbname_photos)).child(photo.getPhoto_id()).child(getContext().getString(R.string.fieldComment)).orderByChild(getContext().getString(R.string.dateField))
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.getChildrenCount()==0){
+                            mtxtComment.setText("Be first to comment");
+                        }else {
+                            mtxtComment.setText("View all " + dataSnapshot.getChildrenCount() + " comments");
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
+                    }
+                });
         return view;
     }
 
-    private void launchComment(String mediaNode, String mediaId) {
+    private void getCurrentProfile() {
 
-        final Intent mediaIntent = new Intent(getActivity(), CommentActivity.class);
-        mediaIntent.putExtra("mediaID", mediaId);
-        mediaIntent.putExtra("mediaNode", mediaNode);
-        mediaIntent.putExtra(getString(R.string.profilePhotoField), profilePhotoURL);
-        mediaIntent.putExtra("photoUser",photo.getUser_id());
+        Query query = myRef.child(getContext().getString(R.string.users_node))
+                .orderByKey().equalTo(mAuth.getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    currentprofile = Objects.requireNonNull(ds.getValue(UserInformation.class)).getImageurl();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void launchComment(final String mediaNode, final String mediaId) {
 
         mComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Intent mediaIntent = new Intent(getActivity(), CommentActivity.class);
+                mediaIntent.putExtra("mediaID", mediaId);
+                mediaIntent.putExtra("mediaNode", mediaNode);
+                mediaIntent.putExtra(getString(R.string.profilePhotoField), currentprofile);
+                mediaIntent.putExtra("photoUser",photo.getUser_id());
                 startActivity(mediaIntent);
             }
         });
@@ -153,6 +189,11 @@ public class PostViewFragment extends Fragment {
         mtxtComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Intent mediaIntent = new Intent(getActivity(), CommentActivity.class);
+                mediaIntent.putExtra("mediaID", mediaId);
+                mediaIntent.putExtra("mediaNode", mediaNode);
+                mediaIntent.putExtra(getString(R.string.profilePhotoField), currentprofile);
+                mediaIntent.putExtra("photoUser",photo.getUser_id());
                 startActivity(mediaIntent);
             }
         });

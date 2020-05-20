@@ -50,7 +50,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
     private Activity mContext;
     private DatabaseReference reference;
     private FirebaseAuth mAuth;
-    private String profileImgUrl = "";
+    private String currentprofile = "";
     private FirebaseMethods firebaseMethods;
     private Photo photo;
     private Egg mEgg;
@@ -138,6 +138,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                     }
                 }
             });
+            getCurrentProfile();
             launchComment(mContext.getString(R.string.dbname_photos), photo.getPhoto_id(), convertView);
             GlideImageLoader.loadImageWithTransition(mContext, photo.getImage_path(), holder.post, holder.progressBar);
             holder.caption.setText(photo.getCaption());
@@ -175,10 +176,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                    if (userId.equals(mAuth.getCurrentUser().getUid())) {
-                        profileImgUrl = Objects.requireNonNull(ds.getValue(UserInformation.class)).getImageurl();
-                    }
                     GlideImageLoader.loadImageWithOutTransition(mContext, ds.getValue(UserInformation.class).getImageurl(), profileImage);
                     username.setText(Objects.requireNonNull(ds.getValue(UserInformation.class)).getUsername());
                     username.setOnClickListener(new View.OnClickListener() {
@@ -202,19 +199,41 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         });
     }
 
-    private void launchComment(String mediaNode, String mediaId, View view) {
+    private void getCurrentProfile() {
+
+        Query query = reference.child(mContext.getString(R.string.users_node))
+                .orderByKey().equalTo(mAuth.getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                 currentprofile = Objects.requireNonNull(ds.getValue(UserInformation.class)).getImageurl();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void launchComment(final String mediaNode, final String mediaId, View view) {
 
         ImageView comment = view.findViewById(R.id.comment_main);
         TextView viewComments = view.findViewById(R.id.image_comments_link_main);
-        final Intent mediaIntent = new Intent(mContext, CommentActivity.class);
-        mediaIntent.putExtra("mediaID", mediaId);
-        mediaIntent.putExtra("mediaNode", mediaNode);
-        mediaIntent.putExtra(mContext.getString(R.string.profilePhotoField), profileImgUrl);
-        mediaIntent.putExtra("photoUser",photo.getUser_id());
+
 
         viewComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Intent mediaIntent = new Intent(mContext, CommentActivity.class);
+                mediaIntent.putExtra("mediaID", mediaId);
+                mediaIntent.putExtra("mediaNode", mediaNode);
+                mediaIntent.putExtra(mContext.getString(R.string.profilePhotoField), currentprofile);
+                mediaIntent.putExtra("photoUser",photo.getUser_id());
                 mContext.startActivity(mediaIntent);
             }
         });
@@ -222,6 +241,11 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Intent mediaIntent = new Intent(mContext, CommentActivity.class);
+                mediaIntent.putExtra("mediaID", mediaId);
+                mediaIntent.putExtra("mediaNode", mediaNode);
+                mediaIntent.putExtra(mContext.getString(R.string.profilePhotoField), currentprofile);
+                mediaIntent.putExtra("photoUser",photo.getUser_id());
                 mContext.startActivity(mediaIntent);
             }
         });

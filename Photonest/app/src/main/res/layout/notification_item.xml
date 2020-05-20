@@ -10,6 +10,7 @@
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
+        android:scaleType="centerCrop"
         app:civ_border_width="1dp"
         app:civ_border_color="@color/colorPrimaryDark"
         android:layout_marginTop="8dp"
@@ -32,22 +33,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/username_notification"
+            android:layout_marginStart="8dp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryDark"></TextView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:id="@+id/comment_notification"
             android:maxLines="5"></TextView>
         
     </LinearLayout>
     
-    <ImageView
+    <Utils.SquareImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="8dp"
+        app:civ_border_width="1dp"
+        android:scaleType="centerCrop"
+        app:civ_border_color="@color/colorPrimaryDark"
         android:layout_marginBottom="8dp"
-        android:id="@+id/post_image_notification"></ImageView>
+        android:id="@+id/post_image_notification"></Utils.SquareImageView>
 </RelativeLayout>
