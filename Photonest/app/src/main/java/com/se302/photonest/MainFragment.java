@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +32,7 @@ import Utils.MainFeedListAdapter;
 public class MainFragment extends Fragment {
     View view;
     private Context mContext;
+    private ProgressBar pb;
     private ListView mainList;
     private FirebaseDatabase database;
     private FirebaseAuth mAuth;
@@ -65,9 +67,9 @@ public class MainFragment extends Fragment {
         setSelfFollowing();
 
         addContent();
+
         adapter = new MainFeedListAdapter(Objects.requireNonNull(getActivity()),R.layout.mainfeed_item,mediaList);
         mainList.setAdapter(adapter);
-
     }
 
 
@@ -87,9 +89,6 @@ public class MainFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
-
-
-
 
     private void getPhoto(DataSnapshot ds){
 

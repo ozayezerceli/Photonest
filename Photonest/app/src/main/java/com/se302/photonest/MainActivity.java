@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
         initImageLoader();
         setupBottomNavBar();
-
         Fragment mFragment = null;
         mFragment = new MainFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
