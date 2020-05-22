@@ -431,10 +431,14 @@ public class PostViewFragment extends Fragment {
                 mStringBuilder.append(",");
                 String[] splitUsers = mStringBuilder.toString().split(",");
                 int length = splitUsers.length;
-                mLikesString = "Liked by " + length;
+                if(length == 1){
+                    mLikesString = length+" like";
+                }else{
+                    mLikesString = length+" likes";
+                }
                 SpannableString ss = new SpannableString(mLikesString);
                 ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.parseColor("#AB4C11"));
-                ss.setSpan(fcsOrange,9,9+String.valueOf(length).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ss.setSpan(fcsOrange,0, String.valueOf(length).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 likedBy.setText(ss);
             }
             @Override
