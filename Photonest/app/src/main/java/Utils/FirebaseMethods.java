@@ -306,7 +306,7 @@ public class FirebaseMethods {
         int count = 0;
         for (DataSnapshot ds : dataSnapshot
                 .child(mActivity.getString(R.string.dbname_user_photos))
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(userID)
                 .getChildren()) {
             count++;
         }
@@ -408,7 +408,7 @@ public class FirebaseMethods {
             public void onSuccess(Void aVoid) {
                 // File deleted successfully
                 myRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).removeValue();
-                myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(photo.getPhoto_id()).removeValue();
+                myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(userID).child(photo.getPhoto_id()).removeValue();
                 List<String> hashTags = StringManipulation.getHashTags(photo.getCaption());
                 for(String hashTag : hashTags){
                     myRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue();

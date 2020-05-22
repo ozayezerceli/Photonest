@@ -379,7 +379,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 SpannableString ss = new SpannableString(mLikesString);
                 ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.parseColor("#AB4C11"));
                 ss.setSpan(fcsOrange,9,9+String.valueOf(length).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                System.out.println("lenght"+String.valueOf(length).length());
                 likedBy.setText(ss);
             }
             @Override
