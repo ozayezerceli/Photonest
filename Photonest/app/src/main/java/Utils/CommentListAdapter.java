@@ -55,7 +55,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
     private boolean mLikedByCurrentUser = false;
     private StringBuilder mStringBuilder;
 
-    CommentListAdapter(@NonNull Activity context, int resource, ArrayList<Comment> comments) {
+    public CommentListAdapter(@NonNull Activity context, int resource, ArrayList<Comment> comments) {
         super(context,resource,comments);
         mContext = context;
         layoutResource = resource;

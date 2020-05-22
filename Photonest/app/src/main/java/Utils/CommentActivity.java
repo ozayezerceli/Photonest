@@ -270,7 +270,7 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                 if(commentText.getText().toString().length()>0) {
                     isCommentAdded = true;
                     firebaseMethods.addNewComment(mediaNode,mediaId, commentText.getText().toString());
-                    addNotificationsComment(photoUserID,mediaId, commentText.getText().toString());
+                    //addNotificationsComment(photoUserID,mediaId, commentText.getText().toString()); açılaak
                 }
             }
         });

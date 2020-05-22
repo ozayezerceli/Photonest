@@ -84,6 +84,7 @@ public class PostViewFragmentTest {
         onView(withId(R.id.image_egg_unliked_post_view)).check(matches(isDisplayed()));
 
     }
+
     @Test
     public void testLaunch(){
         onView(withId(R.id.post_image)).check(matches(isDisplayed()));
@@ -97,6 +98,7 @@ public class PostViewFragmentTest {
         onView(withId(R.id.btn_postOption)).check(matches(isDisplayed()));
 
     }
+
 
     @Test
     public void testUserQuitPostView() {
