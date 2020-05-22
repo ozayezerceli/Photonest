@@ -347,7 +347,7 @@ public class PostViewFragment extends Fragment {
                     likedBy.setClickable(false);
                     unlikedEgg.setVisibility(View.VISIBLE);
                     likedEgg.setVisibility(View.GONE);
-                    likedBy.setText("No Likes!");
+                    likedBy.setText("No Like");
                 }else {
                     likedBy.setClickable(true);
                     likedEgg.setVisibility(View.GONE);
@@ -428,32 +428,11 @@ public class PostViewFragment extends Fragment {
                 mStringBuilder.append(",");
                 String[] splitUsers = mStringBuilder.toString().split(",");
                 int length = splitUsers.length;
-                if(length == 1){
-                    mLikesString = "Liked by " + splitUsers[0];
-                }
-                else if(length == 2){
-                    mLikesString = "Liked by " + splitUsers[0]
-                            + " and " + splitUsers[1];
-                }
-                else if(length == 3){
-                    mLikesString = "Liked by " + splitUsers[0]
-                            + ", " + splitUsers[1]
-                            + " and " + splitUsers[2];
-
-                }
-                else if(length == 4){
-                    mLikesString = "Liked by " + splitUsers[0]
-                            + ", " + splitUsers[1]
-                            + ", " + splitUsers[2]
-                            + " and " + splitUsers[3];
-                }
-                else if(length > 4){
-                    mLikesString = "Liked by " + splitUsers[0]
-                            + ", " + splitUsers[1]
-                            + ", " + splitUsers[2]
-                            + " and " + (dataSnapshot.getChildrenCount() - 3) + " others";
-                }
-                likedBy.setText(mLikesString);
+                mLikesString = "Liked by " + length;
+                SpannableString ss = new SpannableString(mLikesString);
+                ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.parseColor("#AB4C11"));
+                ss.setSpan(fcsOrange,9,9+String.valueOf(length).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                likedBy.setText(ss);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
