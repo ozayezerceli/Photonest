@@ -122,9 +122,9 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                 }
             }
         });
-        holder.username.setText(Objects.requireNonNull(commentData).getUser_name());
-        String username = Objects.requireNonNull(commentData).getUser_name();
-        String ss = commentData.getComment();
+        holder.username.setText(Objects.requireNonNull(commentData).getUsername());
+        String username = Objects.requireNonNull(commentData).getUsername();
+        String ss = username+" "+commentData.getComment();
         SpannableString str = new SpannableString(ss);
         ForegroundColorSpan fcsDark = new ForegroundColorSpan(Color.parseColor("#F99F63"));
         str.setSpan(fcsDark, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
