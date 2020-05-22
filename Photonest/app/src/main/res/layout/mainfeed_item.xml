@@ -124,6 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="2dp"
+                android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="15sp"
                 android:clickable="true"/>
@@ -135,6 +136,9 @@
                 android:layout_below="@+id/image_likes_info_main_feed"
                 android:layout_marginTop="1dp"
                 android:text=""
+                android:paddingBottom="2dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="15sp" />
 
@@ -144,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_caption_main"
                 android:layout_marginTop="1dp"
-                android:padding="3dp"
+                android:padding="2dp"
                 android:text=""
                 android:textColor="@color/colorAccent"
                 android:textSize="15sp" />
@@ -155,9 +159,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_comments_link_main"
                 android:layout_marginTop="1dp"
+                android:padding="2dp"
                 android:text=""
-                android:textColor="@color/colorAccent"
-                android:textSize="15sp" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="11sp" />
 
         </RelativeLayout>
 
