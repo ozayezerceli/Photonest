@@ -73,28 +73,28 @@ public class PostViewFragmentTest {
     }
     @Test
     public void testUserLikePost(){
-        onView(withId(R.id.image_egg_unliked_post_view)).perform(click());
-        onView(withId(R.id.image_egg_liked_post)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_egg_not_liked_view)).perform(click());
+        onView(withId(R.id.image_egg_liked_view)).check(matches(isDisplayed()));
 
     }
 
     @Test
     public void testUserUnlikePost(){
-        onView(withId(R.id.image_egg_liked_post)).perform(click());
-        onView(withId(R.id.image_egg_unliked_post_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_egg_liked_view)).perform(click());
+        onView(withId(R.id.image_egg_not_liked_view)).check(matches(isDisplayed()));
 
     }
 
     @Test
     public void testLaunch(){
-        onView(withId(R.id.post_image)).check(matches(isDisplayed()));
+        onView(withId(R.id.post_image_main_view)).check(matches(isDisplayed()));
         onView(withId(R.id.backArrow)).check(matches(isDisplayed()));
         onView(withId(R.id.tvBackLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.image_caption)).check(matches(isDisplayed()));
-        onView(withId(R.id.username)).check(matches(isDisplayed()));
-        onView(withId(R.id.image_time_posted)).check(matches(isDisplayed()));
-        onView(withId(R.id.image_egg_unliked_post_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.profile_photo)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_caption_main_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.username_main_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_time_posted_main_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_egg_not_liked_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.profile_photo_main_view)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_postOption)).check(matches(isDisplayed()));
 
     }
