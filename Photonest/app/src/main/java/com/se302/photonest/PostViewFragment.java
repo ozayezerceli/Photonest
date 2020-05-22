@@ -85,7 +85,7 @@ public class PostViewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_post_view, container, false);
@@ -114,7 +114,10 @@ public class PostViewFragment extends Fragment {
         mBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+             //   getActivity().finish();
+                Intent intent= new Intent(getActivity(), ProfileActivity.class);
                 getActivity().finish();
+                startActivity(intent);
             }
         });
         postOptions.setOnClickListener(new View.OnClickListener() {

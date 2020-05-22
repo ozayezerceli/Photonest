@@ -147,7 +147,10 @@ public class EditProfileFragment extends Fragment {
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              //  getActivity().finish();
+                Intent intent= new Intent(getActivity(), ProfileActivity.class);
                 getActivity().finish();
+                startActivity(intent);
             }
         });
 

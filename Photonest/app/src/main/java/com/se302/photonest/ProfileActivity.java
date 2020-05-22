@@ -316,7 +316,7 @@ public class ProfileActivity extends AppCompatActivity {
                 mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mrelativelayout.setVisibility(View.GONE);
+                        mrelativelayout.setVisibility(View.INVISIBLE);
                         PostViewFragment post_view_fragment = new PostViewFragment();
                         Bundle args = new Bundle();
                         args.putParcelable("photo", photoArrayList.get(position));
