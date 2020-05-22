@@ -74,14 +74,61 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             @Override
             public void onClick(View view) {
                 if(notification.isIspost()){
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                            .child("dbname_user_photos").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                    reference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            final ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                if(snapshot.child("photo_id").getValue().toString().equals(notification.getPostid())) {
+                    if(!notification.getText().contains("liked your comment")) {
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                                .child("dbname_user_photos").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        reference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                final ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    if (snapshot.child("photo_id").getValue().toString().equals(notification.getPostid())) {
+                                        PhotoInformation photoInformation = new PhotoInformation();
+                                        photoInformation.setCaption(snapshot.child("caption").getValue().toString());
+                                        photoInformation.setPhoto_id(snapshot.child("photo_id").getValue().toString());
+                                        photoInformation.setUser_id(snapshot.child("user_id").getValue().toString());
+                                        List<String> hashTags = StringManipulation.getHashTags(photoInformation.getCaption());
+                                        photoInformation.setHashTags(hashTags);
+                                        photoInformation.setDate_created(snapshot.child("date_created").getValue().toString());
+                                        photoInformation.setImage_path(snapshot.child("image_path").getValue().toString());
+
+                                        List<Like> likesList = new ArrayList<Like>();
+                                        for (DataSnapshot dSnapshot : snapshot
+                                                .child("likes").getChildren()) {
+                                            Like like = new Like();
+                                            like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
+                                            likesList.add(like);
+                                        }
+                                        photoInformation.setLikes(likesList);
+
+
+                                        photoArrayList.add(photoInformation);
+                                    }
+                                }
+                                PostViewFragment post_view_fragment = new PostViewFragment();
+                                Bundle args = new Bundle();
+                                args.putParcelable("photo", photoArrayList.get(0));
+                                args.putInt("activityNumber", 1);
+                                post_view_fragment.setArguments(args);
+
+
+                                ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id.container_notification, post_view_fragment).
+                                        addToBackStack("View Post").commit();
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }else{
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                                .child("dbname_photos").child(notification.getPostid());
+                        reference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                final ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
                                     PhotoInformation photoInformation = new PhotoInformation();
                                     photoInformation.setCaption(snapshot.child("caption").getValue().toString());
                                     photoInformation.setPhoto_id(snapshot.child("photo_id").getValue().toString());
@@ -102,24 +149,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
                                     photoArrayList.add(photoInformation);
-                                }
-                            }
-
                                 PostViewFragment post_view_fragment = new PostViewFragment();
                                 Bundle args = new Bundle();
                                 args.putParcelable("photo", photoArrayList.get(0));
                                 args.putInt("activityNumber", 1);
                                 post_view_fragment.setArguments(args);
-                                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.container_edit, post_view_fragment).
+
+
+                                ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id.container_notification, post_view_fragment).
                                         addToBackStack("View Post").commit();
 
-                        }
+                            }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }else{
                     if(notification.getUserid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                         mContext.startActivity(new Intent(mContext, ProfileActivity.class));

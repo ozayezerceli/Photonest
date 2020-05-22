@@ -69,7 +69,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
     private static class ViewHolder{
 
         ImageView profileImage;
-        TextView comment,likes;
+        TextView comment,likes,username;
         TextView dateAdded;
         ImageView likedEgg;
         ImageView unlikedEgg;
@@ -86,6 +86,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             holder.profileImage = convertView.findViewById(R.id.comment_profile);
             holder.comment = convertView.findViewById(R.id.comment_text);
             holder.likes = convertView.findViewById(R.id.commentLike);
+            holder.username = convertView.findViewById(R.id.comment_text_username);
             holder.dateAdded = convertView.findViewById(R.id.date_added);
             holder.likedEgg = convertView.findViewById(R.id.comment_heart_liked);
             holder.unlikedEgg = convertView.findViewById(R.id.comment_heart);
@@ -121,6 +122,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                 }
             }
         });
+        holder.username.setText(Objects.requireNonNull(commentData).getUser_name());
         String username = Objects.requireNonNull(commentData).getUser_name();
         String ss = username+" "+commentData.getComment();
         SpannableString str = new SpannableString(ss);

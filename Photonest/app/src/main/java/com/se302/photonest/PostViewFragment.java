@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -48,6 +49,7 @@ import DataModels.UserInformation;
 import Utils.Egg;
 import Utils.CommentActivity;
 import Utils.FirebaseMethods;
+import Utils.GlideImageLoader;
 import Utils.SquareImageView;
 import Utils.UniversalImageLoader;
 
@@ -59,6 +61,7 @@ public class PostViewFragment extends Fragment {
 
     private TextView mBackLabel, mCaption, mUsername, mTimestamp, likedBy, mtxtComment;
     private ImageView mBackArrow, postOptions, likedEgg, unlikedEgg, mProfileImage, mComments;
+    private ProgressBar progressbar;
     private UserInformation userInformation;
     private boolean mLikedByCurrentUser = false;
 
@@ -90,19 +93,20 @@ public class PostViewFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
-        mPostImage = view.findViewById(R.id.post_image);
+        mPostImage = view.findViewById(R.id.post_image_main_view);
         mBackArrow = view.findViewById(R.id.backArrow);
         mBackLabel = view.findViewById(R.id.tvBackLabel);
-        mCaption = view.findViewById(R.id.image_caption);
-        mUsername = view.findViewById(R.id.username);
-        mTimestamp = view.findViewById(R.id.image_time_posted);
-        likedEgg = view.findViewById(R.id.image_egg_liked_post);
-        likedBy = view.findViewById(R.id.image_likes_info_main);
-        unlikedEgg = view.findViewById(R.id.image_egg_unliked_post_view);
-        mProfileImage = view.findViewById(R.id.profile_photo);
+        mCaption = view.findViewById(R.id.image_caption_main_view);
+        mUsername = view.findViewById(R.id.username_main_view);
+        mTimestamp = view.findViewById(R.id.image_time_posted_main_view);
+        likedEgg = view.findViewById(R.id.image_egg_liked_view);
+        likedBy = view.findViewById(R.id.image_likes_info_main_feed_view);
+        unlikedEgg = view.findViewById(R.id.image_egg_not_liked_view);
+        mProfileImage = view.findViewById(R.id.profile_photo_main_view);
+        progressbar = view.findViewById(R.id.progressBar_view);
         postOptions = view.findViewById(R.id.btn_postOption);
-        mComments = view.findViewById(R.id.speech_bubble);
-        mtxtComment = view.findViewById(R.id.image_comments_link);
+        mComments = view.findViewById(R.id.comment_main_view);
+        mtxtComment = view.findViewById(R.id.image_comments_link_main_view);
        // setTags(mCaption, mCaption.getText().toString());
 
         firebaseMethods = new FirebaseMethods(getActivity());
@@ -202,7 +206,7 @@ public class PostViewFragment extends Fragment {
 
     private void init(){
         photo = getPhotoFromBundle();
-        UniversalImageLoader.setImage(photo.getImage_path(), mPostImage, null, "");
+        GlideImageLoader.loadImageWithTransition(getContext(), photo.getImage_path(), mPostImage, progressbar);
         mTimestamp.setText(photo.getDate_created());
       //  mCaption.setText(photo.getCaption());
         setTags(mCaption, photo.getCaption());
