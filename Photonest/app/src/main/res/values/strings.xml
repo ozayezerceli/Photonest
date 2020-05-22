@@ -61,4 +61,5 @@
     <string name="usernameField">username</string>
     <string name="field_likes">likes</string>
     <string name="field_likes_comment">commentLikes</string>
+    <string name="changePasswordBanner">Change Password</string>
 </resources>

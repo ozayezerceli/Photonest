@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private EditText password, confirmPassword, currentPassword;
     private Button Done;
     FirebaseAuth auth;
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,16 @@ public class ChangePasswordActivity extends AppCompatActivity {
         currentPassword = findViewById(R.id.txt_CurrentPwd);
         Done = findViewById(R.id.btnChangePwd);
         auth = FirebaseAuth.getInstance();
+        back = findViewById(R.id.changePwd_back);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ChangePasswordActivity.this, ProfileActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
     }
 
     private void changePwd(){
