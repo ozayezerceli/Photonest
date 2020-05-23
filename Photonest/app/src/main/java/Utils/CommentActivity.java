@@ -17,7 +17,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,18 +24,15 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,7 +47,6 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import DataModels.Comment;
-import DataModels.UserInformation;
 
 public class CommentActivity extends AppCompatActivity implements UtilityInterface {
     Context mContext = CommentActivity.this;
@@ -145,11 +140,11 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
 
         goBack();
 
-        commentList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        commentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, final View view, final int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, final View view, final int i, long l) {
                 if(mode != null){
-                    return false;
+
                 }
 
                 if(list.get(i).getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) || photoUserID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
@@ -157,7 +152,7 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                     view.setSelected(true);
                     commentSelected = list.get(i);
                 }
-                return true;
+
             }
         });
 
