@@ -140,11 +140,11 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
 
         goBack();
 
-        commentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        commentList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, final View view, final int i, long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, final View view, final int i, long l) {
                 if(mode != null){
-
+                    return false;
                 }
 
                 if(list.get(i).getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) || photoUserID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
@@ -152,7 +152,7 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                     view.setSelected(true);
                     commentSelected = list.get(i);
                 }
-
+                return true;
             }
         });
 

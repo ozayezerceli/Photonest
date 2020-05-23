@@ -615,10 +615,63 @@ public class FirebaseMethods {
                 .child(userID)
                 .removeValue();
 
-        //deleteBlockedUserCommentAndLike(userID,blockedUserID);
-
+        deleteBlockedUserCommentAndLike(userID,blockedUserID);
+        deleteBlockedUserCommentAndLike(blockedUserID,userID);
     }
 
+    private void deleteBlockedUserCommentAndLike(final String user1, final String user2){
+        myRef.child(mActivity.getString(R.string.dbname_photos))
+                .orderByChild(mActivity.getString(R.string.users_id)).equalTo(user1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    ds.child(mActivity.getString(R.string.fieldComment)).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot ds2 : dataSnapshot.getChildren()){
+                                if(ds2.child("userId").getValue().toString().equals(user2) && ds2.getKey()!=null){
+                                    ds2.getRef().removeValue();
+                                    myRef.child(mActivity.getString(R.string.field_likes_comment)).child(ds2.getKey()).removeValue();
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(user1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    if(ds.getKey() != null) {
+                        myRef.child(mActivity.getString(R.string.field_likes)).child(ds.getKey()).child(mActivity.getString(R.string.field_likes)).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds2 : dataSnapshot.getChildren()) {
+                                    if (ds2.child("user_id").getValue().toString().equals(user2)) {
+                                        ds2.getRef().removeValue();
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
 
 
     public void unblockUser(String blockedUserID){
