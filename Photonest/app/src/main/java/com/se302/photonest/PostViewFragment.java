@@ -242,11 +242,12 @@ public class PostViewFragment extends Fragment {
                             alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    firebaseMethods.deletePost(photo);
                                     ProgressDialog progressDialog = new ProgressDialog(getContext());
                                     progressDialog.setMessage("Deleting post!");
                                     progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                                     progressDialog.show();
-                                    firebaseMethods.deletePost(photo);
+
                                 }
                             });
                             alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

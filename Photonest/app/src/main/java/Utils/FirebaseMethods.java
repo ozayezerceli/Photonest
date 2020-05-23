@@ -428,34 +428,36 @@ public class FirebaseMethods {
     /*Code below deletes the choosen post from firebase database and storage */
     public void deletePost(PhotoInformation photo1){
         final PhotoInformation photo = photo1;
+        final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(photo.getImage_path());
         photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 // File deleted successfully
-                myRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).removeValue();
-                myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(userID).child(photo.getPhoto_id()).removeValue();
+                dbRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).removeValue();
+                dbRef.child(mActivity.getString(R.string.dbname_user_photos)).child(userID).child(photo.getPhoto_id()).removeValue();
                 List<String> hashTags = StringManipulation.getHashTags(photo.getCaption());
                 for(String hashTag : hashTags){
-                    myRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue();
+                    dbRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue();
                 }
 
-                myRef.child(mActivity.getString(R.string.field_likes)).child(photo.getPhoto_id()).removeValue();
+                dbRef.child(mActivity.getString(R.string.field_likes)).child(photo.getPhoto_id()).removeValue();
 
-                myRef.child("Notifications").child(photo.getUser_id())
-                        .orderByChild("postid").equalTo(photo.getPhoto_id()).addValueEventListener(new ValueEventListener() {
+                dbRef.child("Notifications").child(userID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot ds : dataSnapshot.getChildren()){
-                            myRef.child("Notifications").child(photo.getUser_id()).child(ds.getKey()).removeValue();
+                            if(ds.child("postid").getValue().toString().equals(photo.getPhoto_id())){
+                                ds.getRef().removeValue();
+                            }
                         }
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(mActivity,"Notification deleting error.",Toast.LENGTH_LONG).show();
+
                     }
                 });
-
                 Toast.makeText(mActivity,"Photo deleted successfully.",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(mActivity, ProfileActivity.class);
                 mActivity.startActivity(intent);
