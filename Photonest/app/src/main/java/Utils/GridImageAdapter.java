@@ -61,7 +61,7 @@ public class GridImageAdapter extends ArrayAdapter<String> {
 
             String imgURL = getItem(position);
 
-            ImageLoader imageLoader = ImageLoader.getInstance();
+            final ImageLoader imageLoader = ImageLoader.getInstance();
             imageLoader.init(ImageLoaderConfiguration.createDefault(Context));
 
             imageLoader.displayImage(append1 + imgURL, holder.image, new ImageLoadingListener() {

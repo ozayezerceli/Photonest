@@ -111,7 +111,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 args.putInt("activityNumber", 1);
                                 post_view_fragment.setArguments(args);
 
-
                                 ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id.container_notification, post_view_fragment).
                                         addToBackStack("View Post").commit();
 

@@ -118,14 +118,20 @@ public class SearchActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(usersClicked==true) {
+                if(usersClicked) {
                     if (searchList.get(position).getId().equals(mAuth.getCurrentUser().getUid())) {
                         startActivity(new Intent(mContext, ProfileActivity.class));
                     } else {
                         Intent intent = new Intent(mContext, ViewProfileActivity.class);
                         intent.putExtra(getString(R.string.users_id), searchList.get(position).getId());
                         startActivity(intent);
+                        finish();
                     }
+                }else{
+                    Intent intent = new Intent(mContext, ResultActivity.class);
+                    intent.putExtra("hashTags", searchHashList.get(position).getHashTags());
+                    startActivity(intent);
+                    finish();
                 }
             }
         });

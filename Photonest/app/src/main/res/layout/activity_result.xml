@@ -2,51 +2,69 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/container_result">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FDEDE3"
-        android:id="@+id/relativeParent">
+        android:id="@+id/relativeParent_result">
+
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/relativeTop">
+            android:id="@+id/relativeTop_result">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:id="@+id/bar_notification"
-                android:background="#F99F63"></androidx.appcompat.widget.AppCompatImageView>
+                android:id="@+id/bar_result"
+                android:background="@drawable/bar_design"></androidx.appcompat.widget.AppCompatImageView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/backArrow_result"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_backarrow"/>
 
                 <TextView
-                    android:id="@+id/notificatonTxt"
+                    android:id="@+id/result_hash_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:text="@string/notification_txt"
+                    android:text=""
                     android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold" />
 
             </LinearLayout>
-
-            <FrameLayout
+            <GridView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="50dp"
-                android:id="@+id/container_notification" />
+                android:padding="3dp"
+                android:id="@+id/grid_view_result"
+                android:numColumns="3"
+                android:gravity="center"
+                android:verticalSpacing="1.5dp"
+                android:horizontalSpacing="1.5dp"
+                android:stretchMode="none"/>
 
         </RelativeLayout>
 
         <include layout="@layout/bottom_navigation_bar" />
-    </RelativeLayout>
 
+    </RelativeLayout>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

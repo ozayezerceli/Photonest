@@ -114,10 +114,10 @@ public class PostViewFragment extends Fragment {
         mBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             //   getActivity().finish();
-                Intent intent= new Intent(getActivity(), ProfileActivity.class);
-                getActivity().finish();
-                startActivity(intent);
+                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                    getActivity().finish();
+                    startActivity(intent);
+
             }
         });
         postOptions.setOnClickListener(new View.OnClickListener() {
