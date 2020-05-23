@@ -96,10 +96,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         firebaseMethods = new FirebaseMethods(ViewProfileActivity.this);
 
         init();
-        getFollowers();
-        getNrPosts();
         setupBottomNavBar();
-        //setUserPhotos();
 
         follow_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,14 +132,34 @@ public class ViewProfileActivity extends AppCompatActivity {
             editprofile_Btn.setVisibility(View.VISIBLE);
         } else{
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            reference.child("Blocked").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child("Blocked").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.child(viewUserID).exists()){
+                    if(dataSnapshot.child(userID).child(viewUserID).exists()){
                         setBlocked();
-                    }else{
+                        followers.setClickable(false);
+                        following.setClickable(false);
+                        followers.setText("0");
+                        following.setText("0");
+                        posts.setText("0");
+                    }
+
+                    if(dataSnapshot.child(viewUserID).child(userID).exists()){
+                        followers.setClickable(false);
+                        following.setClickable(false);
+                        followers.setText(" ");
+                        following.setText(" ");
+                        posts.setText(" ");
+                        bio.setText(" ");
+                        follow_Btn.setEnabled(false);
+                        unfollow_Btn.setEnabled(false);
+                    }
+
+                    if(!dataSnapshot.child(userID).child(viewUserID).exists() && !dataSnapshot.child(viewUserID).child(userID).exists()){
                         checkFollow();
                         setUserPhotos();
+                        getFollowers();
+                        getNrPosts();
                     }
                 }
 
@@ -151,7 +168,6 @@ public class ViewProfileActivity extends AppCompatActivity {
 
                 }
             });
-            //checkFollow();
         }
 
         followers.setOnClickListener(new View.OnClickListener() {
@@ -177,9 +193,7 @@ public class ViewProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 firebaseMethods.unblockUser(viewUserID);
-                setUnBlocked();
-                setUserPhotos();
-                bottomMenu.getItem(0).setTitle("Block User");
+                startActivity(getIntent());
             }
         });
 
@@ -240,12 +254,10 @@ public class ViewProfileActivity extends AppCompatActivity {
                         case R.id.view_profile_block:
                             if(menuItem.getTitle().toString().equals("Block User")) {
                                 firebaseMethods.blockUser(viewUserID);
-                                //menuItem.setTitle("Unblock User");
                                 startActivity(getIntent());
                                 finish();
                             }else {
                                 firebaseMethods.unblockUser(viewUserID);
-                                //menuItem.setTitle("Block User");
                                 startActivity(getIntent());
                                 finish();
                             }
