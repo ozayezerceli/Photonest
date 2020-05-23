@@ -54,6 +54,7 @@ import Utils.StringManipulation;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -301,7 +302,9 @@ public class ProfileActivity extends AppCompatActivity {
                     photoInformation.setDate_created(snapshot.child("date_created").getValue().toString());
                     photoInformation.setImage_path(snapshot.child("image_path").getValue().toString());
                     photoArrayList.add(photoInformation);
+
                 }
+                Collections.reverse(photoArrayList);
                 int gridWidth = getResources().getDisplayMetrics().widthPixels;
                 int imageWidth = gridWidth/3;
                 mGridView.setColumnWidth(imageWidth);
@@ -309,6 +312,8 @@ public class ProfileActivity extends AppCompatActivity {
                 ArrayList<String> imgUrls = new ArrayList<String>();
                 for(int i = 0; i < photoArrayList.size(); i++){
                     imgUrls.add(photoArrayList.get(i).getImage_path());
+
+
                 }
                 GridImageAdapter adapter = new GridImageAdapter(ProfileActivity.this , R.layout.grid_imageview, "", imgUrls);
                 mGridView.setAdapter(adapter);

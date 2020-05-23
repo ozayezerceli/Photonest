@@ -35,6 +35,7 @@ import com.se302.photonest.Model.FollowersActivity;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import DataModels.Photo;
@@ -364,10 +365,10 @@ public class ViewProfileActivity extends AppCompatActivity {
                     photoInformation.setHashTags(hashTags);
                     photoInformation.setDate_created(snapshot.child("date_created").getValue().toString());
                     photoInformation.setImage_path(snapshot.child("image_path").getValue().toString());
-
-
                     photoArrayList.add(photoInformation);
+
                 }
+                Collections.reverse(photoArrayList);
                 int gridWidth = getResources().getDisplayMetrics().widthPixels;
                 int imageWidth = gridWidth/NUM_COLUMNS;
                 mGridView.setColumnWidth(imageWidth);
@@ -375,6 +376,7 @@ public class ViewProfileActivity extends AppCompatActivity {
                 ArrayList<String> imgUrls = new ArrayList<String>();
                 for(int i = 0; i < photoArrayList.size(); i++){
                     imgUrls.add(photoArrayList.get(i).getImage_path());
+                   
                 }
 
                 GridImageAdapter adapter = new GridImageAdapter(ViewProfileActivity.this , R.layout.grid_imageview, "", imgUrls);
