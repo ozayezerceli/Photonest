@@ -438,7 +438,7 @@ public class PostViewFragment extends Fragment {
                 }
                 SpannableString ss = new SpannableString(mLikesString);
                 ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.parseColor("#AB4C11"));
-                ss.setSpan(fcsOrange,0, String.valueOf(length).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ss.setSpan(fcsOrange,0, mLikesString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 likedBy.setText(ss);
             }
             @Override

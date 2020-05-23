@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -27,6 +28,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,7 +46,6 @@ import com.se302.photonest.LoginActivity;
 import com.se302.photonest.MainActivity;
 
 import DataModels.Comment;
-import DataModels.Photo;
 import DataModels.PhotoInformation;
 
 import com.se302.photonest.PostViewFragment;
@@ -324,31 +326,55 @@ public class FirebaseMethods {
     }
 
     public void deleteUserAccount() {
-        final DatabaseReference user_info_ref = mFirebaseDatabase.getReference().child("Users");
-        final FirebaseUser user = mAuth.getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            new AlertDialog.Builder(mActivity)
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity);
+            alertDialog
                     .setTitle("Delete")
-                    .setMessage("Your account will be deleted. \nAre you sure?")
+                    .setMessage("Your account will be deleted. \nConfirm by typing your password.");
+            final EditText input = new EditText(mActivity);
+            input.setHint("Password");
+            input.setInputType(InputType.TYPE_CLASS_TEXT |
+                    InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            input.setLayoutParams(lp);
+            alertDialog.setView(input);
+            alertDialog
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            user_info_ref.child(user.getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            String password = input.getText().toString();
+                            final AuthCredential credential = EmailAuthProvider
+                                    .getCredential(user.getEmail(),password);
+                            final String user_id = user.getUid();
+                            deleteUserPosts(user_id);
+                            final DatabaseReference user_info_ref = mFirebaseDatabase.getReference().child("Users");
+                            user_info_ref.child(user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(mActivity, "Account deleted", Toast.LENGTH_LONG).show();
-                                                Intent i = new Intent(mActivity, LoginActivity.class);
-                                                mActivity.startActivity(i);
-                                                mActivity.finish();
-                                            } else {
-                                                Toast.makeText(mActivity, "Account could not be deleted", Toast.LENGTH_LONG).show();
-                                            }
+                                            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(mActivity, "Account deleted", Toast.LENGTH_LONG).show();
+                                                        Intent i = new Intent(mActivity, LoginActivity.class);
+                                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                        mActivity.startActivity(i);
+                                                        mActivity.finish();
+                                                    } else {
+                                                        Toast.makeText(mActivity, "Account could not be deleted", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
                                         }
                                     });
+
                                 }
                             });
                         }
@@ -444,6 +470,47 @@ public class FirebaseMethods {
         });
     }
 
+
+    public void deletePostForDeleteAccount(PhotoInformation photo1){
+        final PhotoInformation photo = photo1;
+        StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(photo.getImage_path());
+        photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // File deleted successfully
+                myRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).removeValue();
+                myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(userID).child(photo.getPhoto_id()).removeValue();
+                List<String> hashTags = StringManipulation.getHashTags(photo.getCaption());
+                for(String hashTag : hashTags){
+                    myRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue();
+                }
+
+                myRef.child(mActivity.getString(R.string.field_likes)).child(photo.getPhoto_id()).removeValue();
+
+                myRef.child("Notifications").child(photo.getUser_id())
+                        .orderByChild("postid").equalTo(photo.getPhoto_id()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds : dataSnapshot.getChildren()){
+                            myRef.child("Notifications").child(photo.getUser_id()).child(ds.getKey()).removeValue();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(mActivity,"Notification deleting error.",Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                //Toast.makeText(mActivity,"Error occured during process!",Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
 
 
     public String editPost(final String postid, final PhotoInformation photo, final Context context, final TextView tv){
@@ -647,6 +714,149 @@ public class FirebaseMethods {
 
         pTextView.setMovementMethod(LinkMovementMethod.getInstance());
         pTextView.setText(string);
+    }
+
+    public void deleteUserPosts(String userID) {
+        DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference("dbname_user_photos").child(userID);
+        postsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                PhotoInformation photoInformation;
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    photoInformation = ds.getValue(PhotoInformation.class);
+                    deletePostForDeleteAccount(photoInformation);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        deleteUserAllRealtedInfos();
+    }
+
+
+    public void deleteUserAllRealtedInfos(){
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        dbRef.child("Notifications").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    if(ds.getKey().equals(userID)){
+                        ds.getRef().removeValue();
+                    }else{
+                        for(DataSnapshot ds2 : ds.getChildren()){
+                            if(ds2.child("userid").getValue().toString().equals(userID)){
+                                ds2.getRef().removeValue();
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        dbRef.child(mActivity.getString(R.string.followers_node)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    if(ds.getKey().equals(userID)){
+                        ds.getRef().removeValue();
+                    }else{
+                        for(DataSnapshot ds2 : ds.getChildren()){
+                            if(ds2.getKey().equals(userID)){
+                                ds2.getRef().removeValue();
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        dbRef.child(mActivity.getString(R.string.following_node)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    if(ds.getKey().equals(userID)){
+                        ds.getRef().removeValue();
+                    }else{
+                        for(DataSnapshot ds2 : ds.getChildren()){
+                            if(ds2.getKey().equals(userID)){
+                                ds2.getRef().removeValue();
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        dbRef.child(mActivity.getString(R.string.field_likes)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    ds.child(mActivity.getString(R.string.field_likes)).getRef().addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot ds2 : dataSnapshot.getChildren()){
+                                if(ds2.child("user_id").getValue().toString().equals(userID)){
+                                    ds2.getRef().removeValue();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        dbRef.child(mActivity.getString(R.string.dbname_photos)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    ds.child("comment").getRef().addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot ds2 : dataSnapshot.getChildren()){
+                                if(ds2.child("userId").getValue().toString().equals(userID)){
+                                    ds2.getRef().removeValue();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
 
