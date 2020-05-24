@@ -275,10 +275,10 @@ public class FirebaseMethods {
 
 
     private void addPhotoToDatabase(@Nullable String caption, String url, String post_location) {
-        List<String> hashTags = StringManipulation.getHashTags(caption);
         String newPhotoKey = myRef.child(mActivity.getString(R.string.dbname_photos)).push().getKey();
         photoInformation = new PhotoInformation();
         photoInformation.setCaption(caption);
+        List<String> hashTags = StringManipulation.getHashTags(photoInformation.getCaption());
         photoInformation.setDate_created(getTimestamp());
         photoInformation.setImage_path(url);
         //photoInformation.setHashTags(hashTags);
@@ -587,8 +587,19 @@ public class FirebaseMethods {
     }
 
     private void getText(String postid, PhotoInformation photo,final EditText editText){
-        final  PhotoInformation photo1= photo;
-        editText.setText(photo1.getCaption());
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.child("dbname_photos").child(postid).child("caption").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                editText.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
