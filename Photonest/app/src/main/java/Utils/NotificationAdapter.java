@@ -77,7 +77,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     if(!notification.getText().contains("liked your comment")) {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                                 .child("dbname_user_photos").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                        reference.addValueEventListener(new ValueEventListener() {
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 final ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
@@ -124,7 +124,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     }else{
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                                 .child("dbname_photos").child(notification.getPostid());
-                        reference.addValueEventListener(new ValueEventListener() {
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 final ArrayList<PhotoInformation> photoArrayList = new ArrayList<PhotoInformation>();
@@ -216,7 +216,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private void getPostImage(final ImageView imageView, String postID){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("dbname_photos").child(postID);
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GlideImageLoader.loadImageWithOutTransition(mContext, Objects.requireNonNull(dataSnapshot.getValue(Photo.class)).getImage_path(), imageView);

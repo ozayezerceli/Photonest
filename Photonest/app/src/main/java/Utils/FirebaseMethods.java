@@ -1,6 +1,7 @@
 package Utils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -428,12 +429,28 @@ public class FirebaseMethods {
     /*Code below deletes the choosen post from firebase database and storage */
     public void deletePost(PhotoInformation photo1){
         final PhotoInformation photo = photo1;
+        final ProgressDialog progressDialog = new ProgressDialog(mActivity);
+        progressDialog.setMessage("Deleting post!");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
         final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(photo.getImage_path());
         photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 // File deleted successfully
+                dbRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id())
+                        .child(mActivity.getString(R.string.fieldComment)).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds : dataSnapshot.getChildren()){
+                            dbRef.child(mActivity.getString(R.string.field_likes_comment)).child(ds.child("id").getValue().toString()).removeValue();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
                 dbRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).removeValue();
                 dbRef.child(mActivity.getString(R.string.dbname_user_photos)).child(userID).child(photo.getPhoto_id()).removeValue();
                 List<String> hashTags = StringManipulation.getHashTags(photo.getCaption());
@@ -443,12 +460,14 @@ public class FirebaseMethods {
 
                 dbRef.child(mActivity.getString(R.string.field_likes)).child(photo.getPhoto_id()).removeValue();
 
-                dbRef.child("Notifications").child(userID).addValueEventListener(new ValueEventListener() {
+                dbRef.child("Notifications").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot ds : dataSnapshot.getChildren()){
-                            if(ds.child("postid").getValue().toString().equals(photo.getPhoto_id())){
-                                ds.getRef().removeValue();
+                            for(DataSnapshot ds2 : ds.getChildren()){
+                                if(ds2.child("postid").getValue().toString().equals(photo.getPhoto_id())) {
+                                    ds2.getRef().removeValue();
+                                }
                             }
                         }
                     }
@@ -462,6 +481,7 @@ public class FirebaseMethods {
                 Intent intent = new Intent(mActivity, ProfileActivity.class);
                 mActivity.startActivity(intent);
                 mActivity.finish();
+                progressDialog.dismiss();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
