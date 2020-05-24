@@ -363,20 +363,19 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
 
     private void setLikeText(final String user_id, final TextView likedBy){
         mStringBuilder = new StringBuilder();
+        final ArrayList<String> userInfo = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference
-                .child(mContext.getString(R.string.users_node))
-                .orderByChild(mContext.getString(R.string.users_id))
-                .equalTo(user_id);
+        Query query = reference.child(mContext.getString(R.string.users_node)).child(user_id);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String currentUsername = null;
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    currentUsername = singleSnapshot.getValue(UserInformation.class).getUsername();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    userInfo.add(singleSnapshot.getValue().toString());
                 }
-                mStringBuilder.append(currentUsername);
-                mStringBuilder.append(",");
+                if(!mStringBuilder.toString().contains(userInfo.get(5))){
+                    mStringBuilder.append(userInfo.get(5));
+                    mStringBuilder.append(",");
+                }
                 String[] splitUsers = mStringBuilder.toString().split(",");
                 int length = splitUsers.length;
                 if(length == 1){
@@ -389,9 +388,8 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 ss.setSpan(fcsOrange,0, mLikesString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 likedBy.setText(ss);
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
