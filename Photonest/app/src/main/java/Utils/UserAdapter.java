@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;
 import com.se302.photonest.ViewProfileActivity;
 
@@ -102,10 +103,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
                     SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS", MODE_PRIVATE).edit();
                     editor.putString("user_id", user.getId());
                     editor.apply();
-                    Intent intent = new Intent(mContext, ViewProfileActivity.class);
-                    intent.putExtra("user_id", user.getId());
-                    mContext.startActivity(intent);
-
+                    if(!user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        Intent intent = new Intent(mContext, ViewProfileActivity.class);
+                        intent.putExtra("user_id", user.getId());
+                        mContext.startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(mContext, ProfileActivity.class);
+                        mContext.startActivity(intent);
+                    }
             }
         });
 
