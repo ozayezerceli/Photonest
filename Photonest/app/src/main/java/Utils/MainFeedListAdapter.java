@@ -318,6 +318,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         mLikedByCurrentUser  = false;
         if (Objects.requireNonNull(object).getClass()==Photo.class) {
             photo = (Photo)object;
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             Query query = reference.child(mContext.getString(R.string.field_likes)).child(photo.getPhoto_id()).child(mContext.getString(R.string.field_likes));
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -361,17 +362,20 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
 
 
     private void setLikeText(final String user_id, final TextView likedBy){
-
         mStringBuilder = new StringBuilder();
-        Query query = reference.child(mContext.getString(R.string.users_node)).child(user_id);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference
+                .child(mContext.getString(R.string.users_node))
+                .orderByChild(mContext.getString(R.string.users_id))
+                .equalTo(user_id);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<String> userInfo = new ArrayList<>();
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    userInfo.add(singleSnapshot.getValue().toString());
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String currentUsername = null;
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    currentUsername = singleSnapshot.getValue(UserInformation.class).getUsername();
                 }
-                mStringBuilder.append(userInfo.get(5));
+                mStringBuilder.append(currentUsername);
                 mStringBuilder.append(",");
                 String[] splitUsers = mStringBuilder.toString().split(",");
                 int length = splitUsers.length;
@@ -385,8 +389,9 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 ss.setSpan(fcsOrange,0, mLikesString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 likedBy.setText(ss);
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
