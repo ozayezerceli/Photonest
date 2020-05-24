@@ -42,6 +42,7 @@ import java.util.Objects;
 import DataModels.Photo;
 import DataModels.UserInformation;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.se302.photonest.ResultActivity;
 import com.se302.photonest.ViewProfileActivity;
 
 
@@ -409,12 +410,15 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                         // space after word
                     }
 
-                    final String tag = pTagString.substring(start, i);
+                    final String tag = pTagString.substring(start, i).replaceFirst("#", "");
                     string.setSpan(new ClickableSpan() {
 
                         @Override
                         public void onClick(View widget) {
                             Log.d("Hash", String.format("Clicked %s!", tag));
+                            Intent i = new Intent(mContext, ResultActivity.class);
+                            i.putExtra("hashTags", tag);
+                            mContext.startActivity(i);
                         }
 
                         @Override

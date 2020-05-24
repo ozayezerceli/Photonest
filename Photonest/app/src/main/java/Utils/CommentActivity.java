@@ -41,6 +41,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.se302.photonest.R;
+import com.se302.photonest.ResultActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -296,12 +297,15 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                         // space after word
                     }
 
-                    final String tag = pTagString.substring(start, i);
+                    final String tag = pTagString.substring(start, i).replaceFirst("#", "");
                     string.setSpan(new ClickableSpan() {
 
                         @Override
                         public void onClick(View widget) {
                             Log.d("Hash", String.format("Clicked %s!", tag));
+                            Intent i = new Intent(CommentActivity.this, ResultActivity.class);
+                            i.putExtra("hashTags", tag);
+                            startActivity(i);
                         }
 
                         @Override

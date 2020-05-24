@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import Utils.CommentListAdapter;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
@@ -60,8 +61,9 @@ public class CommentActivityTest {
                                 .getTargetContext();
                         Intent result = new Intent(targetContext, CommentActivity.class);
                         Bundle extras = new Bundle();
-                        extras.putString("mediaID", "-M7cSy1wa7WHI_NwLNUd");
+                        extras.putString("mediaID", "-M816x1oocvBThvGyPx4");
                         extras.putString("mediaNode", "/dbname_photos/");
+                        extras.putString("comment", "-M82LmiFNvVe5kVafI9N");
                         extras.putString("imageurl", "https://firebasestorage.googleapis.com/v0/b/photonest-11327.appspot.com/o/imagephoto%2F4m71yIjpG1asMmpVzK7tgcFAAhC3?alt=media&token=da7d03c3-a8f8-48cd-b71b-bb48c9b6f408");
                         result.putExtras(extras);
                         return result;
@@ -102,35 +104,27 @@ public class CommentActivityTest {
             Espresso.onView(withId(mList.getAdapter().getItemViewType(R.id.comment_heart_liked))).check(matches(isDisplayed())); */
          //   Espresso.onData(withId(R.id.comment_list)).onChildView(withId(R.id.comment_heart)).perform(click());
            // Espresso.onData(withId(R.id.comment_list)).onChildView(withId(R.id.comment_heart_liked)).check(matches(isDisplayed()));
-
-            Espresso.onData(instanceOf(CommentListAdapter.class))
+            Espresso.onView(withId(R.id.comment_list)).check(matches(isDisplayed()));
+            Espresso.onData(anything())
                     .inAdapterView(withId(R.id.comment_list))
                     .atPosition(0)
                     .onChildView(withId(R.id.comment_heart))
                     .perform(click());
-            Espresso.onData(instanceOf(CommentListAdapter.class))
+            Espresso.onData(anything())
                     .inAdapterView(withId(R.id.comment_list))
                     .atPosition(0)
                     .onChildView(withId(R.id.comment_heart_liked))
-                    .perform(click());
-
+                    .check(matches(isDisplayed()));
 
         }
         @Test
         public void testDeleteComment(){
-            Espresso.onView(withId(R.id.comment_list)).check(matches(isDisplayed()));
-            Espresso.onView(withId(R.id.comment_list)).perform(longClick());
-        //    Espresso.onView(withText("Delete Comment")).perform(click());
-          //   Espresso.onView(withId(R.id.comment_list)).perform(longClick()).inRoot(RootMatchers.isTouchable()).perform(click()).check(matches(isDisplayed()));
-         //   Espresso.onData(anything()).inAdapterView(withId(R.id.comment_list)).atPosition(0).perform(longClick());
-         //   Espresso.onView(ViewMatchers.withContentDescription("deleteComment")).perform(click());
-      //      Espresso.onData(withId(R.id.action_delete_comment)).perform(click());
-       //     Espresso.onView(withText("Delete Comment")).perform(click());
-            Espresso.onData(anything()).inAdapterView(withId(R.id.comment_list)).onChildView(withText("Delete Comment")).perform(click());
-
-
-        //    Espresso.onData(allOf()).inAdapterView(withId(R.id.comment_list)).atPosition(0).perform(longClick()).inRoot(RootMatchers.isTouchable()).perform(ViewActions.click()).check(matches(isDisplayed()));
-
+            Espresso.onData(anything())
+                    .inAdapterView(withId(R.id.comment_list))
+                    .atPosition(0)
+                    .onChildView(withId(R.id.comment_text))
+                    .perform(longClick());
+            Espresso.onView(withId(R.id.action_delete_comment)).perform(click());
 
 
         }

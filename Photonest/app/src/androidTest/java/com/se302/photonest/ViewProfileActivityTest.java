@@ -3,6 +3,7 @@ package com.se302.photonest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import Utils.CommentActivity;
+import androidx.appcompat.view.menu.ListMenuItemView;
+import androidx.appcompat.widget.ActionMenuView;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
@@ -20,6 +23,7 @@ import androidx.test.rule.ActivityTestRule;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.hasWindowLayoutParams;
@@ -32,6 +36,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.anything;
 import static org.junit.Assert.*;
 
 public class ViewProfileActivityTest {
@@ -70,10 +75,9 @@ public class ViewProfileActivityTest {
     @Test
     public void testBlockUser(){
         Espresso.onView(withId( R.id.view_profile_menu_view)).perform(click());
-        Espresso.onView(withId(R.id.view_profile_block)).inRoot(isFocusable()).perform(click()).check(matches(isDisplayed()));
-   //  onView(withId(R.id.view_profile_block)).perform(click());
-
-
+   //     Espresso.onView(withId(R.id.view_profile_block)).inRoot(isPlatformPopup()).perform(click());
+            Espresso.onData(withId(R.id.view_profile_block)).inRoot(RootMatchers.isPlatformPopup())
+                    .perform(click());
 
     }
 

@@ -26,6 +26,7 @@ public class SearchActivityTest {
         searchActivity=mActivityRule.getActivity();
 
 
+
     }
 
     @Test
@@ -52,11 +53,11 @@ public class SearchActivityTest {
     @Test
     public void testSearchHashtags(){
         Espresso.onView(withId(R.id.hashtagsBtn)).perform(click());
-        Espresso.onView(withId(R.id.search_txt)).perform(typeText("#drawing"));
+        Espresso.onView(withId(R.id.search_txt)).perform(typeText("drawing"));
         onData(anything())
                 .inAdapterView(withId(R.id.search_list))
                 .atPosition(0)
-                .onChildView(withId(R.id.search_photo_hash))
+                .onChildView(withId(R.id.search_hashtag))
                 .perform(click());
 
 

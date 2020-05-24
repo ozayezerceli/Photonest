@@ -443,7 +443,7 @@ public class PostViewFragment extends Fragment {
         });
     }
     private void setTags(TextView pTextView, String pTagString) {
-        SpannableString string = new SpannableString(pTagString);
+        final SpannableString string = new SpannableString(pTagString);
 
         int start = -1;
         for (int i = 0; i < pTagString.length(); i++) {
@@ -456,12 +456,15 @@ public class PostViewFragment extends Fragment {
                         // space after word
                     }
 
-                    final String tag = pTagString.substring(start, i);
+                    final String tag = pTagString.substring(start, i).replaceFirst("#", "");
                     string.setSpan(new ClickableSpan() {
 
                         @Override
                         public void onClick(View widget) {
                             Log.d("Hash", String.format("Clicked %s!", tag));
+                            Intent i = new Intent(getActivity(), ResultActivity.class);
+                            i.putExtra("hashTags", tag);
+                            getActivity().startActivity(i);
                         }
 
                         @Override
