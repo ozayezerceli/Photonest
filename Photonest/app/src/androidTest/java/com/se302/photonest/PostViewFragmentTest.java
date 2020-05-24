@@ -49,6 +49,20 @@ public class PostViewFragmentTest {
     }
 
     @Test
+    public void testLaunch(){
+        onView(withId(R.id.post_image_main_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.backArrow)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvBackLabel)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_caption_main_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.username_main_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_time_posted_main_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_egg_not_liked_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.profile_photo_main_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_postOption)).check(matches(isDisplayed()));
+
+    }
+
+    @Test
     public void testUserDeletePost() {
         onView(withId( R.id.btn_postOption)).perform(click());
         onView(ViewMatchers.withContentDescription("delete"))
@@ -85,19 +99,7 @@ public class PostViewFragmentTest {
 
     }
 
-    @Test
-    public void testLaunch(){
-        onView(withId(R.id.post_image_main_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.backArrow)).check(matches(isDisplayed()));
-        onView(withId(R.id.tvBackLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.image_caption_main_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.username_main_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.image_time_posted_main_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.image_egg_not_liked_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.profile_photo_main_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_postOption)).check(matches(isDisplayed()));
 
-    }
 
 
     @Test

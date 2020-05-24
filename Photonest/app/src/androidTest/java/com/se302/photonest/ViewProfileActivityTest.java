@@ -77,7 +77,7 @@ public class ViewProfileActivityTest {
         Espresso.onView(withId( R.id.view_profile_menu_view)).perform(click());
    //     Espresso.onView(withId(R.id.view_profile_block)).inRoot(isPlatformPopup()).perform(click());
             Espresso.onData(withId(R.id.view_profile_block)).inRoot(RootMatchers.isPlatformPopup())
-                    .perform(click());
+                    .perform(ViewActions.click());
 
     }
 

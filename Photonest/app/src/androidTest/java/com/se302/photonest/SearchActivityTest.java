@@ -9,8 +9,11 @@ import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.anything;
 import static org.junit.Assert.*;
@@ -31,11 +34,13 @@ public class SearchActivityTest {
 
     @Test
     public void testLaunch(){
-        Espresso.onView(withId(R.id.imageView));
-        Espresso.onView(withId(R.id.usersBtn));
-        Espresso.onView(withId(R.id.hashtagsBtn));
-        Espresso.onView(withId(R.id.search_list));
-        Espresso.onView(withId(R.id.search_txt));
+        Espresso.onView(withId(R.id.imageView)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.usersBtn)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.hashtagsBtn)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.search_list)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.search_txt)).check(matches(isDisplayed()));
+      
+
     }
 
     @Test
@@ -52,8 +57,9 @@ public class SearchActivityTest {
     }
     @Test
     public void testSearchHashtags(){
-        Espresso.onView(withId(R.id.hashtagsBtn)).perform(click());
+
         Espresso.onView(withId(R.id.search_txt)).perform(typeText("drawing"));
+        Espresso.onView(withId(R.id.hashtagsBtn)).perform(click());
         onData(anything())
                 .inAdapterView(withId(R.id.search_list))
                 .atPosition(0)

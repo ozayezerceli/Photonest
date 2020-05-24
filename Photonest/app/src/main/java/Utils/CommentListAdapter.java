@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.se302.photonest.Model.FollowersActivity;
 import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;
+import com.se302.photonest.ResultActivity;
 import com.se302.photonest.ViewProfileActivity;
 
 import java.util.ArrayList;
@@ -281,12 +282,15 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                         // space after word
                     }
 
-                    final String tag = pTagString.substring(start, i);
+                    final String tag = pTagString.substring(start, i).replaceFirst("#", "");
                     string.setSpan(new ClickableSpan() {
 
                         @Override
                         public void onClick(View widget) {
                             Log.d("Hash", String.format("Clicked %s!", tag));
+                            Intent i = new Intent(mContext, ResultActivity.class);
+                            i.putExtra("hashTags", tag);
+                            mContext.startActivity(i);
                         }
 
                         @Override
