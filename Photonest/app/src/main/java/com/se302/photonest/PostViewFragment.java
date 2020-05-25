@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -41,15 +42,18 @@ import com.se302.photonest.Model.FollowersActivity;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import DataModels.Photo;
 import DataModels.PhotoInformation;
 import DataModels.UserInformation;
+import Utils.DialogCallback;
 import Utils.Egg;
 import Utils.CommentActivity;
 import Utils.FirebaseMethods;
 import Utils.GlideImageLoader;
+import Utils.GlobalUtils;
 import Utils.SquareImageView;
 import Utils.UniversalImageLoader;
 
@@ -59,8 +63,8 @@ public class PostViewFragment extends Fragment {
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
 
-    private TextView mBackLabel, mCaption, mUsername, mTimestamp, likedBy, mtxtComment;
-    private ImageView mBackArrow, postOptions, likedEgg, unlikedEgg, mProfileImage, mComments;
+    private TextView mBackLabel, mCaption, mUsername, mTimestamp, likedBy, mtxtComment,rateTx1pv,rateTx2pv,rateTx3pv,rateTx4pv,rateTx5pv;
+    private ImageView mBackArrow, postOptions, likedEgg, unlikedEgg, mProfileImage, mComments,rate1pv,rate2pv,rate3pv,rate4pv,rate5pv;
     private ProgressBar progressbar;
     private UserInformation userInformation;
     private boolean mLikedByCurrentUser = false;
@@ -102,6 +106,16 @@ public class PostViewFragment extends Fragment {
         likedEgg = view.findViewById(R.id.image_egg_liked_view);
         likedBy = view.findViewById(R.id.image_likes_info_main_feed_view);
         unlikedEgg = view.findViewById(R.id.image_egg_not_liked_view);
+        rate1pv = view.findViewById(R.id.rating_like_1_pv);
+        rateTx1pv = view.findViewById(R.id.rating_like_text_1_pv);
+        rate2pv = view.findViewById(R.id.rating_like_2_pv);
+        rateTx2pv = view.findViewById(R.id.rating_like_text_2_pv);
+        rate3pv = view.findViewById(R.id.rating_like_3_pv);
+        rateTx3pv = view.findViewById(R.id.rating_like_text_3_pv);
+        rate4pv = view.findViewById(R.id.rating_like_4_pv);
+        rateTx4pv = view.findViewById(R.id.rating_like_text_4_pv);
+        rate5pv = view.findViewById(R.id.rating_like_5_pv);
+        rateTx5pv = view.findViewById(R.id.rating_like_text_5_pv);
         mProfileImage = view.findViewById(R.id.profile_photo_main_view);
         progressbar = view.findViewById(R.id.progressBar_view);
         postOptions = view.findViewById(R.id.btn_postOption);
@@ -126,6 +140,7 @@ public class PostViewFragment extends Fragment {
         });
         mEgg = new Egg();
         setLikeListeners(unlikedEgg,likedEgg,photo,likedBy);
+        getUsersRated();
         likedBy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,6 +153,7 @@ public class PostViewFragment extends Fragment {
         init();
         getPhotoDetails();
         getCurrentProfile();
+        setRateListener();
         launchComment(getString(R.string.dbname_photos), photo.getPhoto_id());
         myRef.child(getContext().getString(R.string.dbname_photos)).child(photo.getPhoto_id()).child(getContext().getString(R.string.fieldComment)).orderByChild(getContext().getString(R.string.dateField))
                 .addValueEventListener(new ValueEventListener() {
@@ -155,6 +171,35 @@ public class PostViewFragment extends Fragment {
                     }
                 });
         return view;
+    }
+    private void setRateListener(){
+        unlikedEgg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                showDialog(view,photo);
+                return false;
+            }
+        });
+        likedEgg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                showDialog(view,photo);
+                return false;
+            }
+        });
+    }
+
+    private void showDialog(View view, final PhotoInformation photo){
+        GlobalUtils.showDialog(photo,mAuth.getCurrentUser().getUid(),getContext(), new DialogCallback() {
+            @Override
+            public void callback(int ratings) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put(getContext().getString(R.string.ratings)+ "/" + photo.getPhoto_id() + "/" + mAuth.getCurrentUser().getUid(),mAuth.getCurrentUser().getUid());
+                childUpdates.put(getContext().getString(R.string.ratings)+ "/" + photo.getPhoto_id() + "/" + mAuth.getCurrentUser().getUid(),ratings);
+                ref.updateChildren(childUpdates);
+            }
+        });
     }
 
     private void getCurrentProfile() {
@@ -215,6 +260,7 @@ public class PostViewFragment extends Fragment {
             postOptions.setVisibility(View.VISIBLE);
         }
         setUserLikes(unlikedEgg,likedEgg,getActivity().getString(R.string.field_likes),photo.getPhoto_id(),likedBy);
+        setRatingNumbers(rateTx1pv,rateTx2pv,rateTx3pv,rateTx4pv,rateTx5pv,photo);
     }
 
 
@@ -331,6 +377,124 @@ public class PostViewFragment extends Fragment {
             }
         });
     }
+
+    private void getUsersRated(){
+        rateTx1pv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(getContext(), FollowersActivity.class);
+                intent.putExtra("id",photo.getPhoto_id());
+                intent.putExtra("title", "rates");
+                getContext().startActivity(intent);
+            }
+        });
+
+        rateTx2pv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(getContext(), FollowersActivity.class);
+                intent.putExtra("id",photo.getPhoto_id());
+                intent.putExtra("title", "rates");
+                getContext().startActivity(intent);
+            }
+        });
+
+        rateTx3pv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(getContext(), FollowersActivity.class);
+                intent.putExtra("id",photo.getPhoto_id());
+                intent.putExtra("title", "rates");
+                getContext().startActivity(intent);
+            }
+        });
+
+        rateTx4pv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(getContext(), FollowersActivity.class);
+                intent.putExtra("id",photo.getPhoto_id());
+                intent.putExtra("title", "rates");
+                getContext().startActivity(intent);
+            }
+        });
+
+        rateTx5pv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int pp=(Integer)view.getTag();
+                Intent intent= new Intent(getContext(), FollowersActivity.class);
+                intent.putExtra("id",photo.getPhoto_id());
+                intent.putExtra("title", "rates");
+                getContext().startActivity(intent);
+            }
+        });
+    }
+
+
+    private void setRatingNumbers(final TextView rateTx1, final TextView rateTx2, final TextView rateTx3, final TextView rateTx4, final TextView rateTx5, PhotoInformation photo){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.child(getActivity().getString(R.string.ratings)).child(photo.getPhoto_id()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap<String,Object> ratedUserList = new HashMap<>();
+                int c1 = 0,c2 = 0,c3 = 0, c4 = 0 ,c5 = 0;
+                rateTx1.setText(": "+c1);rateTx1.setTypeface(null, Typeface.NORMAL);rateTx1.setTextColor(Color.parseColor("#4E260E"));
+                rateTx2.setText(": "+c2);rateTx2.setTypeface(null, Typeface.NORMAL);rateTx2.setTextColor(Color.parseColor("#4E260E"));
+                rateTx3.setText(": "+c3);rateTx3.setTypeface(null, Typeface.NORMAL);rateTx3.setTextColor(Color.parseColor("#4E260E"));
+                rateTx4.setText(": "+c4);rateTx4.setTypeface(null, Typeface.NORMAL);rateTx4.setTextColor(Color.parseColor("#4E260E"));
+                rateTx5.setText(": "+c5);rateTx5.setTypeface(null, Typeface.NORMAL);rateTx5.setTextColor(Color.parseColor("#4E260E"));
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    if(ds.getValue().toString().equals("0")){
+                        ds.getRef().removeValue();
+                    }else if(ds.getValue().toString().equals("1")){
+                        ratedUserList.put("rated1",ds.getKey());
+                        c1 = c1+1;
+                        rateTx1.setText(": "+c1);
+                        rateTx1.setTextColor(Color.parseColor("#AB4C11"));
+                        rateTx1.setTypeface(null, Typeface.BOLD);
+                        rateTx1.setClickable(true);
+                    }else if(ds.getValue().toString().equals("2")){
+                        ratedUserList.put("rated2",ds.getKey());
+                        c2 = c2+1;
+                        rateTx2.setText(": "+c2);
+                        rateTx2.setTextColor(Color.parseColor("#AB4C11"));
+                        rateTx2.setTypeface(null, Typeface.BOLD);
+                        rateTx2.setClickable(true);
+                    }else if(ds.getValue().toString().equals("3")){
+                        ratedUserList.put("rated3",ds.getKey());
+                        c3 = c3+1;
+                        rateTx3.setText(": "+c3);
+                        rateTx3.setTextColor(Color.parseColor("#AB4C11"));
+                        rateTx3.setTypeface(null, Typeface.BOLD);
+                        rateTx3.setClickable(true);
+                    }else if(ds.getValue().toString().equals("4")){
+                        ratedUserList.put("rated4",ds.getKey());
+                        c4 = c4+1;
+                        rateTx4.setText(": "+c4);
+                        rateTx4.setTextColor(Color.parseColor("#AB4C11"));
+                        rateTx4.setTypeface(null, Typeface.BOLD);
+                        rateTx4.setClickable(true);
+                    }else{
+                        ratedUserList.put("rated5",ds.getKey());
+                        c5 = c5+1;
+                        rateTx5.setText(": "+c5);
+                        rateTx5.setTextColor(Color.parseColor("#AB4C11"));
+                        rateTx5.setTypeface(null, Typeface.BOLD);
+                        rateTx5.setClickable(true);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+
 
     private void setUserLikes(final ImageView unlikedEgg, final ImageView likedEgg,String mediaNode, String mediaId,final TextView likedBy){
 

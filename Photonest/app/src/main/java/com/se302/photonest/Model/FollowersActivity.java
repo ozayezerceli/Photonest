@@ -104,11 +104,32 @@ public class FollowersActivity extends AppCompatActivity {
              case "followers":
                  getFollowers();
                  break;
-
+             case "rates":
+                 getUsersRated();
+                 break;
          }
 
 
      }
+
+    private void getUsersRated() {
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference();
+        reference.child(getString(R.string.ratings)).child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                idList.clear();
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    idList.add(snapshot.getKey());
+                }
+                showUsers();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     private void getCommentLikes() {
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference().child(getString(R.string.field_likes_comment))

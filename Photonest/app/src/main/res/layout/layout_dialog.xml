@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:background="@drawable/dialog_bg"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        >
+
+        <TextView
+            android:id="@+id/text_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Rating"
+            android:layout_marginTop="20dp"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <RatingBar
+            android:id="@+id/post_rating_bar"
+            android:numStars="5"
+            style="@style/RatingBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="20dp"
+            android:stepSize="1" />
+
+
+        <TextView
+            android:id="@+id/btn_done"
+            android:layout_width="117dp"
+            android:layout_height="28dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="93dp"
+            android:layout_marginEnd="90dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/button_shape"
+            android:text="DONE"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    
+</RelativeLayout>

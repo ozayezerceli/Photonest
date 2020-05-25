@@ -130,6 +130,91 @@
         android:background="#FDEDE3"
         android:padding="2dp">
 
+        <LinearLayout
+            android:id="@+id/rating_layout_post_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/rating_like_1_pv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/liked_egg_rate_1"
+                />
+            <TextView
+                android:id="@+id/rating_like_text_1_pv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text=": 0"
+                android:textSize="15dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageView
+                android:id="@+id/rating_like_2_pv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/liked_egg_rate_2"/>
+
+            <TextView
+                android:id="@+id/rating_like_text_2_pv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text=": 0"
+                android:textSize="15dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageView
+                android:id="@+id/rating_like_3_pv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/liked_egg_rate_3"/>
+            <TextView
+                android:id="@+id/rating_like_text_3_pv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text=": 0"
+                android:textSize="15dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageView
+                android:id="@+id/rating_like_4_pv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/liked_egg_rate_4"/>
+            <TextView
+                android:id="@+id/rating_like_text_4_pv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text=": 0"
+                android:textSize="15dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_gravity="center" />
+
+            <ImageView
+                android:id="@+id/rating_like_5_pv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/liked_egg_rate_5"/>
+            <TextView
+                android:id="@+id/rating_like_text_5_pv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text=": 0"
+                android:textSize="15dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginEnd="10dp"/>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/image_likes_info_main_feed_view"
             android:layout_width="match_parent"
@@ -138,7 +223,8 @@
             android:clickable="true"
             android:padding="2dp"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:layout_below="@id/rating_layout_post_view"/>
 
         <TextView
             android:id="@+id/image_caption_main_view"

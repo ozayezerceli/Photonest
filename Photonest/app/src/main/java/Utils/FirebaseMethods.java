@@ -477,6 +477,7 @@ public class FirebaseMethods {
 
                     }
                 });
+                dbRef.child(mActivity.getString(R.string.ratings)).child(photo.photo_id).removeValue();
                 Toast.makeText(mActivity,"Photo deleted successfully.",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(mActivity, ProfileActivity.class);
                 mActivity.startActivity(intent);
@@ -522,7 +523,7 @@ public class FirebaseMethods {
                         Toast.makeText(mActivity,"Notification deleting error.",Toast.LENGTH_LONG).show();
                     }
                 });
-
+                myRef.child(mActivity.getString(R.string.ratings)).child(photo.photo_id).removeValue();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -882,6 +883,23 @@ public class FirebaseMethods {
 
                         }
                     });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        dbRef.child(mActivity.getString(R.string.ratings)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    for(DataSnapshot ds2 : ds.getChildren()){
+                        if(ds2.getKey().equals(userID)){
+                            ds2.getRef().removeValue();
+                        }
+                    }
                 }
             }
 
