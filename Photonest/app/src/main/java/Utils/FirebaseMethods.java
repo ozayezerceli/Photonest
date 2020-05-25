@@ -575,6 +575,7 @@ public class FirebaseMethods {
                         }
                         myRef.updateChildren(hashtag_list);
                         setTags(tv,editText.getText().toString());
+                        photo.setCaption(editText.getText().toString());
 
                         Toast.makeText(mActivity,"Photo is edited  successfully.",Toast.LENGTH_LONG).show();
 
@@ -588,7 +589,7 @@ public class FirebaseMethods {
 
     private void getText(String postid, PhotoInformation photo,final EditText editText){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        reference.child("dbname_photos").child(postid).child("caption").addValueEventListener(new ValueEventListener() {
+        reference.child("dbname_photos").child(postid).child("caption").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 editText.setText(dataSnapshot.getValue().toString());
