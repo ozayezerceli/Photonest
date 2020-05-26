@@ -438,11 +438,11 @@ public class PostViewFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 HashMap<String,Object> ratedUserList = new HashMap<>();
                 int c1 = 0,c2 = 0,c3 = 0, c4 = 0 ,c5 = 0;
-                rateTx1.setText(": "+c1);rateTx1.setTypeface(null, Typeface.NORMAL);rateTx1.setTextColor(Color.parseColor("#4E260E"));
-                rateTx2.setText(": "+c2);rateTx2.setTypeface(null, Typeface.NORMAL);rateTx2.setTextColor(Color.parseColor("#4E260E"));
-                rateTx3.setText(": "+c3);rateTx3.setTypeface(null, Typeface.NORMAL);rateTx3.setTextColor(Color.parseColor("#4E260E"));
-                rateTx4.setText(": "+c4);rateTx4.setTypeface(null, Typeface.NORMAL);rateTx4.setTextColor(Color.parseColor("#4E260E"));
-                rateTx5.setText(": "+c5);rateTx5.setTypeface(null, Typeface.NORMAL);rateTx5.setTextColor(Color.parseColor("#4E260E"));
+                rateTx1.setText(": "+c1);rateTx1.setTypeface(null, Typeface.NORMAL);rateTx1.setTextColor(Color.parseColor("#4E260E"));rateTx1.setClickable(false);
+                rateTx2.setText(": "+c2);rateTx2.setTypeface(null, Typeface.NORMAL);rateTx2.setTextColor(Color.parseColor("#4E260E"));rateTx2.setClickable(false);
+                rateTx3.setText(": "+c3);rateTx3.setTypeface(null, Typeface.NORMAL);rateTx3.setTextColor(Color.parseColor("#4E260E"));rateTx3.setClickable(false);
+                rateTx4.setText(": "+c4);rateTx4.setTypeface(null, Typeface.NORMAL);rateTx4.setTextColor(Color.parseColor("#4E260E"));rateTx4.setClickable(false);
+                rateTx5.setText(": "+c5);rateTx5.setTypeface(null, Typeface.NORMAL);rateTx5.setTextColor(Color.parseColor("#4E260E"));rateTx5.setClickable(false);
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     if(ds.getValue().toString().equals("0")){
                         ds.getRef().removeValue();
