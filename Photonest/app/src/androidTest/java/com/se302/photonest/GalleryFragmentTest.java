@@ -47,13 +47,20 @@ public class GalleryFragmentTest {
     }
 
     @Test
-    public void testNextButton(){
+    public void testNextButton() throws InterruptedException {
         Espresso.onView(withId(R.id.spinnerDirectory)).perform(click());
-        Espresso.onData(allOf(is(instanceOf(String.class)) , is("camera"))).perform(click());
+        Espresso.onData(allOf(is(instanceOf(String.class)) , is("WhatsApp Images"))).perform(click());
         Espresso.onData(anything()).inAdapterView(withId(R.id.gridView)).atPosition(0).perform(click());
         Espresso.onView(withId(R.id.nextBtn)).perform(click());
         Espresso.onView(withId(R.id.upload_post_description)).perform(typeText("#testCaption"));
+        Espresso.closeSoftKeyboard();
+        Espresso.onView(withId(R.id.upload_post_add_location_btn)).perform(click());
+        Espresso.onView(withId(R.id.action_geolocate)).perform(click());
+        Thread.sleep(3000);
+        Espresso.onView(withId(R.id.listPlaces)).check(matches(isDisplayed()));
+        Espresso.onData(anything()).inAdapterView(withId(R.id.listPlaces)).atPosition(0).perform(click());
         Espresso.onView(withId(R.id.upload_post_post)).perform(click());
+        Thread.sleep(15000);
     }
 
     @Test

@@ -27,6 +27,7 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
@@ -57,7 +58,7 @@ public class PhotoFragmentTest {
     }
 
     @Test
-    public void testCameraIntent(){
+    public void testCameraIntent() throws InterruptedException {
         Bitmap icon = BitmapFactory.decodeResource(
                 intentsRule.getActivity().getResources(),
                 R.drawable.place_holder_photo);
@@ -78,6 +79,11 @@ public class PhotoFragmentTest {
         Espresso.onView(withId(R.id.launch_camera)).perform(click());
         Espresso.onView(withId(R.id.upload_post_description)).perform(typeText("#testCaption"));
         Espresso.closeSoftKeyboard();
+        Espresso.onView(withId(R.id.upload_post_add_location_btn)).perform(click());
+        Espresso.onView(withId(R.id.action_geolocate)).perform(click());
+        Thread.sleep(3000);
+        Espresso.onView(withId(R.id.listPlaces)).check(matches(isDisplayed()));
+        Espresso.onData(anything()).inAdapterView(withId(R.id.listPlaces)).atPosition(0).perform(click());
         Espresso.onView(withId(R.id.upload_post_post)).perform(click());
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         //intended(toPackage("com.android.camera2"));
