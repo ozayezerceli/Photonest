@@ -1,5 +1,6 @@
 package Utils;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -53,7 +54,7 @@ public class GlobalUtils {
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                    rating = (int) ratingBar.getRating();
+                rating = (int) ratingBar.getRating();
             }
         });
         btn_done.setOnClickListener(new View.OnClickListener() {

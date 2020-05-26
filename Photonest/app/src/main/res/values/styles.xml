@@ -21,6 +21,8 @@
 
     <style name="postRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/post_rating_bar_full</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:stepSize">1</item>
         <item name="android:numStars">5</item>
     </style>
