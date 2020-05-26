@@ -13,11 +13,12 @@ public class Photo implements Serializable {
     private String photo_id;
     private String user_id;
     private String hashTags;
+    private String location;
     private List<Like> likes;
     private List<Comment> comments;
 
     public Photo(String caption, String date_created, String image_path, String photo_id,
-                 String user_id, String hashTags, List<Like> likes, List<Comment> comments) {
+                 String user_id, String hashTags, List<Like> likes, List<Comment> comments, String location) {
         this.caption = caption ;
         this.date_created = date_created;
         this.image_path = image_path;
@@ -26,6 +27,7 @@ public class Photo implements Serializable {
         this.hashTags = hashTags;
         this.likes = likes;
         this.comments = comments;
+        this.location = location;
     }
 
     public Photo() {
@@ -35,6 +37,10 @@ public class Photo implements Serializable {
 
     public String getCaption() {
         return caption;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public void setCaption(String caption) {

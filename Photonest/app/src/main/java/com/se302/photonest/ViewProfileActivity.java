@@ -365,6 +365,11 @@ public class ViewProfileActivity extends AppCompatActivity {
                     photoInformation.setHashTags(hashTags);
                     photoInformation.setDate_created(snapshot.child("date_created").getValue().toString());
                     photoInformation.setImage_path(snapshot.child("image_path").getValue().toString());
+                    if(snapshot.child("location").getValue().toString().length()>=1) {
+                        photoInformation.setLocation(snapshot.child("location").getValue().toString());
+                    }else{
+                        photoInformation.setLocation("Location Unknown");
+                    }
                     photoArrayList.add(photoInformation);
 
                 }

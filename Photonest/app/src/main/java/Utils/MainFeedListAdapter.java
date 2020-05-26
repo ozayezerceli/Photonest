@@ -50,6 +50,8 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.se302.photonest.ResultActivity;
 import com.se302.photonest.ViewProfileActivity;
 
+import static android.view.View.GONE;
+
 
 public class MainFeedListAdapter extends ArrayAdapter<Object> {
     private int mResource;
@@ -84,7 +86,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         ImageView likedEgg;
         ImageView unlikedEgg;
         TextView caption;
-        TextView date;
+        TextView date, location;
         TextView commentsLink;
         ProgressBar progressBar;
     }
@@ -118,6 +120,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             holder.unlikedEgg = convertView.findViewById(R.id.image_egg_not_liked);
             holder.caption = convertView.findViewById(R.id.image_caption_main);
             holder.date = convertView.findViewById(R.id.image_time_posted_main);
+            holder.location = convertView.findViewById(R.id.location_main);
             holder.commentsLink = convertView.findViewById(R.id.image_comments_link_main);
             convertView.setTag(holder);
             setTags(holder.caption, holder.caption.getText().toString());
@@ -234,6 +237,11 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             holder.caption.setText(photo.getCaption());
             setTags(holder.caption, holder.caption.getText().toString());
             holder.date.setText(photo.getDate_created());
+            if(photo.getLocation().length()>=1) {
+                holder.location.setText(photo.getLocation());
+            }else{
+                holder.location.setText("Location Unknown");
+            }
             reference.child(mContext.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).child(mContext.getString(R.string.fieldComment)).orderByChild(mContext.getString(R.string.dateField))
                     .addValueEventListener(new ValueEventListener() {
                         @Override
@@ -455,16 +463,16 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 if(!dataSnapshot.exists()){
                     likedBy.setClickable(false);
                     unlikedEgg.setVisibility(View.VISIBLE);
-                    likedEgg.setVisibility(View.GONE);
+                    likedEgg.setVisibility(GONE);
                     likedBy.setText("No like");
 
                 }else {
                     likedBy.setClickable(true);
-                    likedEgg.setVisibility(View.GONE);
+                    likedEgg.setVisibility(GONE);
                     unlikedEgg.setVisibility(View.VISIBLE);
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (ds.child(mContext.getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
-                            unlikedEgg.setVisibility(View.GONE);
+                            unlikedEgg.setVisibility(GONE);
                             likedEgg.setVisibility(View.VISIBLE);
                         }
                         String ds1 = ds.child("user_id").getValue().toString();
@@ -491,7 +499,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                     if(!dataSnapshot.exists()){
                         mLikesString = "";
                         mLikedByCurrentUser = false;
-                        likedEgg.setVisibility(View.GONE);
+                        likedEgg.setVisibility(GONE);
                         unlikedEgg.setVisibility(View.VISIBLE);
                     }else {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -499,7 +507,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                             if (ds.child(mContext.getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
                                 mLikedByCurrentUser = true;
                                 likeId = ds.getKey();
-                                unlikedEgg.setVisibility(View.GONE);
+                                unlikedEgg.setVisibility(GONE);
                                 likedEgg.setVisibility(View.VISIBLE);
                                 mEgg.toggleLike(unlikedEgg, likedEgg);
                                 firebaseMethods.removeNewLike(mContext.getString(R.string.field_likes), photo.getPhoto_id(), likeId);
@@ -510,7 +518,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
 
                     if(!mLikedByCurrentUser){
                         unlikedEgg.setVisibility(View.VISIBLE);
-                        likedEgg.setVisibility(View.GONE);
+                        likedEgg.setVisibility(GONE);
                         mEgg.toggleLike(unlikedEgg, likedEgg);
                         firebaseMethods.addNewLike(mContext.getString(R.string.field_likes),photo.getPhoto_id());
                         setUserLikes(unlikedEgg,likedEgg,mContext.getString(R.string.field_likes),photo.getPhoto_id(),likedBy);

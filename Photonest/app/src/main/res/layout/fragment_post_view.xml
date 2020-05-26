@@ -36,11 +36,21 @@
             android:id="@+id/username_main_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="7dp"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/profile_photo_main_view"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/location_main_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/profile_photo_main_view"
+            android:layout_below="@+id/username_main_view"
+            android:textColor="@color/colorAccent"
+            android:textSize="11sp" />
 
         <ImageView
             android:id="@+id/btn_postOption"

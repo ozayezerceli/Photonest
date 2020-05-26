@@ -63,7 +63,7 @@ public class PostViewFragment extends Fragment {
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
 
-    private TextView mBackLabel, mCaption, mUsername, mTimestamp, likedBy, mtxtComment,rateTx1pv,rateTx2pv,rateTx3pv,rateTx4pv,rateTx5pv;
+    private TextView mBackLabel, mCaption, mUsername, mTimestamp, likedBy, mtxtComment,rateTx1pv,rateTx2pv,rateTx3pv,rateTx4pv,rateTx5pv, location;
     private ImageView mBackArrow, postOptions, likedEgg, unlikedEgg, mProfileImage, mComments,rate1pv,rate2pv,rate3pv,rate4pv,rate5pv;
     private ProgressBar progressbar;
     private UserInformation userInformation;
@@ -117,6 +117,7 @@ public class PostViewFragment extends Fragment {
         rate5pv = view.findViewById(R.id.rating_like_5_pv);
         rateTx5pv = view.findViewById(R.id.rating_like_text_5_pv);
         mProfileImage = view.findViewById(R.id.profile_photo_main_view);
+        location = view.findViewById(R.id.location_main_view);
         progressbar = view.findViewById(R.id.progressBar_view);
         postOptions = view.findViewById(R.id.btn_postOption);
         mComments = view.findViewById(R.id.comment_main_view);
@@ -154,6 +155,7 @@ public class PostViewFragment extends Fragment {
         getPhotoDetails();
         getCurrentProfile();
         setRateListener();
+        location.setText(photo.getLocation());
         launchComment(getString(R.string.dbname_photos), photo.getPhoto_id());
         myRef.child(getContext().getString(R.string.dbname_photos)).child(photo.getPhoto_id()).child(getContext().getString(R.string.fieldComment)).orderByChild(getContext().getString(R.string.dateField))
                 .addValueEventListener(new ValueEventListener() {
