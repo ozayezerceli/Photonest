@@ -33,6 +33,7 @@
         app:layout_constraintStart_toEndOf="@+id/comment_profile"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
+        android:touchscreenBlocksFocus="true"
         >
 
         <TextView

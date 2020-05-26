@@ -704,6 +704,32 @@ public class FirebaseMethods {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
+        myRef.child("Notifications").child(user1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(final DataSnapshot ds : dataSnapshot.getChildren()){
+                    if(ds.child("userid").getValue().toString().equals(user2)){
+                        ds.getRef().removeValue();
+                    }else {
+                        myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(user2).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (!ds.child("postid").getValue().toString().equals("") && dataSnapshot.child(ds.child("postid").getValue().toString()).exists()) {
+                                    ds.getRef().removeValue();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
 
