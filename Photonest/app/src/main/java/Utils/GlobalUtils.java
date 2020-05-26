@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,13 +19,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.se302.photonest.R;
 
+import java.util.HashMap;
+
 import DataModels.CustomDialog;
 import DataModels.Photo;
 import DataModels.PhotoInformation;
 
 public class GlobalUtils {
     public static int rating;
-    public static void showDialog(Photo photo, final String userId, final Context context, final DialogCallback dialogCallback){
+    public static void showDialog(final Photo photo, final String userId, final Context context, final DialogCallback dialogCallback){
         final CustomDialog dialog = new CustomDialog(context, R.style.CustomDialogTheme);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.layout_dialog,null);
@@ -60,15 +63,29 @@ public class GlobalUtils {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dialogCallback != null)
+                if(dialogCallback != null) {
                     dialogCallback.callback(rating);
+                }
                 dialog.dismiss();
+                if(rating!=0){
+                    addNotifications(userId, photo.getPhoto_id());
+                }
             }
         });
         dialog.show();
     }
+    private static void addNotifications(String userid, String postid){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+        HashMap<String,Object> hash = new HashMap<>();
+        hash.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        hash.put("text", "rated your post");
+        hash.put("postid",postid);
+        hash.put("ispost", true);
 
-    public static void showDialog(PhotoInformation photo, final String userId, final Context context, final DialogCallback dialogCallback){
+        ref.push().setValue(hash);
+    }
+
+    public static void showDialog(final PhotoInformation photo, final String userId, final Context context, final DialogCallback dialogCallback){
         final CustomDialog dialog = new CustomDialog(context, R.style.CustomDialogTheme);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.layout_dialog,null);
@@ -104,9 +121,13 @@ public class GlobalUtils {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dialogCallback != null)
+                if(dialogCallback != null) {
                     dialogCallback.callback(rating);
+                }
                 dialog.dismiss();
+                if(rating!=0){
+                    addNotifications(userId, photo.getPhoto_id());
+                }
             }
         });
         dialog.show();
