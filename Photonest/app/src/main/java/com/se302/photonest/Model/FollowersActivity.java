@@ -104,7 +104,19 @@ public class FollowersActivity extends AppCompatActivity {
              case "followers":
                  getFollowers();
                  break;
-             case "rates":
+             case "rates1":
+                 getUsersRated();
+                 break;
+             case "rates2":
+                 getUsersRated();
+                 break;
+             case "rates3":
+                 getUsersRated();
+                 break;
+             case "rates4":
+                 getUsersRated();
+                 break;
+             case "rates5":
                  getUsersRated();
                  break;
          }
@@ -119,7 +131,18 @@ public class FollowersActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 idList.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    idList.add(snapshot.getKey());
+                    if(title.equals("rates1") && snapshot.getValue().toString().equals("1")){
+                        idList.add(snapshot.getKey());
+                    }else if(title.equals("rates2") && snapshot.getValue().toString().equals("2")){
+                        idList.add(snapshot.getKey());
+                    }else if(title.equals("rates3") && snapshot.getValue().toString().equals("3")){
+                        idList.add(snapshot.getKey());
+                    }else if(title.equals("rates4") && snapshot.getValue().toString().equals("4")){
+                        idList.add(snapshot.getKey());
+                    }else if(title.equals("rates5") && snapshot.getValue().toString().equals("5")){
+                        idList.add(snapshot.getKey());
+                    }
+
                 }
                 showUsers();
             }

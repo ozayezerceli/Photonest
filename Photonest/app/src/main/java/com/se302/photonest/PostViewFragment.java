@@ -384,7 +384,7 @@ public class PostViewFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates");
+                intent.putExtra("title", "rates1");
                 getContext().startActivity(intent);
             }
         });
@@ -394,7 +394,7 @@ public class PostViewFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates");
+                intent.putExtra("title", "rates2");
                 getContext().startActivity(intent);
             }
         });
@@ -404,7 +404,7 @@ public class PostViewFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates");
+                intent.putExtra("title", "rates3");
                 getContext().startActivity(intent);
             }
         });
@@ -414,7 +414,7 @@ public class PostViewFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates");
+                intent.putExtra("title", "rates4");
                 getContext().startActivity(intent);
             }
         });
@@ -422,10 +422,9 @@ public class PostViewFragment extends Fragment {
         rateTx5pv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int pp=(Integer)view.getTag();
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates");
+                intent.putExtra("title", "rates5");
                 getContext().startActivity(intent);
             }
         });
