@@ -128,6 +128,8 @@ public class ViewProfileActivity extends AppCompatActivity {
                         followers.setText("0");
                         following.setText("0");
                         posts.setText("0");
+                        follow_Btn.setEnabled(false);
+                        unfollow_Btn.setEnabled(false);
                     }
 
                     if(dataSnapshot.child(viewUserID).child(userID).exists()){
@@ -363,7 +365,7 @@ public class ViewProfileActivity extends AppCompatActivity {
                         fragment.setArguments(args);
 
                         FragmentTransaction transaction  = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container, fragment);
+                        transaction.replace(R.id.container_edit_pview, fragment);
                         transaction.addToBackStack("View Post");
                         transaction.commit();
                     }
