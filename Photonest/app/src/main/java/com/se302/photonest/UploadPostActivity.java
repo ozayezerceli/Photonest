@@ -106,18 +106,19 @@ public class UploadPostActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(UploadPostActivity.this, "Attempting to upload new photo", Toast.LENGTH_SHORT).show();
                 String caption = description.getText().toString();
-                if(caption.isEmpty()){
-                    caption =" ";
-                }
-                if(intent.hasExtra(getString(R.string.selected_image))){
-                    imgUrl = intent.getStringExtra(getString(R.string.selected_image));
-                    mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgUrl,null, post_location.getText().toString());
-                }
-                else if(intent.hasExtra(getString(R.string.selected_bitmap))){
-                    bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
-                    mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap, post_location.getText().toString());
+                if(caption.isEmpty() || caption.trim().equals("")){
+                    Toast.makeText(getApplicationContext(), "Sorry you did't type anything for caption", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(UploadPostActivity.this, "Attempting to upload new photo", Toast.LENGTH_SHORT).show();
+                    if(intent.hasExtra(getString(R.string.selected_image))){
+                        imgUrl = intent.getStringExtra(getString(R.string.selected_image));
+                        mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgUrl,null, post_location.getText().toString());
+                    }
+                    else if(intent.hasExtra(getString(R.string.selected_bitmap))){
+                        bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
+                        mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap, post_location.getText().toString());
+                    }
                 }
             }
         });
