@@ -44,6 +44,7 @@ import DataModels.User;
 import DataModels.UserInformation;
 import Utils.BottomNavigationViewHelper;
 import Utils.FirebaseMethods;
+import Utils.GlideImageLoader;
 import Utils.GridImageAdapter;
 import Utils.StringManipulation;
 
@@ -214,7 +215,8 @@ public class ViewProfileActivity extends AppCompatActivity {
                     username.setText(muser.getUsername());
                     fullname.setText(muser.getFullName());
                     bio.setText(muser.getBio());
-                    Glide.with(getApplicationContext()).load(muser.getImageUrl()).into(image_profile);
+
+                    GlideImageLoader.loadImageWithOutTransition(myContext, muser.getImageUrl(), image_profile);
                 }
 
                 @Override

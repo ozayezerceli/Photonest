@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 
 import DataModels.Like;
+import DataModels.UserInformation;
 import Utils.FirebaseMethods;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +48,7 @@ import com.squareup.picasso.Picasso;
 import DataModels.PhotoInformation;
 
 import Utils.BottomNavigationViewHelper;
+import Utils.GlideImageLoader;
 import Utils.GridImageAdapter;
 import Utils.StringManipulation;
 
@@ -267,8 +269,7 @@ public class ProfileActivity extends AppCompatActivity {
                             String website = dataSnapshot.child("website_link").getValue().toString();
                             String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
 
-                           Picasso.get().load(Image_Url).into(image_profile);
-
+                            GlideImageLoader.loadImageWithOutTransition(myContext, Image_Url, image_profile);
 
                             username.setText(UserName);
                             fullname.setText(FullName);
@@ -357,25 +358,6 @@ public class ProfileActivity extends AppCompatActivity {
         Menu menu = bottomNavBar.getMenu();
         MenuItem mItem = menu.getItem(ACTIVITY_NUM);
         mItem.setChecked(true);
-    }
-    private void setupFirebaseAuth() {
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-
-
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
-
-
     }
 
 
