@@ -69,10 +69,10 @@ public class SearchActivity extends AppCompatActivity {
         hashBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userBtn.setPaintFlags(0);
+                hashBtn.setPaintFlags(hashBtn.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                listView.setAdapter(HListAdapter);
                 if(keyword !=null) {
-                    userBtn.setPaintFlags(0);
-                    hashBtn.setPaintFlags(hashBtn.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                    listView.setAdapter(HListAdapter);
                     searchForMatchHashs(keyword);
                 }
                 usersClicked=false;
@@ -82,10 +82,10 @@ public class SearchActivity extends AppCompatActivity {
         userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hashBtn.setPaintFlags(0);
+                userBtn.setPaintFlags(userBtn.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                listView.setAdapter(listAdapter);
                 if(keyword != null) {
-                    hashBtn.setPaintFlags(0);
-                    userBtn.setPaintFlags(userBtn.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                    listView.setAdapter(listAdapter);
                     searchForMatchUsers(keyword);
                 }
                 usersClicked=true;
