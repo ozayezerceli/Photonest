@@ -47,6 +47,9 @@ public class MainFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_main,container,false);
         mainList = view.findViewById(R.id.mainListView);
+        mainList.setDivider(null);
+        mainList.setDividerHeight(0);
+
         return view;
     }
 
