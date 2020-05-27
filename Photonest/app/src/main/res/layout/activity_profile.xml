@@ -73,8 +73,8 @@
                             android:id="@+id/profile_image"
                             android:layout_width="92dp"
                             android:layout_height="96dp"
-                            app:civ_border_color="#FF000000"
-                            app:civ_border_width="2dp" />
+                            app:civ_border_width="1dp"
+                            app:civ_border_color="@color/colorPrimaryDark" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -113,7 +113,7 @@
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="30dp"
+                                    android:layout_marginLeft="31dp"
                                     android:orientation="vertical">
 
                                     <TextView
@@ -158,8 +158,11 @@
 
                             <Button
                                 android:id="@+id/edit_profile_button"
-                                android:layout_width="match_parent"
+                                android:layout_width="100dp"
                                 android:layout_height="30dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="10dp"
+                                android:textAlignment="center"
                                 android:layout_marginTop="8dp"
                                 android:background="@drawable/button_background" />
 
@@ -172,7 +175,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="12dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginLeft="12dp"
                         android:id="@+id/mid_bar"
                         android:orientation="vertical">
 
@@ -188,7 +192,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="2dp"
                             android:id="@+id/bio_profile"
                             android:maxLines="5"
                             android:textColor="@color/colorPrimaryDark"/>
@@ -196,7 +200,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="2dp"
                             android:id="@+id/website_link_profile"
                             android:maxLines="5"
                             android:autoLink="web"
@@ -204,25 +208,19 @@
                             android:textColor="@color/colorPrimaryDark"/>
 
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
                         android:id="@+id/last_bar"
-                        android:background="@drawable/button_black"
                         android:orientation="horizontal">
-
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:id="@+id/my_photos"
-                            android:src="@drawable/ic_grid"
-                            style="?android:attr/buttonBarButtonStyle"/>
-
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:background="@color/colorPrimaryDark">
+                        </TextView>
 
                     </LinearLayout>
 
@@ -232,6 +230,7 @@
                         android:id="@+id/grid_view_profile"
                         android:numColumns="3"
                         android:gravity="center"
+                        android:padding="3dp"
                         android:verticalSpacing="1.5dp"
                         android:horizontalSpacing="1.5dp"
                         android:stretchMode="none"/>

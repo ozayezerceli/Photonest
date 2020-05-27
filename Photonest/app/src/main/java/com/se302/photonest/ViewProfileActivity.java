@@ -1,5 +1,6 @@
 package com.se302.photonest;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,8 +65,8 @@ public class ViewProfileActivity extends AppCompatActivity {
 
 
     private ImageView image_profile;
-    private TextView posts, followers,following, fullname, bio;
-    private Button follow_Btn, unfollow_Btn, editprofile_Btn, unblock_Btn;
+    private TextView posts, followers,following, fullname, bio, website_link;
+    private Button follow_Btn, unfollow_Btn;
     private RelativeLayout mrelativelayout;
     private GridView mGridView;
     private Menu bottomMenu;
@@ -76,19 +78,18 @@ public class ViewProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
-        username = findViewById(R.id.ViewusernameTxt);
-        fullname = findViewById(R.id.View_fullname_profile);
-        bio = findViewById(R.id.View_bio_profile);
-        posts = findViewById(R.id.View_posts);
-        followers = findViewById(R.id.View_followers);
-        following = findViewById(R.id.View_following);
-        follow_Btn = findViewById(R.id.Follow_button);
-        unfollow_Btn = findViewById(R.id.UnFollow_button);
-        editprofile_Btn = findViewById(R.id.View_editprofile_button);
-        image_profile = findViewById(R.id.View_profile_image);
-        mrelativelayout = findViewById(R.id.relativeTop);
-        mGridView = findViewById(R.id.grid_view);
-        unblock_Btn = findViewById(R.id.Unblock_button);
+        username = findViewById(R.id.usernameTxt_pview);
+        fullname = findViewById(R.id.fullname_profile_pview);
+        bio = findViewById(R.id.bio_profile_pview);
+        posts = findViewById(R.id.posts_pview);
+        website_link = findViewById(R.id.website_link_profile_pview);
+        followers = findViewById(R.id.followers_pview);
+        following = findViewById(R.id.following_pview);
+        follow_Btn = findViewById(R.id.Follow_button_pview);
+        unfollow_Btn = findViewById(R.id.UnFollow_button_pview);
+        image_profile = findViewById(R.id.profile_image_pview);
+        mrelativelayout = findViewById(R.id.relativeTop_pview);
+        mGridView = findViewById(R.id.grid_view_profile_pview);
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -116,29 +117,12 @@ public class ViewProfileActivity extends AppCompatActivity {
             }
         });
 
-        editprofile_Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mrelativelayout.setVisibility(View.GONE);
-                EditProfileFragment fragment = new EditProfileFragment();
-                FragmentTransaction transaction = ViewProfileActivity.this.getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container, fragment);
-                transaction.addToBackStack(getString(R.string.profile_fragment));
-                transaction.commit();
-            }
-        });
 
-        if(viewUserID.equals(userID)){
-            follow_Btn.setVisibility(View.GONE);
-            unfollow_Btn.setVisibility(View.GONE);
-            editprofile_Btn.setVisibility(View.VISIBLE);
-        } else{
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             reference.child("Blocked").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.child(userID).child(viewUserID).exists()){
-                        setBlocked();
                         followers.setClickable(false);
                         following.setClickable(false);
                         followers.setText("0");
@@ -170,7 +154,6 @@ public class ViewProfileActivity extends AppCompatActivity {
 
                 }
             });
-        }
 
         followers.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,13 +174,6 @@ public class ViewProfileActivity extends AppCompatActivity {
             }
         });
 
-        unblock_Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                firebaseMethods.unblockUser(viewUserID);
-                startActivity(getIntent());
-            }
-        });
 
     }
 
@@ -215,6 +191,7 @@ public class ViewProfileActivity extends AppCompatActivity {
                     username.setText(muser.getUsername());
                     fullname.setText(muser.getFullName());
                     bio.setText(muser.getBio());
+                    website_link.setText(muser.getWebsite_link());
 
                     GlideImageLoader.loadImageWithOutTransition(myContext, muser.getImageUrl(), image_profile);
                 }
@@ -229,7 +206,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         }
 
         final FirebaseMethods firebaseMethods = new FirebaseMethods(ViewProfileActivity.this);
-        ActionMenuView actionMenuView = findViewById(R.id.view_profile_menu_view);
+        ActionMenuView actionMenuView = findViewById(R.id.profile_menu_view_pview);
         bottomMenu = actionMenuView.getMenu();
         getMenuInflater().inflate(R.menu.view_profile_menu, bottomMenu);
         final MenuItem item = bottomMenu.getItem(0);
@@ -297,24 +274,10 @@ public class ViewProfileActivity extends AppCompatActivity {
         //Log.d(TAG, "setFollowing: updating UI for following this user");
         follow_Btn.setVisibility(View.GONE);
         unfollow_Btn.setVisibility(View.VISIBLE);
-        editprofile_Btn.setVisibility(View.GONE);
     }
 
     private void setUnfollowing(){
         //Log.d(TAG, "setFollowing: updating UI for unfollowing this user");
-        follow_Btn.setVisibility(View.VISIBLE);
-        unfollow_Btn.setVisibility(View.GONE);
-        editprofile_Btn.setVisibility(View.GONE);
-    }
-
-    private void setBlocked(){
-        unblock_Btn.setVisibility(View.VISIBLE);
-        follow_Btn.setVisibility(View.GONE);
-        unfollow_Btn.setVisibility(View.GONE);
-    }
-
-    private void setUnBlocked(){
-        unblock_Btn.setVisibility(View.GONE);
         follow_Btn.setVisibility(View.VISIBLE);
         unfollow_Btn.setVisibility(View.GONE);
     }
