@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -32,6 +33,7 @@ import java.util.List;
 
 import DataModels.PhotoInformation;
 import Utils.BottomNavigationViewHelper;
+import Utils.GlideImageLoader;
 import Utils.GridImageAdapter;
 import Utils.StringManipulation;
 
@@ -40,7 +42,7 @@ public class ResultActivity extends AppCompatActivity {
     private String hashTags;
     private GridView mGridView;
     private RelativeLayout mRelative;
-    private ImageView mBackArrow;
+    private ImageView mBackArrow,mContainer;
     private TextView mText;
     private static final int ACTIVITY_NUM = 1;
 
@@ -51,6 +53,7 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         mGridView = findViewById(R.id.grid_view_result);
+        mContainer = findViewById(R.id.empty_container_result);
         mRelative = findViewById(R.id.relativeParent_result);
         mBackArrow = findViewById(R.id.backArrow_result);
         mBackArrow.setOnClickListener(new View.OnClickListener() {
@@ -101,31 +104,34 @@ public class ResultActivity extends AppCompatActivity {
                                 int gridWidth = getResources().getDisplayMetrics().widthPixels;
                                 int imageWidth = gridWidth / 3;
                                 mGridView.setColumnWidth(imageWidth);
-
-                                ArrayList<String> imgUrls = new ArrayList<String>();
-                                for (int i = 0; i < photoArrayList.size(); i++) {
-                                    imgUrls.add(photoArrayList.get(i).getImage_path());
-                                }
-
-                                GridImageAdapter adapter = new GridImageAdapter(ResultActivity.this, R.layout.grid_imageview, "", imgUrls);
-                                mGridView.setAdapter(adapter);
-
-                                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        mRelative.setVisibility(View.INVISIBLE);
-                                        PostViewFragment post_view_fragment = new PostViewFragment();
-                                        Bundle args = new Bundle();
-                                        args.putParcelable("photo", photoArrayList.get(position));
-                                        args.putInt("activityNumber", 1);
-                                        post_view_fragment.setArguments(args);
-
-                                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.container_result, post_view_fragment);
-                                        transaction.addToBackStack("View Post");
-                                        transaction.commit();
+                                if(photoArrayList.size()>0){
+                                    ArrayList<String> imgUrls = new ArrayList<String>();
+                                    for (int i = 0; i < photoArrayList.size(); i++) {
+                                        imgUrls.add(photoArrayList.get(i).getImage_path());
                                     }
-                                });
+
+                                    GridImageAdapter adapter = new GridImageAdapter(ResultActivity.this, R.layout.grid_imageview, "", imgUrls);
+                                    mGridView.setAdapter(adapter);
+
+                                    mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            mRelative.setVisibility(View.INVISIBLE);
+                                            PostViewFragment post_view_fragment = new PostViewFragment();
+                                            Bundle args = new Bundle();
+                                            args.putParcelable("photo", photoArrayList.get(position));
+                                            args.putInt("activityNumber", 1);
+                                            post_view_fragment.setArguments(args);
+
+                                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                            transaction.replace(R.id.container_result, post_view_fragment);
+                                            transaction.addToBackStack("View Post");
+                                            transaction.commit();
+                                        }
+                                    });
+                                }else{
+                                    mContainer.setImageResource(R.drawable.empty_photo_result);
+                                }
                             }
                         }
 
