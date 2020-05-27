@@ -68,7 +68,7 @@ public class GlobalUtils {
                 }
                 dialog.dismiss();
                 if(rating!=0){
-                    addNotifications(userId, photo.getPhoto_id());
+                    addNotifications(photo.getUser_id(), photo.getPhoto_id());
                 }
             }
         });
@@ -126,7 +126,7 @@ public class GlobalUtils {
                 }
                 dialog.dismiss();
                 if(rating!=0){
-                    addNotifications(userId, photo.getPhoto_id());
+                    addNotifications(photo.getUser_id(), photo.getPhoto_id());
                 }
             }
         });
