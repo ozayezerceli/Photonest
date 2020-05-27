@@ -9,9 +9,9 @@
     <string name="login_btn">LOGIN</string>
     <string name="email_field">E-mail address</string>
     <string name="password_field">Password</string>
-    <string name="sign_up_q">Don\'t have an Account?</string>
+    <string name="sign_up_q">Don\'t have an account?</string>
     <string name="sign_up_txt">Sign up</string>
-    <string name="forgot_pw">Forgot Password?</string>
+    <string name="forgot_pw">Forgot your password?</string>
     <string name="verify_header">Verify Your Email</string>
     <string name="check_mark_desc"></string>
     <string name="cancel_mark_desc"></string>
