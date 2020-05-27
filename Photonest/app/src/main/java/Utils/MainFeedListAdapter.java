@@ -166,7 +166,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 int pp=(Integer)view.getTag();
                 Intent intent= new Intent(mContext, FollowersActivity.class);
                 intent.putExtra("id",Objects.requireNonNull((Photo)getItem(pp)).getPhoto_id());
-                intent.putExtra("title", "rates1");
+                intent.putExtra("title", "1 Rated List");
                 mContext.startActivity(intent);
             }
         });
@@ -177,7 +177,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 int pp=(Integer)view.getTag();
                 Intent intent= new Intent(mContext, FollowersActivity.class);
                 intent.putExtra("id",Objects.requireNonNull((Photo)getItem(pp)).getPhoto_id());
-                intent.putExtra("title", "rates2");
+                intent.putExtra("title", "2 Rated List");
                 mContext.startActivity(intent);
             }
         });
@@ -188,7 +188,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 int pp=(Integer)view.getTag();
                 Intent intent= new Intent(mContext, FollowersActivity.class);
                 intent.putExtra("id",Objects.requireNonNull((Photo)getItem(pp)).getPhoto_id());
-                intent.putExtra("title", "rates3");
+                intent.putExtra("title", "3 Rated List");
                 mContext.startActivity(intent);
             }
         });
@@ -199,7 +199,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 int pp=(Integer)view.getTag();
                 Intent intent= new Intent(mContext, FollowersActivity.class);
                 intent.putExtra("id",Objects.requireNonNull((Photo)getItem(pp)).getPhoto_id());
-                intent.putExtra("title", "rates4");
+                intent.putExtra("title", "4 Rated List");
                 mContext.startActivity(intent);
             }
         });
@@ -210,7 +210,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 int pp=(Integer)view.getTag();
                 Intent intent= new Intent(mContext, FollowersActivity.class);
                 intent.putExtra("id",Objects.requireNonNull((Photo)getItem(pp)).getPhoto_id());
-                intent.putExtra("title", "rates5");
+                intent.putExtra("title", "5 Rated List");
                 mContext.startActivity(intent);
             }
         });

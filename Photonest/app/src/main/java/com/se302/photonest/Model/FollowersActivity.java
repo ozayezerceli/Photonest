@@ -89,7 +89,6 @@ public class FollowersActivity extends AppCompatActivity {
         userAdapter = new UserAdapter(myContext, userList, false);
         recyclerView.setAdapter(userAdapter);
 
-
         idList = new ArrayList<>();
          switch ((title)){
              case "likes":
@@ -104,19 +103,19 @@ public class FollowersActivity extends AppCompatActivity {
              case "followers":
                  getFollowers();
                  break;
-             case "rates1":
+             case "1 Rated List":
                  getUsersRated();
                  break;
-             case "rates2":
+             case "2 Rated List":
                  getUsersRated();
                  break;
-             case "rates3":
+             case "3 Rated List":
                  getUsersRated();
                  break;
-             case "rates4":
+             case "4 Rated List":
                  getUsersRated();
                  break;
-             case "rates5":
+             case "5 Rated List":
                  getUsersRated();
                  break;
          }
@@ -131,15 +130,15 @@ public class FollowersActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 idList.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    if(title.equals("rates1") && snapshot.getValue().toString().equals("1")){
+                    if(title.equals("1 Rated List") && snapshot.getValue().toString().equals("1")){
                         idList.add(snapshot.getKey());
-                    }else if(title.equals("rates2") && snapshot.getValue().toString().equals("2")){
+                    }else if(title.equals("2 Rated List") && snapshot.getValue().toString().equals("2")){
                         idList.add(snapshot.getKey());
-                    }else if(title.equals("rates3") && snapshot.getValue().toString().equals("3")){
+                    }else if(title.equals("3 Rated List") && snapshot.getValue().toString().equals("3")){
                         idList.add(snapshot.getKey());
-                    }else if(title.equals("rates4") && snapshot.getValue().toString().equals("4")){
+                    }else if(title.equals("4 Rated List") && snapshot.getValue().toString().equals("4")){
                         idList.add(snapshot.getKey());
-                    }else if(title.equals("rates5") && snapshot.getValue().toString().equals("5")){
+                    }else if(title.equals("5 Rated List") && snapshot.getValue().toString().equals("5")){
                         idList.add(snapshot.getKey());
                     }
 

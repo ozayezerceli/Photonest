@@ -386,7 +386,7 @@ public class PostViewFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates1");
+                intent.putExtra("title", "1 Rated List");
                 getContext().startActivity(intent);
             }
         });
@@ -396,7 +396,7 @@ public class PostViewFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates2");
+                intent.putExtra("title", "2 Rated List");
                 getContext().startActivity(intent);
             }
         });
@@ -406,7 +406,7 @@ public class PostViewFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates3");
+                intent.putExtra("title", "3 Rated List");
                 getContext().startActivity(intent);
             }
         });
@@ -416,7 +416,7 @@ public class PostViewFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates4");
+                intent.putExtra("title", "4 Rated List");
                 getContext().startActivity(intent);
             }
         });
@@ -426,7 +426,7 @@ public class PostViewFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent= new Intent(getContext(), FollowersActivity.class);
                 intent.putExtra("id",photo.getPhoto_id());
-                intent.putExtra("title", "rates5");
+                intent.putExtra("title", "5 Rated List");
                 getContext().startActivity(intent);
             }
         });
