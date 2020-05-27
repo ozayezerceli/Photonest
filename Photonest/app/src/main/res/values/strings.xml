@@ -6,7 +6,7 @@
     <string name="activate_button">Activate</string>
     <string name="photonestImg"></string>
     <string name="edit_profile_fragment">Edit Profile</string>
-    <string name="login_btn">Login</string>
+    <string name="login_btn">LOGIN</string>
     <string name="email_field">E-mail address</string>
     <string name="password_field">Password</string>
     <string name="sign_up_q">Don\'t have an Account?</string>
