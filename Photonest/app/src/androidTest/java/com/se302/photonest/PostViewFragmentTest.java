@@ -21,8 +21,10 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -59,6 +61,7 @@ public class PostViewFragmentTest {
         onView(withId(R.id.image_egg_not_liked_view)).check(matches(isDisplayed()));
         onView(withId(R.id.profile_photo_main_view)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_postOption)).check(matches(isDisplayed()));
+        onView(withId(R.id.rating_layout_post_view)).check(matches(isDisplayed()));
 
     }
 
@@ -98,6 +101,16 @@ public class PostViewFragmentTest {
         onView(withId(R.id.image_egg_not_liked_view)).check(matches(isDisplayed()));
 
     }
+    @Test
+    public void testUserRatePost(){
+        onView(withId(R.id.image_egg_not_liked_view)).perform(longClick());
+        onView(withId(R.id.post_rating_bar)).inRoot(RootMatchers.isDialog()).check(matches(isDisplayed())).perform(click());
+        onView(withId(R.id.btn_done)).perform(click());
+
+
+
+    }
+
 
 
 
