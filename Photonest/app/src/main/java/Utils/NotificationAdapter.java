@@ -203,8 +203,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GlideImageLoader.loadImageWithOutTransition(mContext, Objects.requireNonNull(dataSnapshot.getValue(User.class)).getImageUrl(), imageView);
-                username.setText(dataSnapshot.getValue(User.class).getUsername());
+                if(dataSnapshot.getValue(User.class)!=null) {
+                    GlideImageLoader.loadImageWithOutTransition(mContext, Objects.requireNonNull(dataSnapshot.getValue(User.class)).getImageUrl(), imageView);
+                    username.setText(dataSnapshot.getValue(User.class).getUsername());
+                }
             }
 
             @Override
@@ -219,9 +221,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GlideImageLoader.loadImageWithOutTransition(mContext, Objects.requireNonNull(dataSnapshot.getValue(Photo.class)).getImage_path(), imageView);
+                if (dataSnapshot.getValue(Photo.class) != null) {
+                    GlideImageLoader.loadImageWithOutTransition(mContext, Objects.requireNonNull(dataSnapshot.getValue(Photo.class)).getImage_path(), imageView);
+                }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

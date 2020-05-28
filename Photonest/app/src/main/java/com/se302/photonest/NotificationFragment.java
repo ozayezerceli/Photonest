@@ -50,12 +50,15 @@ public class NotificationFragment extends Fragment {
     }
 
     private void readNotifications(){
+        notificationList.clear();
+        notificationAdapter.notifyDataSetChanged();
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Notifications").child(fUser.getUid());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 notificationList.clear();
+                notificationAdapter.notifyDataSetChanged();
 
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Notification notification = snapshot.getValue(Notification.class);
