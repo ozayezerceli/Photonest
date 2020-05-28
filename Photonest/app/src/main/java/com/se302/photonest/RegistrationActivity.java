@@ -57,9 +57,6 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pd = new ProgressDialog(RegistrationActivity.this);
-                pd.setMessage("Please wait...");
-                pd.show();
-
                 String str_username= username.getText().toString();
                 String str_full_name= full_name.getText().toString();
                 String str_email = email.getText().toString();
@@ -74,7 +71,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
                 else if( str_password.length() <6 ){
                     Toast.makeText(RegistrationActivity.this, "Password must be at least 6 character!", Toast.LENGTH_LONG).show();
-                } else {
+                }else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(str_email).matches()){
+                    Toast.makeText(RegistrationActivity.this, "Enter a valid email!", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    pd.setMessage("Please wait...");
+                    pd.show();
                     register(str_username, str_full_name,str_email,str_password);
 
                 }
