@@ -86,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Uri ImageUri;
 
 
-    private   ImageButton my_photos;
+    private ImageButton my_photos;
 
     @SuppressLint("ResourceType")
     @Override

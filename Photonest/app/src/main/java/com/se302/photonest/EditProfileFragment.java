@@ -46,6 +46,7 @@ import java.util.HashMap;
 
 
 import DataModels.UserInformation;
+import Utils.GlideImageLoader;
 
 
 import static android.app.Activity.RESULT_OK;
@@ -146,7 +147,6 @@ public class EditProfileFragment extends Fragment {
                     uploadImage();
                  Toast.makeText(getActivity(), "Changes are being loaded.", Toast.LENGTH_SHORT).show();
              }
-
              else {
                  startActivity(new Intent(getActivity(), ProfileActivity.class));
                  Toast.makeText(getActivity(), "Profile Edited!", Toast.LENGTH_SHORT).show();
@@ -167,7 +167,7 @@ public class EditProfileFragment extends Fragment {
 
                                             //Toast.makeText(getActivity(), "Deleting profile photo...", Toast.LENGTH_SHORT).show();
                                             DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                            Picasso.get().load(def_image).into(edit_profile_image);
+                                GlideImageLoader.loadImageWithOutTransition(getActivity().getApplicationContext(), def_image, edit_profile_image);
                                             Toast.makeText(getActivity(), "Profile photo is deleted", Toast.LENGTH_SHORT).show();
 
                                             HashMap<String,Object> hashMap = new HashMap<>();
@@ -205,7 +205,7 @@ public class EditProfileFragment extends Fragment {
                 EditBio.setText(uInfo.getBio());
                 EditWebsite.setText(uInfo.getWebsite_link());
                 String Image_Url= uInfo.getImageurl();
-                Picasso.get().load(Image_Url).into(edit_profile_image);
+                GlideImageLoader.loadImageWithOutTransition(getActivity().getApplicationContext(), Image_Url, edit_profile_image);
 
 
             }
@@ -239,7 +239,7 @@ public class EditProfileFragment extends Fragment {
 
 
     private void uploadImage(){
-        if(profilechanged==true){ //if a image is selected from gallery
+        if(profilechanged){ //if a image is selected from gallery
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -344,10 +344,6 @@ public class EditProfileFragment extends Fragment {
                     myRef.child("website_link").setValue(websitelink);
 
                 }
-                /*if(!dataSnapshot.child("WebsiteLink").getValue().toString().equals(websitelink)){
-                    myRef.child("WebsiteLink").setValue(websitelink);
-                    }
-                */
             }
 
             @Override
