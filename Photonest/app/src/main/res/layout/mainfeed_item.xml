@@ -134,81 +134,82 @@
                 android:id="@+id/rating_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true">
+                android:gravity="center"
+                android:padding="2dp">
 
                 <ImageView
                     android:id="@+id/rating_like_1"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/liked_egg_rate_1"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:src="@drawable/egg_rate_1"
                     />
                 <TextView
                     android:id="@+id/rating_like_text_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text=": 0"
+                    android:text=" 0"
                     android:textSize="15dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:layout_marginEnd="10dp"/>
 
                 <ImageView
                     android:id="@+id/rating_like_2"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/liked_egg_rate_2"/>
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:src="@drawable/egg_rate_2"/>
 
                 <TextView
                     android:id="@+id/rating_like_text_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text=": 0"
+                    android:text=" 0"
                     android:textSize="15dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:layout_marginEnd="10dp"/>
 
                 <ImageView
                     android:id="@+id/rating_like_3"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/liked_egg_rate_3"/>
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:src="@drawable/egg_rate_3"/>
                 <TextView
                     android:id="@+id/rating_like_text_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text=": 0"
+                    android:text=" 0"
                     android:textSize="15dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:layout_marginEnd="10dp"/>
 
                 <ImageView
                     android:id="@+id/rating_like_4"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/liked_egg_rate_4"/>
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:src="@drawable/egg_rate_4"/>
                 <TextView
                     android:id="@+id/rating_like_text_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:text=": 0"
+                    android:text=" 0"
                     android:textSize="15dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:layout_gravity="center" />
 
                 <ImageView
                     android:id="@+id/rating_like_5"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/liked_egg_rate_5"/>
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:src="@drawable/egg_rate_5"/>
                 <TextView
                     android:id="@+id/rating_like_text_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text=": 0"
+                    android:text=" 0"
                     android:textSize="15dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:layout_marginEnd="10dp"/>

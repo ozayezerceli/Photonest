@@ -4,18 +4,19 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".UploadPostActivity">
+    tools:context=".UploadPostActivity"
+    android:background="#FDEDE3">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F99F63"
+        android:background="@color/colorPrimary"
         android:id="@+id/upload_post_bar">
 
         <Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
+            android:background="@color/colorPrimary"
             android:id="@+id/upload_post_toolbar">
 
             <RelativeLayout
@@ -38,7 +39,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/colorPrimaryDark"/>
 
             </RelativeLayout>
 
@@ -67,25 +68,35 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_marginTop="15dp"
+            android:background="@drawable/edittext_background"
+            android:textColor="@color/colorPrimaryDark"
             android:hint="Description"
+            android:padding="10dp"
             android:maxLines="5"
             android:id="@+id/upload_post_description"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="15dp"
+            android:padding="10dp"
+            android:hint="Location"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:background="@drawable/edittext_background"
+            android:id="@+id/tvPlace"/>
+
         <Button
             android:id="@+id/upload_post_add_location_btn"
-            android:layout_width="211dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:gravity="center"
-            android:text="Add Location" />
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_shape"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:text="ADD LOCATION" />
 
-        <TextView
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvPlace"/>
 
 
 
