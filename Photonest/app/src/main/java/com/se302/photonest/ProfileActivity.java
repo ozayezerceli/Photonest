@@ -1,18 +1,11 @@
 package com.se302.photonest;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,11 +16,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import DataModels.Like;
-import DataModels.UserInformation;
 import Utils.FirebaseMethods;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,7 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.se302.photonest.Model.FollowersActivity;
-import com.squareup.picasso.Picasso;
 
 
 import DataModels.PhotoInformation;
@@ -171,20 +160,9 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String btn = edit_profile.getText().toString();
 
-                if(btn.equals("EDIT PROFILE"))
-                {
-
-                   mrelativeTop=findViewById(R.id.relativeTop);
-                   mrelativeTop.setVisibility(View.INVISIBLE);
-
-
-                    FragmentTransaction transaction = getSupportFragmentManager()
-                            .beginTransaction();
-                    transaction.replace(R.id.container_edit, new EditProfileFragment());
-                    transaction.commit();
-
-
-                    } else if(btn.equals("Follow")){
+                if(btn.equals("EDIT PROFILE")){
+                    startActivity(new Intent(myContext, EditProfileActivity.class));
+                } else if(btn.equals("Follow")){
 
                     new FirebaseMethods(ProfileActivity.this).addFollowingAndFollowers(userID); //
 
