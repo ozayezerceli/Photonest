@@ -228,13 +228,13 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
                     if(isCommentAdded&&commentsLength==dataSnapshot.getChildrenCount()-1){
 
                         Comment comment = snapshot.getValue(Comment.class);
-                        list.add(0,new Comment(comment.getUserId(),comment.getPhotoId(),comment.getId(),Objects.requireNonNull(comment).getComment(), comment.getDate_added(), comment.getUsername(), comment.getProfile_image(), comment.getComment_likes()));
+                        list.add(0,new Comment(comment.getUserId(),comment.getPhotoId(),comment.getId(),Objects.requireNonNull(comment).getComment(), comment.getDate_added(), comment.getUsername(), comment.getProfile_image()));
                         commentList.smoothScrollToPosition(0);
                         isCommentAdded = false;
                     }
                     else if (!isCommentAdded&&commentsLength <= endLimit && commentsLength > startLimit) {
                         Comment comment = snapshot.getValue(Comment.class);
-                        list.add(new Comment(comment.getUserId(),comment.getPhotoId(),comment.getId(),Objects.requireNonNull(comment).getComment(), comment.getDate_added(), comment.getUsername(), comment.getProfile_image(), comment.getComment_likes()));
+                        list.add(new Comment(comment.getUserId(),comment.getPhotoId(),comment.getId(),Objects.requireNonNull(comment).getComment(), comment.getDate_added(), comment.getUsername(), comment.getProfile_image()));
                     }
                     commentsLength++;
                 }

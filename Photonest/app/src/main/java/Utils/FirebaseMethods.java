@@ -397,7 +397,7 @@ public class FirebaseMethods {
              //   setTags(tv, comment);
                 String username = Objects.requireNonNull(dataSnapshot.child(mActivity.getString(R.string.usernameField)).getValue()).toString();
                 String profileImage = Objects.requireNonNull(dataSnapshot.child(mActivity.getString(R.string.profilePhotoField)).getValue()).toString();
-                Comment comment_model = new Comment(userID, mediaId, commentId, comment, dateAdded, username, profileImage, 0);
+                Comment comment_model = new Comment(userID, mediaId, commentId, comment, dateAdded, username, profileImage);
                 myRef.child(node).child(mediaId).child(mActivity.getString(R.string.fieldComment))
                         .child(Objects.requireNonNull(commentId)).setValue(comment_model);
                 List<String> hashTags2 = StringManipulation.getHashTags(comment); //new caption's tags taken
