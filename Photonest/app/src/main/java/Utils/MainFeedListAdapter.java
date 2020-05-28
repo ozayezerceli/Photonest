@@ -349,6 +349,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 mediaIntent.putExtra("mediaNode", mediaNode);
                 mediaIntent.putExtra(mContext.getString(R.string.profilePhotoField), currentprofile);
                 mediaIntent.putExtra("photoUser",photo.getUser_id());
+                mediaIntent.putExtra("caption", photo.getCaption());
                 mContext.startActivity(mediaIntent);
             }
         });
@@ -361,6 +362,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                 mediaIntent.putExtra("mediaNode", mediaNode);
                 mediaIntent.putExtra(mContext.getString(R.string.profilePhotoField), currentprofile);
                 mediaIntent.putExtra("photoUser",photo.getUser_id());
+                mediaIntent.putExtra("caption", photo.getCaption());
                 mContext.startActivity(mediaIntent);
             }
         });

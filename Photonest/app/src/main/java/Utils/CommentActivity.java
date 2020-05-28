@@ -55,6 +55,7 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
     private String mediaId;
     private String mediaNode;
     private String profileImage;
+    private String photocaption;
     private ListView commentList;
     private ArrayList<Comment> list;
     private CommentListAdapter listAdapter;
@@ -89,6 +90,7 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
         mediaNode = mediaIntent.getStringExtra("mediaNode");
         profileImage = mediaIntent.getStringExtra("imageurl");
         photoUserID = mediaIntent.getStringExtra("photoUser");
+        photocaption = mediaIntent.getStringExtra("caption");
 
         setCommentProfileImage(profileImage);
         addComment(mediaNode, mediaId);
@@ -178,27 +180,10 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
         public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()){
                 case R.id.action_delete_comment:
-                    List<String> hashTags = StringManipulation.getHashTags(commentSelected.getComment());
-                    for(String hashTag : hashTags){
-                        myRef.child("hashTags").child(hashTag).child(mediaId).removeValue(); //remove photoid from old hastags
-                    }
-                    final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(mediaNode).child(mediaId).child(getString(R.string.fieldComment));
-                    reference.child(commentSelected.getId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            list.remove(commentSelected);
-                            listAdapter.notifyDataSetChanged();
-                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference().child(getString(R.string.field_likes_comment));
-                            reference1.child(commentSelected.getId()).removeValue();
-                            actionMode.finish();
-                            Toast.makeText(CommentActivity.this, "Comment deleted.", Toast.LENGTH_LONG).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(CommentActivity.this, "Error occured!", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    firebaseMethods.deleteComment(commentSelected, mediaNode, mediaId, photocaption);
+                    list.remove(commentSelected);
+                    listAdapter.notifyDataSetChanged();
+                    actionMode.finish();
                     return true;
                 default:
                     return false;

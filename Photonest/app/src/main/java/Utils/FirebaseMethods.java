@@ -416,6 +416,30 @@ public class FirebaseMethods {
         });
     }
 
+    public void deleteComment(final Comment commentSelected, String mediaNode, String mediaId, String photocaption){
+        List<String> hashTags = StringManipulation.getHashTags(commentSelected.getComment());
+        List<String> captionHashTags = StringManipulation.getHashTags(photocaption);
+        for(String hashTag : hashTags){
+            if(!captionHashTags.contains(hashTag)) {
+                myRef.child("hashTags").child(hashTag).child(mediaId).removeValue(); //remove photoid from old hastags
+            }
+        }
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(mediaNode).child(mediaId).child(mActivity.getString(R.string.fieldComment));
+        reference.child(commentSelected.getId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference().child(mActivity.getString(R.string.field_likes_comment));
+                reference1.child(commentSelected.getId()).removeValue();
+                Toast.makeText(mActivity, "Comment deleted.", Toast.LENGTH_LONG).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(mActivity, "Error occured!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public void sendVerificationEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 

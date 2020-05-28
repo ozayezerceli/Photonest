@@ -239,6 +239,7 @@ public class PostViewFragment extends Fragment {
                 mediaIntent.putExtra("mediaNode", mediaNode);
                 mediaIntent.putExtra(getString(R.string.profilePhotoField), currentprofile);
                 mediaIntent.putExtra("photoUser",photo.getUser_id());
+                mediaIntent.putExtra("caption", photo.getCaption());
                 startActivity(mediaIntent);
             }
         });
@@ -251,6 +252,7 @@ public class PostViewFragment extends Fragment {
                 mediaIntent.putExtra("mediaNode", mediaNode);
                 mediaIntent.putExtra(getString(R.string.profilePhotoField), currentprofile);
                 mediaIntent.putExtra("photoUser",photo.getUser_id());
+                mediaIntent.putExtra("caption", photo.getCaption());
                 startActivity(mediaIntent);
             }
         });
