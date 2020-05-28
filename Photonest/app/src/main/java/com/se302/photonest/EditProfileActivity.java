@@ -343,7 +343,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 if(!dataSnapshot.exists()){
                     myRef.child("username").setValue(username);
-                    Toast.makeText(context, "saved username.", Toast.LENGTH_SHORT).show();
 
                 }
                 for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()){

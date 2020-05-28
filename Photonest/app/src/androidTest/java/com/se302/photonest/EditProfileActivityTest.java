@@ -8,24 +8,28 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.*;
 
-public class EditProfileFragmentTest {
+public class EditProfileActivityTest {
 
     @Rule
-    public ActivityTestRule<ProfileActivity> profileActivityActivityTestRule = new ActivityTestRule<ProfileActivity>(ProfileActivity.class);
+    public ActivityTestRule<EditProfileActivity> editprofileActivityTestRule = new ActivityTestRule<EditProfileActivity>(EditProfileActivity.class);
 
-    public ProfileActivity profileActivity = null;
+    public EditProfileActivity editProfileActivity = null;
 
     @Before
     public void setUp() throws Exception {
-        profileActivity = profileActivityActivityTestRule.getActivity();
-        Espresso.onView(withId(R.id.edit_profile_button)).perform(click());
+        editProfileActivity = editprofileActivityTestRule.getActivity();
     }
 
     @Test
@@ -41,15 +45,26 @@ public class EditProfileFragmentTest {
 
     @Test
     public void testEditProfileInformation(){
-        Espresso.onView(withId(R.id.EditFullName)).perform(typeText("TestFullname"));
-        Espresso.onView(withId(R.id.EditUsername)).perform(typeText("TestUsername"));
-        Espresso.onView(withId(R.id.EditBio)).perform(typeText("TestBio"));
+        Espresso.onView(withId(R.id.EditFullName)).perform(typeText("Test"));
+        Espresso.closeSoftKeyboard();
+        Espresso.onView(withId(R.id.EditUsername)).perform(typeText("Test"));
+        Espresso.closeSoftKeyboard();
+        Espresso.onView(withId(R.id.EditWebsite)).perform(typeText("Test"));
+        Espresso.closeSoftKeyboard();
+        Espresso.onView(withId(R.id.EditBio)).perform(typeText("Test"));
+        Espresso.closeSoftKeyboard();
 
         Espresso.onView(withId(R.id.saveChanges)).perform(click());
     }
 
+    @Test
+    public void testDeleteProfilePhoto(){
+        Espresso.onView(withId(R.id.delete_image_photo)).perform(click());
+        Espresso.onView(withText("YES")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+    }
+
     @After
     public void tearDown() throws Exception {
-        profileActivity = null;
+        editProfileActivity = null;
     }
 }

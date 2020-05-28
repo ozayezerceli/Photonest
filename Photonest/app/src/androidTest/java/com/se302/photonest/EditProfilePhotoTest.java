@@ -33,18 +33,17 @@ import static org.junit.Assert.*;
 public class EditProfilePhotoTest {
 
     @Rule
-    public IntentsTestRule<ProfileActivity> profileActivityActivityTestRule = new IntentsTestRule<ProfileActivity>(ProfileActivity.class);
+    public IntentsTestRule<EditProfileActivity> editprofileActivityIntentsTestRule = new IntentsTestRule<EditProfileActivity>(EditProfileActivity.class);
 
-    private ProfileActivity profileActivity = null;
+    private EditProfileActivity editprofileActivity = null;
 
     @Before
     public void setUp() throws Exception {
-        profileActivity = profileActivityActivityTestRule.getActivity();
-        Espresso.onView(withId(R.id.edit_profile_button)).perform(click());
+        editprofileActivity = editprofileActivityIntentsTestRule.getActivity();
     }
 
     @Test
-    public void changephotoTest(){
+    public void changephotoTest() throws InterruptedException {
 
         Espresso.onView(withId(R.id.profile_image_edit)).check(matches(isDisplayed()));
         /*Bitmap icon = BitmapFactory.decodeResource(
@@ -56,21 +55,23 @@ public class EditProfilePhotoTest {
         Intent resultData = new Intent();
         //Resources resources = InstrumentationRegistry.getInstrumentation().getContext().getResources();
         Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                profileActivityActivityTestRule.getActivity().getResources().getResourcePackageName(R.drawable.liked_egg_main_color) + "/" +
-                profileActivityActivityTestRule.getActivity().getResources().getResourceTypeName(R.drawable.liked_egg_main_color) + "/" +
-                profileActivityActivityTestRule.getActivity().getResources().getResourceEntryName(R.drawable.liked_egg_main_color));
+                editprofileActivityIntentsTestRule.getActivity().getResources().getResourcePackageName(R.drawable.liked_egg_main_color) + "/" +
+                editprofileActivityIntentsTestRule.getActivity().getResources().getResourceTypeName(R.drawable.liked_egg_main_color) + "/" +
+                editprofileActivityIntentsTestRule.getActivity().getResources().getResourceEntryName(R.drawable.liked_egg_main_color));
         resultData.setData(uri);
 
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
 
-        intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
+        intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(result);
 
         // Now that we have the stub in place, click on the button in our app that launches into the Gallery
         Espresso.onView(withId(R.id.profile_image_edit)).perform(click());
+        Espresso.onView(withId(R.id.saveChanges)).perform(click());
+        Thread.sleep(5000);
     }
 
     @After
     public void tearDown() throws Exception {
-        profileActivity = null;
+        editprofileActivity = null;
     }
 }
