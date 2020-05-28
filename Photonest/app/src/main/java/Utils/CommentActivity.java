@@ -45,6 +45,7 @@ import com.se302.photonest.ResultActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import DataModels.Comment;
@@ -177,6 +178,10 @@ public class CommentActivity extends AppCompatActivity implements UtilityInterfa
         public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()){
                 case R.id.action_delete_comment:
+                    List<String> hashTags = StringManipulation.getHashTags(commentSelected.getComment());
+                    for(String hashTag : hashTags){
+                        myRef.child("hashTags").child(hashTag).child(mediaId).removeValue(); //remove photoid from old hastags
+                    }
                     final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(mediaNode).child(mediaId).child(getString(R.string.fieldComment));
                     reference.child(commentSelected.getId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

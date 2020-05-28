@@ -400,6 +400,14 @@ public class FirebaseMethods {
                 Comment comment_model = new Comment(userID, mediaId, commentId, comment, dateAdded, username, profileImage, 0);
                 myRef.child(node).child(mediaId).child(mActivity.getString(R.string.fieldComment))
                         .child(Objects.requireNonNull(commentId)).setValue(comment_model);
+                List<String> hashTags2 = StringManipulation.getHashTags(comment); //new caption's tags taken
+
+                Map<String, Object> hashtag_list = new HashMap<>();
+                for (String hashtag : hashTags2) {
+                    hashtag_list.put("/hashTags/" + hashtag + "/" + mediaId + "/photoId", mediaId);
+                    hashtag_list.put("/hashTags/" + hashtag + "/hashTags", hashtag);
+                }
+                myRef.updateChildren(hashtag_list);
             }
 
             @Override
