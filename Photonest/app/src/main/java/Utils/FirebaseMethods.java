@@ -52,6 +52,7 @@ import DataModels.PhotoInformation;
 import com.se302.photonest.PostViewFragment;
 import com.se302.photonest.ProfileActivity;
 import com.se302.photonest.R;
+import com.se302.photonest.ResultActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -782,12 +783,16 @@ public class FirebaseMethods {
                         // space after word
                     }
 
-                    final String tag = pTagString.substring(start, i);
+                    final String tag = pTagString.substring(start, i).replaceFirst("#", "");
                     string.setSpan(new ClickableSpan() {
 
                         @Override
                         public void onClick(View widget) {
                             Log.d("Hash", String.format("Clicked %s!", tag));
+
+                            Intent i = new Intent(Context, ResultActivity.class);
+                            i.putExtra("hashTags", tag);
+                            Context.startActivity(i);
                         }
 
                         @Override
