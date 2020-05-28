@@ -246,7 +246,7 @@ public class ProfileActivity extends AppCompatActivity {
                             String website = dataSnapshot.child("website_link").getValue().toString();
                             String Image_Url = dataSnapshot.child("imageurl").getValue().toString();
 
-                            GlideImageLoader.loadImageWithOutTransition(myContext, Image_Url, image_profile);
+                            GlideImageLoader.loadImageWithOutTransition(getApplicationContext(), Image_Url, image_profile);
 
                             username.setText(UserName);
                             fullname.setText(FullName);

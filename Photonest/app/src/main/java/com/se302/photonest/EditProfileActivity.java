@@ -92,7 +92,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent galeriIntent= new Intent();
-                galeriIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galeriIntent.setAction(Intent.ACTION_OPEN_DOCUMENT);
                 galeriIntent.setType("image/*");
                 startActivityForResult(galeriIntent,GaleriPick);
 
@@ -185,7 +185,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 EditBio.setText(uInfo.getBio());
                 EditWebsite.setText(uInfo.getWebsite_link());
                 String Image_Url= uInfo.getImageurl();
-                GlideImageLoader.loadImageWithOutTransition(context, Image_Url, edit_profile_image);
+                GlideImageLoader.loadImageWithOutTransition(getApplicationContext(), Image_Url, edit_profile_image);
             }
 
             @Override
@@ -204,8 +204,6 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode==GaleriPick && resultCode==RESULT_OK && data!=null){
-     /*   imgUrl=data.getData().toString();
-        edit_profile_image.setImageURI(ImageUri); */
             ImageUri=data.getData();
             edit_profile_image.setImageURI(ImageUri);
             profilechanged=true;
@@ -368,7 +366,7 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // do your stuff
+
                 } else {
                     Toast.makeText(context, "GET_ACCOUNTS Denied",
                             Toast.LENGTH_SHORT).show();
