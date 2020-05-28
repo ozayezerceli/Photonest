@@ -486,10 +486,17 @@ public class FirebaseMethods {
                 });
                 dbRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).removeValue();
                 dbRef.child(mActivity.getString(R.string.dbname_user_photos)).child(userID).child(photo.getPhoto_id()).removeValue();
-                List<String> hashTags = StringManipulation.getHashTags(photo.getCaption());
-                for(String hashTag : hashTags){
-                    dbRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue();
-                }
+                dbRef.child("hashTags").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds : dataSnapshot.getChildren()){
+                            ds.child(photo.getPhoto_id()).getRef().removeValue();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
 
                 dbRef.child(mActivity.getString(R.string.field_likes)).child(photo.getPhoto_id()).removeValue();
 
@@ -688,12 +695,19 @@ public class FirebaseMethods {
                 .orderByChild(mActivity.getString(R.string.users_id)).equalTo(user1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                for(final DataSnapshot ds : dataSnapshot.getChildren()){
                     ds.child(mActivity.getString(R.string.fieldComment)).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for(DataSnapshot ds2 : dataSnapshot.getChildren()){
                                 if(ds2.child("userId").getValue().toString().equals(user2) && ds2.getKey()!=null){
+                                    List<String> hashTags = StringManipulation.getHashTags(ds2.child("comment").getValue().toString());
+                                    List<String> captionHashTags = StringManipulation.getHashTags(ds.child("caption").getValue().toString());
+                                    for(String hashTag : hashTags){
+                                        if(!captionHashTags.contains(hashTag)) {
+                                            myRef.child("hashTags").child(hashTag).child(ds.getKey()).removeValue(); //remove photoid from old hastags
+                                        }
+                                    }
                                     ds2.getRef().removeValue();
                                     myRef.child(mActivity.getString(R.string.field_likes_comment)).child(ds2.getKey()).removeValue();
                                 }
