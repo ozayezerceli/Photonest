@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/edit_profile_fragment"
-
+    android:background="#FDEDE3"
     >
 
 
@@ -49,6 +49,7 @@
             android:layout_below="@+id/profile_image_edit"
             android:layout_marginTop="0dp"
             android:gravity="center"
+            android:textColor="@color/colorAccent"
             android:text="Click on Photo to Change"
             android:textSize="15sp" />
 
@@ -80,8 +81,11 @@
         android:id="@+id/fname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
         android:layout_below="@+id/edit_profile_area"
             android:layout_marginTop="15dp"
+            android:layout_marginStart="9dp"
+            android:layout_marginEnd="9dp"
         android:text="Name"
         android:textSize="18dp"/>
 
@@ -90,6 +94,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fname"
+        android:padding="10dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/edittext_background"
         />
     </RelativeLayout>
 
@@ -99,6 +109,9 @@
     <TextView
         android:id="@+id/usName"
         android:layout_width="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"
         android:layout_height="wrap_content"
         android:text="Username"
         android:textSize="18dp"/>
@@ -106,8 +119,13 @@
     <EditText
         android:id="@+id/EditUsername"
         android:layout_width="match_parent"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@drawable/edittext_background"
         android:layout_marginBottom="24dp"
+        android:padding="10dp"
         android:layout_below="@id/usName"
         tools:layout_editor_absoluteX="0dp" />
     </RelativeLayout>
@@ -118,6 +136,9 @@
     <TextView
         android:id="@+id/webname"
         android:layout_width="wrap_content"
+        android:layout_marginStart="9dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginEnd="9dp"
         android:layout_height="wrap_content"
         android:text="Website link"
         android:textSize="18dp"/>
@@ -126,6 +147,11 @@
         android:id="@+id/EditWebsite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginEnd="9dp"
+        android:background="@drawable/edittext_background"
+        android:padding="10dp"
         android:layout_marginBottom="20dp"
         android:layout_below="@id/webname"
         tools:layout_editor_absoluteX="0dp" />
@@ -137,8 +163,11 @@
 
     <TextView
         android:id="@+id/bioname"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"
         android:text="Bio"
         android:textSize="18dp"/>
 
@@ -146,7 +175,12 @@
         android:id="@+id/EditBio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginEnd="9dp"
         android:layout_marginBottom="216dp"
+        android:padding="10dp"
+        android:background="@drawable/edittext_background"
         android:layout_below="@id/bioname"
         tools:layout_editor_absoluteX="0dp" />
     </RelativeLayout>

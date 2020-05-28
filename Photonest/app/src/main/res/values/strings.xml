@@ -3,7 +3,7 @@
     <string name="login_with_your_account">Login With Your Account</string>
     <string name="verify_text">We sent a verification email to your address.
         Click the link in the email and press the activate button to get started!</string>
-    <string name="activate_button">Activate</string>
+    <string name="activate_button">ACTIVATE</string>
     <string name="photonestImg"></string>
     <string name="edit_profile_fragment">Edit Profile</string>
     <string name="login_btn">LOGIN</string>

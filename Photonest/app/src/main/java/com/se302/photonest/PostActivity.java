@@ -40,6 +40,7 @@ public class PostActivity extends AppCompatActivity{
             setupViewPager();
         }else{
             verifyPermissions(Permissions.PERMISSIONS);
+            finish();
         }
 
     }
