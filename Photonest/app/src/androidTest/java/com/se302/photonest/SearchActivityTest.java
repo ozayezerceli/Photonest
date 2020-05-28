@@ -46,7 +46,7 @@ public class SearchActivityTest {
     @Test
     public void testSearchUser(){
         Espresso.onView(withId(R.id.usersBtn)).perform(click());
-        Espresso.onView(withId(R.id.search_txt)).perform(typeText("senafrakara"));
+        Espresso.onView(withId(R.id.search_txt)).perform(typeText("bjornikof"));
         onData(anything())
                 .inAdapterView(withId(R.id.search_list))
                 .atPosition(0)
@@ -58,7 +58,7 @@ public class SearchActivityTest {
     @Test
     public void testSearchHashtags(){
 
-        Espresso.onView(withId(R.id.search_txt)).perform(typeText("drawing"));
+        Espresso.onView(withId(R.id.search_txt)).perform(typeText("water"));
         Espresso.onView(withId(R.id.hashtagsBtn)).perform(click());
         onData(anything())
                 .inAdapterView(withId(R.id.search_list))

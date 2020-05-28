@@ -82,7 +82,7 @@ public class PostViewFragmentTest {
         onView(ViewMatchers.withContentDescription("edit"))
                 .inRoot(RootMatchers.isPlatformPopup())
                 .perform(ViewActions.click());
-        Espresso.onView(withContentDescription("new caption")).perform(replaceText("Test new caption #test"));
+        Espresso.onView(withContentDescription("New Caption")).perform(replaceText("Test new caption #test"));
         Espresso.closeSoftKeyboard();
         onView(withText("Edit")).inRoot(isDialog())
                 .check(matches(isDisplayed()))

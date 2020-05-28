@@ -65,20 +65,21 @@ public class ViewProfileActivityTest {
 
     @Test
     public void testLaunch(){
-        Espresso.onView(withId(R.id.View_profile_image)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.ViewusernameTxt)).check(matches(isDisplayed()));
-       Espresso.onView(withId(R.id.view_profile_menu_view)).check(matches(isDisplayed()));
-        Espresso.onView(withId(R.id.View_bio_profile)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.profile_image_pview)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.usernameTxt_pview)).check(matches(isDisplayed()));
+       Espresso.onView(withId(R.id.profile_menu_view_pview)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.bio_profile_pview)).check(matches(isDisplayed()));
 
     }
 
     @Test
     public void testBlockUser(){
-        Espresso.onView(withId( R.id.view_profile_menu_view)).perform(click());
+        Espresso.onView(withId( R.id.profile_menu_view_pview)).perform(click());
    //     Espresso.onView(withId(R.id.view_profile_block)).inRoot(isPlatformPopup()).perform(click());
-            Espresso.onData(withId(R.id.view_profile_block)).inRoot(RootMatchers.isPlatformPopup())
-                    .perform(ViewActions.click());
-
+     /*       Espresso.onData(withText("Block User")).inRoot(RootMatchers.isPlatformPopup())
+                    .perform(ViewActions.click()); */
+            Espresso.onView(withText("Block User")).perform(click());
+            Espresso.onView(withId(R.id.Follow_button_pview)).check(matches(isDisplayed()));
     }
 
     @After

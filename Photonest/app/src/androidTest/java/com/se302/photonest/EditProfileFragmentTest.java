@@ -18,9 +18,9 @@ import static org.junit.Assert.*;
 public class EditProfileFragmentTest {
 
     @Rule
-    ActivityTestRule<ProfileActivity> profileActivityActivityTestRule = new ActivityTestRule<ProfileActivity>(ProfileActivity.class);
+    public ActivityTestRule<ProfileActivity> profileActivityActivityTestRule = new ActivityTestRule<ProfileActivity>(ProfileActivity.class);
 
-    ProfileActivity profileActivity = null;
+    public ProfileActivity profileActivity = null;
 
     @Before
     public void setUp() throws Exception {
