@@ -440,46 +440,46 @@ public class PostViewFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 HashMap<String,Object> ratedUserList = new HashMap<>();
                 int c1 = 0,c2 = 0,c3 = 0, c4 = 0 ,c5 = 0;
-                rateTx1.setText(": "+c1);rateTx1.setTypeface(null, Typeface.NORMAL);rateTx1.setTextColor(Color.parseColor("#4E260E"));rateTx1.setClickable(false);
-                rateTx2.setText(": "+c2);rateTx2.setTypeface(null, Typeface.NORMAL);rateTx2.setTextColor(Color.parseColor("#4E260E"));rateTx2.setClickable(false);
-                rateTx3.setText(": "+c3);rateTx3.setTypeface(null, Typeface.NORMAL);rateTx3.setTextColor(Color.parseColor("#4E260E"));rateTx3.setClickable(false);
-                rateTx4.setText(": "+c4);rateTx4.setTypeface(null, Typeface.NORMAL);rateTx4.setTextColor(Color.parseColor("#4E260E"));rateTx4.setClickable(false);
-                rateTx5.setText(": "+c5);rateTx5.setTypeface(null, Typeface.NORMAL);rateTx5.setTextColor(Color.parseColor("#4E260E"));rateTx5.setClickable(false);
+                rateTx1.setText(" "+c1);rateTx1.setTypeface(null, Typeface.NORMAL);rateTx1.setTextColor(Color.parseColor("#4E260E"));rateTx1.setClickable(false);
+                rateTx2.setText(" "+c2);rateTx2.setTypeface(null, Typeface.NORMAL);rateTx2.setTextColor(Color.parseColor("#4E260E"));rateTx2.setClickable(false);
+                rateTx3.setText(" "+c3);rateTx3.setTypeface(null, Typeface.NORMAL);rateTx3.setTextColor(Color.parseColor("#4E260E"));rateTx3.setClickable(false);
+                rateTx4.setText(" "+c4);rateTx4.setTypeface(null, Typeface.NORMAL);rateTx4.setTextColor(Color.parseColor("#4E260E"));rateTx4.setClickable(false);
+                rateTx5.setText(" "+c5);rateTx5.setTypeface(null, Typeface.NORMAL);rateTx5.setTextColor(Color.parseColor("#4E260E"));rateTx5.setClickable(false);
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     if(ds.getValue().toString().equals("0")){
                         ds.getRef().removeValue();
                     }else if(ds.getValue().toString().equals("1")){
                         ratedUserList.put("rated1",ds.getKey());
                         c1 = c1+1;
-                        rateTx1.setText(": "+c1);
+                        rateTx1.setText(" "+c1);
                         rateTx1.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx1.setTypeface(null, Typeface.BOLD);
                         rateTx1.setClickable(true);
                     }else if(ds.getValue().toString().equals("2")){
                         ratedUserList.put("rated2",ds.getKey());
                         c2 = c2+1;
-                        rateTx2.setText(": "+c2);
+                        rateTx2.setText(" "+c2);
                         rateTx2.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx2.setTypeface(null, Typeface.BOLD);
                         rateTx2.setClickable(true);
                     }else if(ds.getValue().toString().equals("3")){
                         ratedUserList.put("rated3",ds.getKey());
                         c3 = c3+1;
-                        rateTx3.setText(": "+c3);
+                        rateTx3.setText(" "+c3);
                         rateTx3.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx3.setTypeface(null, Typeface.BOLD);
                         rateTx3.setClickable(true);
                     }else if(ds.getValue().toString().equals("4")){
                         ratedUserList.put("rated4",ds.getKey());
                         c4 = c4+1;
-                        rateTx4.setText(": "+c4);
+                        rateTx4.setText(" "+c4);
                         rateTx4.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx4.setTypeface(null, Typeface.BOLD);
                         rateTx4.setClickable(true);
                     }else{
                         ratedUserList.put("rated5",ds.getKey());
                         c5 = c5+1;
-                        rateTx5.setText(": "+c5);
+                        rateTx5.setText(" "+c5);
                         rateTx5.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx5.setTypeface(null, Typeface.BOLD);
                         rateTx5.setClickable(true);

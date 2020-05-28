@@ -128,8 +128,24 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Object object = getItem(position);
-        setLikeListeners(holder.unlikedEgg,holder.likedEgg,object,holder.likedBy);
+        final Object object = getItem(position);
+        holder.unlikedEgg.setTag(position);
+        holder.unlikedEgg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pp=(Integer)v.getTag();
+                toggleLike(holder.unlikedEgg,holder.likedEgg,Objects.requireNonNull(getItem(pp)),holder.likedBy);
+                addNotifications(photo.getUser_id(), photo.getPhoto_id());
+            }
+        });
+        holder.likedEgg.setTag(position);
+        holder.likedEgg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pp=(Integer)v.getTag();
+                toggleLike(holder.unlikedEgg,holder.likedEgg,Objects.requireNonNull(getItem(pp)),holder.likedBy);
+            }
+        });
         holder.unlikedEgg.setTag(position);
         holder.unlikedEgg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -357,46 +373,46 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 HashMap<String,Object> ratedUserList = new HashMap<>();
                 int c1 = 0,c2 = 0,c3 = 0, c4 = 0 ,c5 = 0;
-                rateTx1.setText(": "+c1);rateTx1.setTypeface(null, Typeface.NORMAL);rateTx1.setTextColor(Color.parseColor("#4E260E"));rateTx1.setClickable(false);
-                rateTx2.setText(": "+c2);rateTx2.setTypeface(null, Typeface.NORMAL);rateTx2.setTextColor(Color.parseColor("#4E260E"));rateTx2.setClickable(false);
-                rateTx3.setText(": "+c3);rateTx3.setTypeface(null, Typeface.NORMAL);rateTx3.setTextColor(Color.parseColor("#4E260E"));rateTx3.setClickable(false);
-                rateTx4.setText(": "+c4);rateTx4.setTypeface(null, Typeface.NORMAL);rateTx4.setTextColor(Color.parseColor("#4E260E"));rateTx4.setClickable(false);
-                rateTx5.setText(": "+c5);rateTx5.setTypeface(null, Typeface.NORMAL);rateTx5.setTextColor(Color.parseColor("#4E260E"));rateTx5.setClickable(false);
+                rateTx1.setText(" "+c1);rateTx1.setTypeface(null, Typeface.NORMAL);rateTx1.setTextColor(Color.parseColor("#4E260E"));rateTx1.setClickable(false);
+                rateTx2.setText(" "+c2);rateTx2.setTypeface(null, Typeface.NORMAL);rateTx2.setTextColor(Color.parseColor("#4E260E"));rateTx2.setClickable(false);
+                rateTx3.setText(" "+c3);rateTx3.setTypeface(null, Typeface.NORMAL);rateTx3.setTextColor(Color.parseColor("#4E260E"));rateTx3.setClickable(false);
+                rateTx4.setText(" "+c4);rateTx4.setTypeface(null, Typeface.NORMAL);rateTx4.setTextColor(Color.parseColor("#4E260E"));rateTx4.setClickable(false);
+                rateTx5.setText(" "+c5);rateTx5.setTypeface(null, Typeface.NORMAL);rateTx5.setTextColor(Color.parseColor("#4E260E"));rateTx5.setClickable(false);
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     if(ds.getValue().toString().equals("0")){
                         ds.getRef().removeValue();
                     }else if(ds.getValue().toString().equals("1")){
                         ratedUserList.put("rated1",ds.getKey());
                         c1 = c1+1;
-                        rateTx1.setText(": "+c1);
+                        rateTx1.setText(" "+c1);
                         rateTx1.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx1.setTypeface(null, Typeface.BOLD);
                         rateTx1.setClickable(true);
                     }else if(ds.getValue().toString().equals("2")){
                         ratedUserList.put("rated2",ds.getKey());
                         c2 = c2+1;
-                        rateTx2.setText(": "+c2);
+                        rateTx2.setText(" "+c2);
                         rateTx2.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx2.setTypeface(null, Typeface.BOLD);
                         rateTx2.setClickable(true);
                     }else if(ds.getValue().toString().equals("3")){
                         ratedUserList.put("rated3",ds.getKey());
                         c3 = c3+1;
-                        rateTx3.setText(": "+c3);
+                        rateTx3.setText(" "+c3);
                         rateTx3.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx3.setTypeface(null, Typeface.BOLD);
                         rateTx3.setClickable(true);
                     }else if(ds.getValue().toString().equals("4")){
                         ratedUserList.put("rated4",ds.getKey());
                         c4 = c4+1;
-                        rateTx4.setText(": "+c4);
+                        rateTx4.setText(" "+c4);
                         rateTx4.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx4.setTypeface(null, Typeface.BOLD);
                         rateTx4.setClickable(true);
                     }else{
                         ratedUserList.put("rated5",ds.getKey());
                         c5 = c5+1;
-                        rateTx5.setText(": "+c5);
+                        rateTx5.setText(" "+c5);
                         rateTx5.setTextColor(Color.parseColor("#AB4C11"));
                         rateTx5.setTypeface(null, Typeface.BOLD);
                         rateTx5.setClickable(true);
@@ -423,22 +439,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
         });
     }
 
-    private void setLikeListeners(final ImageView unlikedEgg, final ImageView likedEgg, final Object object, final TextView likedBy){
-
-        unlikedEgg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleLike(unlikedEgg,likedEgg,object,likedBy);
-                addNotifications(photo.getUser_id(), photo.getPhoto_id());
-            }
-        });
-        likedEgg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleLike(unlikedEgg,likedEgg,object,likedBy);
-            }
-        });
-    }
     private void addNotifications(String userid, String postid){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
         HashMap<String,Object> hash = new HashMap<>();
@@ -451,7 +451,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
     }
 
 
-    private void setUserLikes(final ImageView unlikedEgg, final ImageView likedEgg,String mediaNode, String mediaId,final TextView likedBy){
+    private void setUserLikes(final ImageView unlikedEgg, final ImageView likedEgg, String mediaNode, final String mediaId, final TextView likedBy){
 
         Query query = reference.child(mediaNode).child(mediaId)
                 .child(mContext.getString(R.string.field_likes));
@@ -475,8 +475,8 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                             unlikedEgg.setVisibility(GONE);
                             likedEgg.setVisibility(View.VISIBLE);
                         }
-                        String ds1 = ds.child("user_id").getValue().toString();
-                        setLikeText(ds1,likedBy);
+                        //String ds1 = ds.child("user_id").getValue().toString();
+                        setLikeText(mediaId,likedBy);
                     }
                 }
             }
@@ -495,7 +495,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                     if(!dataSnapshot.exists()){
                         mLikesString = "";
                         mLikedByCurrentUser = false;
@@ -503,7 +502,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                         unlikedEgg.setVisibility(View.VISIBLE);
                     }else {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
                             if (ds.child(mContext.getString(R.string.users_id)).getValue().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())) {
                                 mLikedByCurrentUser = true;
                                 likeId = ds.getKey();
@@ -515,7 +513,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
                             }
                         }
                     }
-
                     if(!mLikedByCurrentUser){
                         unlikedEgg.setVisibility(View.VISIBLE);
                         likedEgg.setVisibility(GONE);
@@ -533,27 +530,20 @@ public class MainFeedListAdapter extends ArrayAdapter<Object> {
     }
 
 
-    private void setLikeText(final String user_id, final TextView likedBy){
-        mStringBuilder = new StringBuilder();
-        final ArrayList<String> userInfo = new ArrayList<>();
+    private void setLikeText(final String photo_id, final TextView likedBy){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference.child(mContext.getString(R.string.users_node)).child(user_id);
+        Query query = reference.child(mContext.getString(R.string.field_likes)).child(photo_id).child(mContext.getString(R.string.field_likes));
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    userInfo.add(singleSnapshot.getValue().toString());
+                long likeCount = 0;
+                if(!(dataSnapshot.getChildrenCount() == 0)){
+                    likeCount = dataSnapshot.getChildrenCount();
                 }
-                if(!mStringBuilder.toString().contains(userInfo.get(5))){
-                    mStringBuilder.append(userInfo.get(5));
-                    mStringBuilder.append(",");
-                }
-                String[] splitUsers = mStringBuilder.toString().split(",");
-                int length = splitUsers.length;
-                if(length == 1){
-                    mLikesString = length+" like";
-                }else{
-                    mLikesString = length+" likes";
+                if(likeCount == 1){
+                    mLikesString = likeCount+" like";
+                }else if(likeCount > 1){
+                    mLikesString = likeCount+" likes";
                 }
                 SpannableString ss = new SpannableString(mLikesString);
                 ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.parseColor("#AB4C11"));
