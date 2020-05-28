@@ -17,6 +17,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -174,6 +175,7 @@ public class PostViewFragment extends Fragment {
                 });
         return view;
     }
+
     private void setRateListener(){
         unlikedEgg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -224,6 +226,8 @@ public class PostViewFragment extends Fragment {
             }
         });
     }
+
+
 
     private void launchComment(final String mediaNode, final String mediaId) {
 
@@ -277,9 +281,8 @@ public class PostViewFragment extends Fragment {
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.edit_post:
-
                             String photo_id = photo.getPhoto_id();
-                            String new_caption = firebaseMethods.editPost(photo_id, photo, getContext(),mCaption);
+                            firebaseMethods.editPost(photo_id, photo, getContext(),mCaption);
 
                             break;
                         case R.id.delete_post:

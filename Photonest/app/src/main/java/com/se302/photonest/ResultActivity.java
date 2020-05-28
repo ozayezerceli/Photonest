@@ -125,7 +125,6 @@ public class ResultActivity extends AppCompatActivity {
 
                                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                                             transaction.replace(R.id.container_result, post_view_fragment);
-                                            transaction.addToBackStack("View Post");
                                             transaction.commit();
                                         }
                                     });

@@ -548,50 +548,47 @@ public class FirebaseMethods {
         final Intent intent= new Intent(context, PostViewFragment.class);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle("Edit Post");
-
         final EditText editText = new EditText(context);
-        editText.setContentDescription("new caption");
+        editText.setHint("New Caption");
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
         editText.setLayoutParams(lp);
         alertDialog.setView(editText);
-
         getText(postid, photo,editText);
-
         alertDialog.setNeutralButton("Edit",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        if(editText.getText().toString().isEmpty() || editText.getText().toString().trim().equals("")){
+                            Toast.makeText(mActivity, "Sorry you did't type anything for caption", Toast.LENGTH_SHORT).show();
+                        }else{
+                            List<String> hashTags = StringManipulation.getHashTags(photo.getCaption());
+                            for(String hashTag : hashTags){
+                                myRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue(); //first remove photoid from old hastags
+                            }
+                            //then updates new ones
+                            myRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).child("caption").setValue(editText.getText().toString()); //dbname_photos updated
+                            myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(photo.getPhoto_id())
+                                    .child("caption").setValue(editText.getText().toString()); //dbname_user_photos updated
 
-                        List<String> hashTags = StringManipulation.getHashTags(photo.getCaption());
-                        for(String hashTag : hashTags){
-                            myRef.child("hashTags").child(hashTag).child(photo.getPhoto_id()).removeValue(); //first remove photoid from old hastags
+                            List<String> hashTags2 = StringManipulation.getHashTags(editText.getText().toString()); //new caption's tags taken
+
+                            String newPhotoKey = myRef.child(mActivity.getString(R.string.dbname_photos)).push().getKey();
+
+                            Map<String, Object> hashtag_list = new HashMap<>();
+                            for (String hashtag : hashTags2) {
+                                hashtag_list.put("/hashTags/" + hashtag + "/" + photo.getPhoto_id() + "/photoId", photo.getPhoto_id());
+                                hashtag_list.put("/hashTags/" + hashtag + "/hashTags", hashtag);
+                            }
+                            myRef.updateChildren(hashtag_list);
+                            setTags(tv,editText.getText().toString());
+                            photo.setCaption(editText.getText().toString());
+                            Toast.makeText(mActivity,"Photo is edited  successfully.",Toast.LENGTH_LONG).show();
                         }
-                        //then updates new ones
-                        myRef.child(mActivity.getString(R.string.dbname_photos)).child(photo.getPhoto_id()).child("caption").setValue(editText.getText().toString()); //dbname_photos updated
-                        myRef.child(mActivity.getString(R.string.dbname_user_photos)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(photo.getPhoto_id())
-                                .child("caption").setValue(editText.getText().toString()); //dbname_user_photos updated
-
-                        List<String> hashTags2 = StringManipulation.getHashTags(editText.getText().toString()); //new caption's tags taken
-
-                        String newPhotoKey = myRef.child(mActivity.getString(R.string.dbname_photos)).push().getKey();
-
-                        Map<String, Object> hashtag_list = new HashMap<>();
-                        for (String hashtag : hashTags2) {
-                            hashtag_list.put("/hashTags/" + hashtag + "/" + photo.getPhoto_id() + "/photoId", photo.getPhoto_id());
-                            hashtag_list.put("/hashTags/" + hashtag + "/hashTags", hashtag);
-                        }
-                        myRef.updateChildren(hashtag_list);
-                        setTags(tv,editText.getText().toString());
-                        photo.setCaption(editText.getText().toString());
-
-                        Toast.makeText(mActivity,"Photo is edited  successfully.",Toast.LENGTH_LONG).show();
-
                     }
                 });
         alertDialog.show();
-
         return editText.getText().toString();
 
     }

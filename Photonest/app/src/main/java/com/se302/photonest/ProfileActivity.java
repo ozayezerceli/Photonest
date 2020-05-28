@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -220,7 +221,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-
     private  void getFollowers(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.addValueEventListener(new ValueEventListener() {
@@ -332,10 +332,8 @@ public class ProfileActivity extends AppCompatActivity {
                         args.putParcelable("photo", photoArrayList.get(position));
                         args.putInt("activityNumber", 1);
                         post_view_fragment.setArguments(args);
-
                         FragmentTransaction transaction  = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container_edit, post_view_fragment);
-                        transaction.addToBackStack("View Post");
                         transaction.commit();
                     }
                 });
@@ -347,8 +345,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void setupBottomNavBar(){
         BottomNavigationViewEx bottomNavBar = (BottomNavigationViewEx) findViewById(R.id.bottomNavBar);
