@@ -366,7 +366,6 @@ public class ViewProfileActivity extends AppCompatActivity {
 
                         FragmentTransaction transaction  = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container_edit_pview, fragment);
-                        transaction.addToBackStack("View Post");
                         transaction.commit();
                     }
                 });
