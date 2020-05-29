@@ -804,9 +804,9 @@ public class FirebaseMethods {
                         public void onClick(View widget) {
                             Log.d("Hash", String.format("Clicked %s!", tag));
 
-                            Intent i = new Intent(Context, ResultActivity.class);
+                            Intent i = new Intent(mActivity, ResultActivity.class);
                             i.putExtra("hashTags", tag);
-                            Context.startActivity(i);
+                            mActivity.startActivity(i);
                         }
 
                         @Override
