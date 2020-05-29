@@ -143,7 +143,7 @@ public class EditProfileFragment extends Fragment {
             public void onClick(View v) {
                 updateData();
              if(profilechanged){
-                    uploadImage();
+                 uploadImage();
                  Toast.makeText(getActivity(), "Changes are being loaded.", Toast.LENGTH_SHORT).show();
              }
              else {
@@ -243,7 +243,7 @@ public class EditProfileFragment extends Fragment {
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        final String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         FilePaths filePaths = new FilePaths();
 
                         final StorageReference myStrRef =  FirebaseStorage.getInstance().getReference();
@@ -272,9 +272,7 @@ public class EditProfileFragment extends Fragment {
                                     HashMap<String,Object> hashMap = new HashMap<>();
                                     hashMap.put("imageurl",""+downloadURL);
                                     reference.child("imageurl").setValue(downloadURL);
-
                                     edit_profile_image.setImageURI(task.getResult());
-
                                     reference.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task)
@@ -282,6 +280,7 @@ public class EditProfileFragment extends Fragment {
                                             if (task.isSuccessful())
                                             {
                                                 uploaded=true;
+
                                                 startActivity(new Intent(getActivity(), ProfileActivity.class));
                                                 Toast.makeText(getActivity().getApplicationContext(), "Profile Photo is changed.", Toast.LENGTH_SHORT).show();
                                             }

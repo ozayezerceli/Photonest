@@ -220,7 +220,7 @@ public class EditProfileActivity extends AppCompatActivity {
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    final String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     FilePaths filePaths = new FilePaths();
 
                     final StorageReference myStrRef =  FirebaseStorage.getInstance().getReference();
@@ -228,7 +228,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             .child(filePaths.PROFILE_PHOTO_STORAGE + "/" + user_id);
 
 
-                    UploadTask uploadTask= filePath.putFile(ImageUri);
+                    final UploadTask uploadTask = filePath.putFile(ImageUri);
 
 
                     uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -244,21 +244,51 @@ public class EditProfileActivity extends AppCompatActivity {
                             if (task.isSuccessful() && !uploaded) {
                                 downloadURL=task.getResult().toString();
 
-
                                 DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                 HashMap<String,Object> hashMap = new HashMap<>();
                                 hashMap.put("imageurl",""+downloadURL);
                                 reference.child("imageurl").setValue(downloadURL);
 
                                 edit_profile_image.setImageURI(task.getResult());
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                                ref.child(context.getString(R.string.dbname_photos)).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot ds : dataSnapshot.getChildren()){
+                                            if(ds.child("comment").getChildrenCount() != 0){
+                                                ds.getRef().child("comment").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        for(DataSnapshot ds2: dataSnapshot.getChildren()){
+                                                            if(ds2.child("userId").getValue().equals(userID) && !ds2.child("profile_image").getValue().equals(downloadURL)){
+                                                                ds2.getRef().child("profile_image").setValue(downloadURL);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
 
                                 reference.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task)
+                                    public void onComplete(@NonNull final Task<Void> task)
                                     {
                                         if (task.isSuccessful())
                                         {
                                             uploaded=true;
+
                                             startActivity(new Intent(context, ProfileActivity.class));
                                             Toast.makeText(context, "Profile Photo is changed.", Toast.LENGTH_SHORT).show();
                                             finish();
@@ -268,9 +298,6 @@ public class EditProfileActivity extends AppCompatActivity {
                             } else if(!task.isSuccessful()){
                                 Toast.makeText(context, "Failed.",Toast.LENGTH_SHORT).show();
                             }
-                            else{
-                            }
-
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
