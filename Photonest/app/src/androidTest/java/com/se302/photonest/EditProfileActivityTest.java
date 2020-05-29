@@ -43,6 +43,13 @@ public class EditProfileActivityTest {
         Espresso.onView(withId(R.id.delete_image_photo)).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void testDeleteProfilePhoto(){
+        Espresso.onView(withId(R.id.delete_image_photo)).perform(click());
+        Espresso.onView(withText("YES")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+    }
+
+
 
     @Test
     public void testEditProfileInformation(){

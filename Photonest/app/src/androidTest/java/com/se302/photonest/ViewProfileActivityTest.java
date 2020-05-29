@@ -82,6 +82,12 @@ public class ViewProfileActivityTest {
             Espresso.onView(withId(R.id.Follow_button_pview)).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void testFollow(){
+        Espresso.onView(withId(R.id.Follow_button_pview)).perform(click());
+        Espresso.onView(withId(R.id.UnFollow_button_pview)).perform(click());
+    }
+
     @After
     public void tearDown() throws Exception {
         viewProfile=null;
