@@ -61,7 +61,7 @@ public class PhotoFragmentTest {
     public void testCameraIntent() throws InterruptedException {
         Bitmap icon = BitmapFactory.decodeResource(
                 intentsRule.getActivity().getResources(),
-                R.drawable.place_holder_photo);
+                R.drawable.rating_bar_empty_egg);
 
         // Build a result to return from the Camera app
         Intent resultData = new Intent();
@@ -85,6 +85,7 @@ public class PhotoFragmentTest {
         Espresso.onView(withId(R.id.listPlaces)).check(matches(isDisplayed()));
         Espresso.onData(anything()).inAdapterView(withId(R.id.listPlaces)).atPosition(0).perform(click());
         Espresso.onView(withId(R.id.upload_post_post)).perform(click());
+        Thread.sleep(5000);
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         //intended(toPackage("com.android.camera2"));
 

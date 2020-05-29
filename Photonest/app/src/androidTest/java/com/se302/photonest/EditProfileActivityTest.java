@@ -43,24 +43,19 @@ public class EditProfileActivityTest {
         Espresso.onView(withId(R.id.delete_image_photo)).check(matches(isDisplayed()));
     }
 
+
     @Test
     public void testEditProfileInformation(){
-        Espresso.onView(withId(R.id.EditFullName)).perform(typeText("Test"));
+        Espresso.onView(withId(R.id.EditFullName)).perform(clearText()).perform(typeText("TestName"));
         Espresso.closeSoftKeyboard();
-        Espresso.onView(withId(R.id.EditUsername)).perform(typeText("Test"));
+        Espresso.onView(withId(R.id.EditUsername)).perform(clearText()).perform(typeText("TestUser"));
         Espresso.closeSoftKeyboard();
-        Espresso.onView(withId(R.id.EditWebsite)).perform(typeText("Test"));
+        Espresso.onView(withId(R.id.EditWebsite)).perform(clearText()).perform(typeText("TestWebsite"));
         Espresso.closeSoftKeyboard();
-        Espresso.onView(withId(R.id.EditBio)).perform(typeText("Test"));
+        Espresso.onView(withId(R.id.EditBio)).perform(clearText()).perform(typeText("TestBio"));
         Espresso.closeSoftKeyboard();
 
         Espresso.onView(withId(R.id.saveChanges)).perform(click());
-    }
-
-    @Test
-    public void testDeleteProfilePhoto(){
-        Espresso.onView(withId(R.id.delete_image_photo)).perform(click());
-        Espresso.onView(withText("YES")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
     }
 
     @After
